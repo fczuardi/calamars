@@ -1,0 +1,25 @@
+{
+  "name": "calamars",
+  "version": "0.1.0",
+  "description": "proto-framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fczuardi/calamars.git"
+  },
+  "keywords": [
+    "chat"
+  ],
+  "author": "Fabricio C Zuardi",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/fczuardi/calamars/issues"
+  },
+  "homepage": "https://github.com/fczuardi/calamars#readme",
+  "devDependencies": {
+    "ava": "^0.14.0"
+  }
+}
