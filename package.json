@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "coverage:coveralls": "nyc report --reporter=lcov | coveralls",
+    "coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "test": "nyc ava"
   },
   "repository": {
