@@ -12,6 +12,6 @@ test_script:
   - npm test
 
 after_test:
-  - npm run report-coverage
+  - npm run coverage:codecov
 
 build: off

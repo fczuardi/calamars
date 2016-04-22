@@ -9,7 +9,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "coverage:coveralls": "nyc report --reporter=lcov | coveralls",
     "test": "nyc ava"
   },
   "repository": {
