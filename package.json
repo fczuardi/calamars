@@ -9,7 +9,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "ava"
+    "test": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/fczuardi/calamars#readme",
   "devDependencies": {
-    "ava": "^0.14.0"
+    "ava": "^0.14.0",
+    "coveralls": "^2.11.9",
+    "nyc": "^6.4.0"
   }
 }
