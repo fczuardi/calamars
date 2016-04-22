@@ -9,6 +9,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "test": "nyc ava"
   },
   "repository": {
@@ -24,6 +25,7 @@
   "homepage": "https://github.com/fczuardi/calamars#readme",
   "devDependencies": {
     "ava": "^0.14.0",
+    "codecov": "^1.0.1",
     "coveralls": "^2.11.9",
     "nyc": "^6.4.0"
   }

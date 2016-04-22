@@ -12,6 +12,6 @@ test_script:
   - npm test
 
 after_test:
-  - ps: ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
+  - npm run report-coverage
 
 build: off
