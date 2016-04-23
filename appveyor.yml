@@ -9,8 +9,7 @@ install:
 test_script:
   - node --version
   - npm --version
-  - ps: npm run init
   - npm run lint
-  - npm test
+  - ps: npm test
 
 build: off

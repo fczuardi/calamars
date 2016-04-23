@@ -9,11 +9,12 @@
   },
   "main": "./src/lib/index.js",
   "scripts": {
-    "init": "npm-run-all build:*",
     "lint": "eslint src tasks test || true",
+    "test:dev": "NODE_PATH=./src ava -v --require babel-register",
+    "test:watch": "NODE_PATH=./src ava -v --watch --require babel-register",
+    "coverage": "nyc npm run test:dev",
+    "pretest": "npm-run-all build:*",
     "test": "NODE_PATH=./dist/npm/src ava",
-    "test:dev": "NODE_PATH=./src ava -v --watch --require babel-register",
-    "coverage": "nyc npm test",
     "build:eslintrc": "tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src -D src",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
@@ -21,7 +22,8 @@
     "upload:coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "upload:coverage:codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter",
     "upload:coverage:codacy": "nyc report --reporter=text-lcov | codacy-coverage",
-    "upload:coverage": "npm-run-all coverage --parallel upload:coverage:*"
+    "preupload:coverage": "npm run coverage",
+    "upload:coverage": "npm-run-all --parallel upload:coverage:*"
   },
   "babel": {
     "plugins": [
