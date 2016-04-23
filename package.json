@@ -14,7 +14,7 @@
     "test": "NODE_PATH=./dist/npm/src ava",
     "test:dev": "NODE_PATH=./src ava -v --watch --require babel-register",
     "coverage": "nyc npm test",
-    "build:eslintrc": "./tasks/print-eslintrc.js > .eslintrc",
+    "build:eslintrc": "tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src -D src",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
     "upload:coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
