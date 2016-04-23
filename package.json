@@ -7,11 +7,25 @@
   "engines": {
     "node": "*"
   },
-  "main": "index.js",
+  "main": "./src/lib/index.js",
   "scripts": {
+    "coverage": "nyc npm test",
     "coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "test": "nyc ava"
+    "build:npm": "babel -d dist/npm/src/lib -D src/lib",
+    "postbuild:npm": "cp *.md *.json dist/npm/.",
+    "lint": "eslint src test || true",
+    "test": "ava",
+    "test:dev": "ava -v --watch"
+  },
+  "babel": {
+    "plugins": [
+      "transform-es2015-modules-commonjs",
+      "transform-export-extensions"
+    ]
+  },
+  "ava": {
+    "babel": "inherit"
   },
   "repository": {
     "type": "git",
@@ -26,6 +40,9 @@
   "homepage": "https://github.com/fczuardi/calamars#readme",
   "devDependencies": {
     "ava": "^0.14.0",
+    "babel-cli": "^6.7.7",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.7.7",
+    "babel-plugin-transform-export-extensions": "^6.5.0",
     "codecov": "^1.0.1",
     "coveralls": "^2.11.9",
     "eslint-config-calamar": "^1.0.3",

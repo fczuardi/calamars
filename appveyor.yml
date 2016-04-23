@@ -9,9 +9,8 @@ install:
 test_script:
   - node --version
   - npm --version
+  - npm run build:npm
+  - npm run lint
   - npm test
-
-after_test:
-  - npm run coverage:codecov
 
 build: off

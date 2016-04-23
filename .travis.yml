@@ -7,5 +7,10 @@ node_js:
 before_install:
   - npm set progress=false
 
+before_script:
+  - npm run build:npm
+  - npm run lint
+
 after_success:
     - npm run coverage:coveralls
+    - npm run coverage:codecov
