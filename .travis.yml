@@ -12,5 +12,6 @@ before_script:
   - npm run lint
 
 after_success:
+    - npm run coverage
     - npm run coverage:coveralls
     - npm run coverage:codecov
