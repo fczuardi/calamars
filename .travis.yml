@@ -11,10 +11,8 @@ before_install:
   - npm set progress=false
 
 before_script:
-  - npm run build:npm
+  - npm run init
   - npm run lint
 
 after_success:
-    - npm run coverage
-    - npm run coverage:coveralls
-    - npm run coverage:codecov
+    - npm run upload:coverage

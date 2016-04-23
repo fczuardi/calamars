@@ -9,14 +9,17 @@
   },
   "main": "./src/lib/index.js",
   "scripts": {
+    "init": "npm-run-all build:*",
+    "lint": "eslint src tasks test || true",
+    "test": "ava",
+    "test:dev": "ava -v --watch",
     "coverage": "nyc npm test",
-    "coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "build:eslintrc": "tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src/lib -D src/lib",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
-    "lint": "eslint src test || true",
-    "test": "ava",
-    "test:dev": "ava -v --watch"
+    "upload:coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "upload:coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "upload:coverage": "npm-run-all coverage --parallel upload:coverage:*"
   },
   "babel": {
     "plugins": [
