@@ -1,13 +1,14 @@
 import test from 'ava';
-
-const brainURL = process.env.LUIS_APP_URL;
+import * as luis from 'lib/luis';
 
 test('Evironment var for the Luis app is set', t => {
-    t.truthy(brainURL);
+    t.truthy(luis.brainURL);
 });
 
-test.skip('GET on Luis URL returns a JSON', t => {
-    t.pass();
+test('GET on Luis URL returns an object', t => {
+    return luis.query('').then(result => {
+        t.is(typeof result, 'object');
+    }).catch( err => {
+        t.is(err.statusCode, 200);
+    });;
 });
-
-test.todo('Get on the Luis url returns a JSON');
