@@ -8,11 +8,19 @@
 
 ## dependencies
 
+[![bitHound Dependencies](https://www.bithound.io/github/fczuardi/calamars/badges/dependencies.svg)](https://www.bithound.io/github/fczuardi/calamars/master/dependencies/npm)
+
+[![bitHound Dev Dependencies](https://www.bithound.io/github/fczuardi/calamars/badges/devDependencies.svg)](https://www.bithound.io/github/fczuardi/calamars/master/dependencies/npm)
+
 [![Dependency Status](https://gemnasium.com/badges/github.com/fczuardi/calamars.svg)](https://gemnasium.com/github.com/fczuardi/calamars)
 
 ## analisys
 
 [![Code Climate](https://codeclimate.com/github/fczuardi/calamars/badges/gpa.svg)](https://codeclimate.com/github/fczuardi/calamars)
+
+[![bitHound Overall Score](https://www.bithound.io/github/fczuardi/calamars/badges/score.svg)](https://www.bithound.io/github/fczuardi/calamars)
+
+[![bitHound Code](https://www.bithound.io/github/fczuardi/calamars/badges/code.svg)](https://www.bithound.io/github/fczuardi/calamars)
 
 ## coverage
 
