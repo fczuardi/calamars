@@ -12,7 +12,7 @@ class LuisDriver {
         if (!id || !subscriptionKey) {
             throw new Error(
                 'LuisDriver could not be instantiated. Missing required options.'
-            )
+            );
         }
 
         this.brainURL = `${previewBaseURL}?id=${id}&subscription-key=${subscriptionKey}`;
