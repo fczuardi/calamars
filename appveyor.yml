@@ -2,6 +2,12 @@ environment:
   matrix:
     - nodejs_version: "5"
 
+clone_folder: c:\projects\calamars
+
+shallow_clone: true
+
+clone_depth: 3
+
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm install
@@ -10,6 +16,7 @@ test_script:
   - node --version
   - npm --version
   - npm run lint
+  - cmd: set NODE_PATH=c:\projects\calamar\dist\npm\src
   - npm run test-windows
 
 build: off
