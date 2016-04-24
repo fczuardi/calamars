@@ -20,6 +20,8 @@
 
 ## analisys
 
+[![Known Vulnerabilities](https://snyk.io/test/github/fczuardi/calamars/badge.svg)](https://snyk.io/test/github/fczuardi/calamars)
+
 [![Code Climate](https://codeclimate.com/github/fczuardi/calamars/badges/gpa.svg)](https://codeclimate.com/github/fczuardi/calamars)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/10a9ef44744748219b04d4e82c7cf950)](https://www.codacy.com/app/fabricio/calamars)
