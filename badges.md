@@ -8,6 +8,10 @@
 
 ## dependencies
 
+[![Dependency Status](https://david-dm.org/fczuardi/calamars.svg)](https://david-dm.org/fczuardi/calamars)
+
+[![devDependency Status](https://david-dm.org/fczuardi/calamars/dev-status.svg)](https://david-dm.org/fczuardi/calamars#info=devDependencies)
+
 [![bitHound Dependencies](https://www.bithound.io/github/fczuardi/calamars/badges/dependencies.svg)](https://www.bithound.io/github/fczuardi/calamars/master/dependencies/npm)
 
 [![bitHound Dev Dependencies](https://www.bithound.io/github/fczuardi/calamars/badges/devDependencies.svg)](https://www.bithound.io/github/fczuardi/calamars/master/dependencies/npm)
@@ -31,6 +35,8 @@
 [![coveralls](https://coveralls.io/repos/github/fczuardi/calamars/badge.svg?branch=master)](https://coveralls.io/github/fczuardi/calamars?branch=master)
 
 [![codeclimate](https://codeclimate.com/github/fczuardi/calamars/badges/coverage.svg)](https://codeclimate.com/github/fczuardi/calamars/coverage)
+
+[![Codacy Badge](https://api.codacy.com/project/badge/coverage/10a9ef44744748219b04d4e82c7cf950)](https://www.codacy.com/app/fabricio/calamars)
 
 ## issues
 
