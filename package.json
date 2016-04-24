@@ -15,6 +15,7 @@
     "coverage": "nyc npm run test:dev",
     "pretest": "npm-run-all build:*",
     "test": "NODE_PATH=./dist/npm/src ava",
+    "pretest:windows": "npm run pretest && cp -R dist/npm/src/lib node_modules/lib",
     "test:windows": "ava",
     "build:eslintrc": "node tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src -D src",

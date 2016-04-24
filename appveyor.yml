@@ -16,10 +16,6 @@ test_script:
   - node --version
   - npm --version
   - npm run lint
-  - npm run pretest
-  - cp -R %APPVEYOR_BUILD_FOLDER%/dist/npm/src/lib %APPVEYOR_BUILD_FOLDER%/node_modules/lib
-  - SET NODE_PATH=dist\npm\src
-  - CALL node -e "console.log(process.env.NODE_PATH)"
   - npm run test:windows
 
 build: off
