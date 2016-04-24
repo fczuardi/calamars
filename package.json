@@ -15,7 +15,7 @@
     "coverage": "nyc npm run test:dev",
     "pretest": "npm-run-all build:*",
     "test": "NODE_PATH=./dist/npm/src ava",
-    "build:eslintrc": "tasks/print-eslintrc.js > .eslintrc",
+    "build:eslintrc": "./tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src -D src",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
     "upload:coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
