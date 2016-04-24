@@ -17,10 +17,7 @@ test_script:
   - npm --version
   - npm run lint
   - SET NODE_PATH=C:\projects\calamars\dist\npm\src
-  - CALL node -e "console.log(process.execPath)"
   - CALL node -e "console.log(process.env.NODE_PATH)"
-  - npm run print:path
-  - cmd: set NODE_PATH=C:\projects\calamars\dist\npm\src && npm run test:windows
-  - npm run test:windows
+  - CALL node C:\projects\calamars\node_modules\.bin\ava
 
 build: off
