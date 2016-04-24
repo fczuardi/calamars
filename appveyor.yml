@@ -2,7 +2,7 @@ environment:
   matrix:
     - nodejs_version: "5"
 
-clone_folder: c:\projects\calamars
+clone_folder: C:\projects\calamars
 
 shallow_clone: true
 
@@ -16,7 +16,6 @@ test_script:
   - node --version
   - npm --version
   - npm run lint
-  - cmd: set NODE_PATH=c:\projects\calamar\dist\npm\src
-  - npm run test-windows
+  - cmd: set NODE_PATH=C:\projects\calamars\dist\npm\src && npm run test-windows
 
 build: off
