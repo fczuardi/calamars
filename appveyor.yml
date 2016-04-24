@@ -16,7 +16,6 @@ test_script:
   - node --version
   - npm --version
   - npm run lint
-  - npm run test:windows2
   - SET NODE_PATH=C:\projects\calamars\dist\npm\src
   - CALL node -e "console.log(process.execPath)"
   - CALL node -e "console.log(process.env.NODE_PATH)"
