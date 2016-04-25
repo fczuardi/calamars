@@ -13,6 +13,7 @@
     "test:watch": "Keep the tests running on the development (non-transpiled) source files.",
     "lint": "Run eslint on the dev files and list code-style issues.",
     "coverage": "Build the test coverage report and print the text summary.",
+    "coverage:html": "Build the html coverage report and open it with your browser.",
     "test": "Update the npm package distribution of the lib (transpile to es5) and run the tests."
   },
   "scripts": {
@@ -26,14 +27,16 @@
     "build:npm": "babel -d dist/npm/src -D src",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
     "build:coverage": "nyc --silent npm run test:dev",
+    "build:coverage:lcov": "nyc report --reporter=lcov",
     "precoverage": "npm run build:coverage",
     "coverage": "nyc report",
+    "coverage:html": "npm run build:coverage:lcov && open coverage/lcov-report/index.html",
     "pretest": "npm-run-all --parallel build:eslintrc build:npm",
     "test": "NODE_PATH=./dist/npm/src ava",
-    "upload:coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "upload:coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "upload:coverage:codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter",
-    "upload:coverage:codacy": "nyc report --reporter=text-lcov | codacy-coverage",
+    "upload:coverage:codecov": "npm run build:coverage:lcov > coverage.lcov && codecov",
+    "upload:coverage:codacy": "npm run build:coverage:lcov | codacy-coverage",
     "preupload:coverage": "npm run build:coverage",
     "upload:coverage": "npm-run-all --parallel upload:coverage:*"
   },
