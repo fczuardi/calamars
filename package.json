@@ -8,23 +8,33 @@
     "node": "*"
   },
   "main": "./src/lib/index.js",
+  "scripts-info": {
+    "info": "Print the description of the main npm scripts.",
+    "test:watch": "Keep the tests running on the development (non-transpiled) source files.",
+    "lint": "Run eslint on the dev files and list code-style issues.",
+    "coverage": "Build the test coverage report and print the text summary.",
+    "test": "Update the npm package distribution of the lib (transpile to es5) and run the tests."
+  },
   "scripts": {
+    "info": "npm-scripts-info",
     "lint": "eslint src tasks test || true",
     "test:dev": "NODE_PATH=./src ava -v --require babel-register",
-    "test:watch": "NODE_PATH=./src ava -v --watch --require babel-register",
-    "coverage": "nyc npm run test:dev",
-    "pretest": "npm-run-all build:*",
-    "test": "NODE_PATH=./dist/npm/src ava",
+    "test:watch": "npm run test:dev -- --watch",
     "pretest:windows": "npm run pretest && cp -R dist/npm/src/lib node_modules/lib",
     "test:windows": "ava",
     "build:eslintrc": "node tasks/print-eslintrc.js > .eslintrc",
     "build:npm": "babel -d dist/npm/src -D src",
     "postbuild:npm": "cp *.md *.json dist/npm/.",
+    "build:coverage": "nyc --silent npm run test:dev",
+    "precoverage": "npm run build:coverage",
+    "coverage": "nyc report",
+    "pretest": "npm-run-all --parallel build:eslintrc build:npm",
+    "test": "NODE_PATH=./dist/npm/src ava",
     "upload:coverage:codecov": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "upload:coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "upload:coverage:codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter",
     "upload:coverage:codacy": "nyc report --reporter=text-lcov | codacy-coverage",
-    "preupload:coverage": "npm run coverage",
+    "preupload:coverage": "npm run build:coverage",
     "upload:coverage": "npm-run-all --parallel upload:coverage:*"
   },
   "babel": {
@@ -60,6 +70,7 @@
     "coveralls": "^2.11.9",
     "eslint-config-calamar": "^1.0.3",
     "npm-run-all": "^1.7.0",
+    "npm-scripts-info": "^0.3.6",
     "nyc": "^6.4.0"
   },
   "dependencies": {
