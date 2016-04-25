@@ -20,7 +20,7 @@ class LuisDriver {
 
     query(text) {
         const url = `${this.brainURL}&q=${text}`;
-        return request(url).then(body => (JSON.parse(body)));
+        return request(url).then(body => JSON.parse(body));
     }
 }
 
