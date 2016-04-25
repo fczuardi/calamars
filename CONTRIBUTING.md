@@ -26,6 +26,17 @@ To get an overview of the configured npm scripts run:
 npm run info
 ```
 
+## code style
+
+We use a javascript style guide based on the popular
+[airbnb style guide][airbnb-style], with some minor changes, and this style
+is enforced with an eslint config called [eslint-config-calamar][eslint-config-calamar],
+to check your fork's code against this styles use:
+
+```sh
+npm run lint
+```
+
 ## Test your contributions
 
 If you are working on a patch, please test it with the existing tests by running
@@ -59,5 +70,8 @@ npm run coverage:html
 ```
 
 
+[airbnb-style]: https://github.com/airbnb/javascript
+[eslint]: http://eslint.org/
+[eslint-config-calamar]: https://www.npmjs.com/package/eslint-config-calamar
 [ava]: https://github.com/sindresorhus/ava
 [nyc]: https://github.com/bcoe/nyc
