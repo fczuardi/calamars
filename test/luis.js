@@ -1,10 +1,17 @@
 import test from 'ava';
-import LuisDriver from 'lib/luis';
+import fakeLuisApi from './fixtures/luis/nock';
+import LuisDriver, { previewBaseURL } from 'lib/luis';
 
 const options = {
     id: process.env.LUIS_APP_ID,
     subscriptionKey: process.env.LUIS_APP_SUBSCRIPTION_KEY
 };
+
+const scope = fakeLuisApi(previewBaseURL);
+
+test('Luis API is mocked', t => {
+    t.is(scope.urlParts.href, `${previewBaseURL}/`);
+});
 
 test('Instantiation attempt without options should fail', t => {
     t.throws(() => (new LuisDriver()));
@@ -20,12 +27,12 @@ test('Evironment var for the Luis app is set', t => {
 
 test('GET on Luis URL returns an object', t => {
     const luis = new LuisDriver(options);
-    return luis.query('')
+    return luis.query()
         .then(result => t.is(typeof result, 'object'))
         .catch(err => t.is(err.statusCode, 200));
 });
 
-test.skip(
+test(
     'Query "Hi" should return a topScoringIntent object with intent and score attributes',
     t => {
         const luis = new LuisDriver(options);
