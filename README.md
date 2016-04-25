@@ -15,5 +15,5 @@ If you want to help us improve this library with a fix, a feature, better
 documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
-[badges]: (https://github.com/fczuardi/calamars/blob/master/badges.md)
-[contributing]: (https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md)
+[badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
+[contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
