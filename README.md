@@ -69,8 +69,9 @@ console.log(router('goodbye')()); // goodbye
 
 ### More usage examples
 
-  - [string -> regex -> string][regexString] (Using createRegexRouter)
-  - [string -> regex -> callback -> string][regexCallbackString] (Using createRegexFunctionRouter)
+  - [string -> regex -> string][regexString] - Using createRegexRouter
+  - [string -> regex -> callback -> string][regexCallbackString] - With matches and default answer using createRegexFunctionRouter
+  - [more][testfolder]
 
 string -> LUIS -> intentName -> callback
 
@@ -93,4 +94,5 @@ documentation or any other thing, please refer to the
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L21-L32
 [regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L75-L89
+[testfolder]: https://github.com/fczuardi/calamars/blob/master/test/answers.js
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
