@@ -4,7 +4,7 @@ import {
     createRegexRouter,
     createRegexFunctionRouter,
     createPayloadFunctionRouter
-} from 'lib/answers';
+} from 'lib/router';
 
 test('string → string: Hello/Goodbye exact match router', t => {
     const routes = [

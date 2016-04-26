@@ -1,6 +1,6 @@
 import test from 'ava';
 import { LuisDriver, previewBaseURL } from 'lib/luis';
-import { createExactMatchRouter } from 'lib/answers';
+import { createExactMatchRouter } from 'lib/router';
 import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
