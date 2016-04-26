@@ -6,7 +6,7 @@
 [![coveralls](https://coveralls.io/repos/github/fczuardi/calamars/badge.svg?branch=master)](https://coveralls.io/github/fczuardi/calamars?branch=master)
 [see all badges…][badges]
 
-An alpha quality, under heavily development, proto-frramework for building
+An alpha quality, under heavy development, proto-frramework for building
 chat applications.
 
 ## Usage
