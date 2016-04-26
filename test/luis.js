@@ -1,6 +1,6 @@
 import test from 'ava';
-import fakeLuisApi from './fixtures/luis/nock';
 import LuisDriver, { previewBaseURL } from 'lib/luis';
+import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
     id: process.env.LUIS_APP_ID,
