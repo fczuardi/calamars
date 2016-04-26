@@ -30,7 +30,7 @@ const router = createExactMatchRouter(pairs);
 console.log(router('goodbye')); // hello
 ```
 
-string -> callback
+string -> callback -> string
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -53,6 +53,11 @@ const router = createExactMatchRouter(pairs);
 console.log(router('goodbye')()); // hello
 ```
 
+See source code of the tests for the answers lib for more examples:
+
+  - [regex -> string][regexString]
+  - [regex -> callback -> string][regexCallbackString]
+
 string -> LUIS -> intentName -> callback
 
 ```javascript
@@ -72,4 +77,6 @@ documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
+[regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L20-L31
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L53-L64
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
