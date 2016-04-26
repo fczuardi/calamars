@@ -109,7 +109,7 @@ documentation or any other thing, please refer to the
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L21-L32
-[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L75-L89
-[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L92-L119
-[testfolder]: https://github.com/fczuardi/calamars/blob/master/test/answers.js
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L75-L89
+[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L92-L119
+[testfolder]: https://github.com/fczuardi/calamars/blob/master/test/router.js
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
