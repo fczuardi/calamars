@@ -36,14 +36,14 @@ string -> callback
 import { createExactMatchRouter } from 'calamars';
 const callbacks = {
     yes() { return 'no'; },
-    stop() { return 'go go go'; },
+    halt() { return 'go go go'; },
     goodbye() { return 'hello'; },
     high() { return 'low'; },
     why() { return 'I don’t know'; }
 };
 const pairs = [
     ['yes', callbacks.yes],
-    ['stop', callbacks.stop],
+    ['stop', callbacks.halt],
     ['goodbye', callbacks.goodbye],
     ['high', callbacks.high],
     ['why', callbacks.why]
