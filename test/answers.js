@@ -87,8 +87,3 @@ test(
         t.is(router('cha cha cha'), 'I dont know why you say cha cha cha, I say hello.');
     }
 );
-
-test.todo('string -> LUIS -> intentName -> callback -> string');
-test.todo('string -> LUIS -> luisPayload -> callback -> string');
-test.todo('chatSession -> string -> LUIS -> intentName -> callback -> string -> chatSession');
-test.todo('chatSession -> string -> LUIS -> luisPayload -> callback -> string -> chatSession');

@@ -1,5 +1,6 @@
 import test from 'ava';
 import { LuisDriver, previewBaseURL } from 'lib/luis';
+import { createExactMatchRouter } from 'lib/answers';
 import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
@@ -37,15 +38,33 @@ test(
     t => {
         const luis = new LuisDriver(options);
         const queryPromise = luis.query('Hi')
-            .then(result => {
+            .then(({ query, topScoringIntent }) => {
                 const {
                     intent,
                     score
-                } = result.topScoringIntent;
-                t.is(result.query, 'Hi');
+                } = topScoringIntent;
+                t.is(query, 'Hi');
                 t.is(typeof intent, 'string');
                 t.is(typeof score, 'number');
             });
         return queryPromise;
     }
 );
+
+test('string -> LUIS -> intentName -> callback -> string', t => {
+    const luis = new LuisDriver(options);
+    const callback = () => 'go go go';
+    const routes = [
+        ['goodbye', callback]
+    ];
+    const router = createExactMatchRouter(routes);
+    return luis.query('Good Bye!')
+        .then(({ topScoringIntent }) => {
+            const intentName = topScoringIntent.intent;
+            t.is(router(intentName), callback);
+            t.is(router(intentName)(), 'go go go');
+        });
+});
+test.todo('string -> LUIS -> luisPayload -> callback -> string');
+test.todo('chatSession -> string -> LUIS -> intentName -> callback -> string -> chatSession');
+test.todo('chatSession -> string -> LUIS -> luisPayload -> callback -> string -> chatSession');

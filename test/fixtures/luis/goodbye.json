@@ -1,0 +1,8 @@
+{
+  "query": "Good Bye!",
+  "topScoringIntent": {
+    "intent": "goodbye",
+    "score": 0.9629247
+  },
+  "entities": []
+}

@@ -2,6 +2,7 @@ import nock from 'nock';
 import { previewApiPath } from 'lib/luis';
 import emptyResponse from './empty.json';
 import hiResponse from './hi.json';
+import goodbyeResponse from './goodbye.json';
 
 const fake = [
     {
@@ -20,6 +21,15 @@ const fake = [
         reply: [
             200,
             hiResponse
+        ]
+    },
+    {
+        path: previewApiPath,
+        verb: 'GET',
+        query: qs => (qs.q === 'Good Bye!'),
+        reply: [
+            200,
+            goodbyeResponse
         ]
     }
 ];
