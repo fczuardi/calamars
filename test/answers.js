@@ -54,7 +54,7 @@ test('regex -> callback -> string: Hello/Goodbye regex router', t => {
     const regexCbPairs = [
         [/yes/i, () => 'yes'],
         [/stop/i, () => 'go go go'],
-        [/goodbye/i, () => 'hello')],
+        [/goodbye/i, () => 'hello'],
         [/high/i, () => 'low'],
         [/why/i, () => 'I don’t know']
     ];
