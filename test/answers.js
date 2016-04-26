@@ -59,6 +59,6 @@ test('regex -> callback -> string: Hello/Goodbye regex router', t => {
         [/why/i, () => 'I don’t know']
     ];
     const router = createRegexRouter(regexCbPairs);
-    t.is(router('high')(), 'low');
+    t.is(router('hIGh')(), 'low');
     t.is(router('cha cha cha'), null);
 });
