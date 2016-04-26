@@ -6,6 +6,9 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/w4ctv2w2fcbgv1fn?svg=true)](https://ci.appveyor.com/project/fczuardi/calamars)
 
+## npm
+[![npm version](https://badge.fury.io/js/calamars.svg)](https://badge.fury.io/js/calamars)
+
 ## dependencies
 
 [![Dependency Status](https://david-dm.org/fczuardi/calamars.svg)](https://david-dm.org/fczuardi/calamars)
