@@ -26,5 +26,4 @@ class LuisDriver {
     }
 }
 
-export { previewBaseURL, previewApiPath };
-export default LuisDriver;
+export { previewBaseURL, previewApiPath, LuisDriver };

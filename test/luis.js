@@ -1,5 +1,5 @@
 import test from 'ava';
-import LuisDriver, { previewBaseURL } from 'lib/luis';
+import { LuisDriver, previewBaseURL } from 'lib/luis';
 import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
