@@ -15,23 +15,23 @@ chat applications.
 npm install --save calamars
 ```
 
-### createExactMatchRouter to create a string -> string map
+### string -> string
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
-const pairs = [
+const routes = [
     ['yes', 'no'],
     ['stop', 'go go go'],
     ['goodbye', 'hello'],
     ['high', 'low'],
     ['why', 'I don’t know']
 ];
-const router = createExactMatchRouter(pairs);
+const router = createExactMatchRouter(routes);
 
 console.log(router('goodbye')); // hello
 ```
 
-### createExactMatchRouter to create a string -> callback -> string map
+### string -> callback -> string
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -42,27 +42,27 @@ const callbacks = {
     high() { return 'low'; },
     why() { return 'I don’t know'; }
 };
-const pairs = [
+const routes = [
     ['yes', callbacks.yes],
     ['stop', callbacks.halt],
     ['goodbye', callbacks.goodbye],
     ['high', callbacks.high],
     ['why', callbacks.why]
 ];
-const router = createExactMatchRouter(pairs);
+const router = createExactMatchRouter(routes);
 
 console.log(router('goodbye')()); // hello
 ```
 
-### createRegexFunctionRouter to echo all messages:
+### echo any string input
 
 ```javascript
 import { createRegexFunctionRouter } from 'calamars';
 
-const regexMap = [
+const routes = [
     [/(.*)/, matches => matches[0]]
 ];
-const router = createRegexFunctionRouter(regexMap);
+const router = createRegexFunctionRouter(routes);
 
 console.log(router('goodbye')()); // goodbye
 ```
@@ -71,6 +71,7 @@ console.log(router('goodbye')()); // goodbye
 
   - [string -> regex -> string][regexString] - Using createRegexRouter
   - [string -> regex -> callback -> string][regexCallbackString] - With matches and default answer using createRegexFunctionRouter
+  - [object -> comparisonFunction -> callback -> string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
   - [more][testfolder]
 
 string -> LUIS -> intentName -> callback
@@ -94,5 +95,6 @@ documentation or any other thing, please refer to the
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L21-L32
 [regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L75-L89
+[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L92-L119
 [testfolder]: https://github.com/fczuardi/calamars/blob/master/test/answers.js
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
