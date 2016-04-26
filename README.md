@@ -60,7 +60,7 @@ console.log(router('goodbye')()); // hello
 import { createRegexFunctionRouter } from 'calamars';
 
 const routes = [
-    [/(.*)/, matches => matches[0]]
+    [/.*/, matches => matches[0]]
 ];
 const router = createRegexFunctionRouter(routes);
 

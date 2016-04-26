@@ -67,7 +67,7 @@ test('string-> regex -> callback -> string: Hello/Goodbye regex router', t => {
 
 test('string -> regex -> callback -> string : Echo function regex router.', t => {
     const routes = [
-        [/(.*)/, matches => matches[0]]
+        [/.*/, matches => matches[0]]
     ];
     const router = createRegexFunctionRouter(routes);
     t.is(router('cha cha cha'), 'cha cha cha');
@@ -81,7 +81,7 @@ test(
             [/stop/i, matches => `You say ${matches[0]}, I say go go go, oh no.`],
             [/high/i, matches => `I say ${matches[0]}, You say low.`],
             [/why/i, matches => `You say ${matches[0]} and I say I don’t know`],
-            [/(.*)/, matches => `I dont know why you say ${matches[0]}, I say hello.`]
+            [/.*/, matches => `I dont know why you say ${matches[0]}, I say hello.`]
         ];
         const router = createRegexFunctionRouter(routes);
         t.is(router('foobar HiGH'), 'I say HiGH, You say low.');
