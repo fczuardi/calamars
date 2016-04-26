@@ -67,18 +67,32 @@ const router = createRegexFunctionRouter(routes);
 console.log(router('goodbye')()); // goodbye
 ```
 
+### string -> LUIS -> intentName -> callback -> string
+
+```javascript
+import { LuisDriver, createExactMatchRouter } from 'calamars';
+
+const luis = new LuisDriver(options);
+const callback = () => 'go go go';
+const routes = [
+    ['goodbye', callback]
+];
+const router = createExactMatchRouter(routes);
+return luis.query('Good Bye!')
+    .then(({ topScoringIntent }) => {
+        const intentName = topScoringIntent.intent;
+
+        console.log(router(intentName)()); // 'go go go'
+    });
+```
+
+
 ### More usage examples
 
   - [string -> regex -> string][regexString] - Using createRegexRouter
   - [string -> regex -> callback -> string][regexCallbackString] - With matches and default answer using createRegexFunctionRouter
   - [object -> comparisonFunction -> callback -> string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
   - [more][testfolder]
-
-string -> LUIS -> intentName -> callback
-
-```javascript
-// TBD
-```
 
 chatSession -> string -> LUIS -> intentName -> callback -> chatSession
 
