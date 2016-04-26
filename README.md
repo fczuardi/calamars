@@ -78,7 +78,8 @@ const routes = [
     ['goodbye', callback]
 ];
 const router = createExactMatchRouter(routes);
-return luis.query('Good Bye!')
+
+luis.query('Good Bye!')
     .then(({ topScoringIntent }) => {
         const intentName = topScoringIntent.intent;
 
