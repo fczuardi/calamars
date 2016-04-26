@@ -7,24 +7,37 @@ const createExactMatchRouter = routes => {
 };
 
 const createRegexRouter = routes => {
-    const findAnswer = text => {
+    const findRoute = text => {
         const route = routes.find(item => item[0].test(text)) || [null, null];
         return route[1];
     };
-    return findAnswer;
+    return findRoute;
 };
 
 const createRegexFunctionRouter = routes => {
-    const findAnswer = text => {
-        const route = routes.find(item => item[0].test(text)) || [new RegExp(null), null];
+    const findRoute = text => {
+        const route = routes.find(
+            item => item[0].test(text)
+        ) || [new RegExp(null), null];
         const matches = route[0].exec(text);
         return route[1](matches);
     };
-    return findAnswer;
+    return findRoute;
+};
+
+const createPayloadFunctionRouter = routes => {
+    const findRoute = payload => {
+        const route = routes.find(
+            item => item[0](payload)
+        ) || [null, null];
+        return route[1](payload);
+    };
+    return findRoute;
 };
 
 export {
     createExactMatchRouter,
     createRegexRouter,
-    createRegexFunctionRouter
+    createRegexFunctionRouter,
+    createPayloadFunctionRouter
 };

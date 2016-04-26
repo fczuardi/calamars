@@ -2,31 +2,32 @@ import test from 'ava';
 import {
     createExactMatchRouter,
     createRegexRouter,
-    createRegexFunctionRouter
+    createRegexFunctionRouter,
+    createPayloadFunctionRouter
 } from 'lib/answers';
 
 test('string -> string: Hello/Goodbye exact match router', t => {
-    const stringPairs = [
+    const routes = [
         ['yes', 'no'],
         ['stop', 'go go go'],
         ['goodbye', 'hello'],
         ['high', 'low'],
         ['why', 'I don’t know']
     ];
-    const router = createExactMatchRouter(stringPairs);
+    const router = createExactMatchRouter(routes);
     t.is(router('high'), 'low');
     t.is(router('cha cha cha'), null);
 });
 
 test('string -> regex -> string: Hello/Goodbye regex router', t => {
-    const regexPairs = [
+    const routes = [
         [/yes/i, 'no'],
         [/stop/i, 'go go go'],
         [/goodbye/i, 'hello'],
         [/high/i, 'low'],
         [/why/i, 'I don’t know']
     ];
-    const router = createRegexRouter(regexPairs);
+    const router = createRegexRouter(routes);
     t.is(router('I say HIGH, you say?'), 'low');
     t.is(router('cha cha cha'), null);
 });
@@ -39,51 +40,80 @@ test('string -> callback -> string : Hello/Goodbye exact match router', t => {
         high() { return 'low'; },
         why() { return 'I don’t know'; }
     };
-    const stringCbPairs = [
+    const routes = [
         ['yes', callbacks.yes],
         ['stop', callbacks.halt],
         ['goodbye', callbacks.goodbye],
         ['high', callbacks.high],
         ['why', callbacks.why]
     ];
-    const router = createExactMatchRouter(stringCbPairs);
+    const router = createExactMatchRouter(routes);
     t.is(router('high')(), 'low');
     t.is(router('cha cha cha'), null);
 });
 
 test('string-> regex -> callback -> string: Hello/Goodbye regex router', t => {
-    const regexCbPairs = [
+    const routes = [
         [/yes/i, () => 'no'],
         [/stop/i, () => 'go go go'],
         [/goodbye/i, () => 'hello'],
         [/high/i, () => 'low'],
         [/why/i, () => 'I don’t know']
     ];
-    const router = createRegexRouter(regexCbPairs);
+    const router = createRegexRouter(routes);
     t.is(router('hIGh')(), 'low');
     t.is(router('cha cha cha'), null);
 });
 
 test('string -> regex -> callback -> string : Echo function regex router.', t => {
-    const regexCbPairs = [
+    const routes = [
         [/(.*)/, matches => matches[0]]
     ];
-    const router = createRegexFunctionRouter(regexCbPairs);
+    const router = createRegexFunctionRouter(routes);
     t.is(router('cha cha cha'), 'cha cha cha');
 });
 
 test(
     'string -> regex -> callback -> string : Regex router with matches and default answer.',
     t => {
-        const regexCbPairs = [
+        const routes = [
             [/yes/i, matches => `You say ${matches[0]}, I say no.`],
             [/stop/i, matches => `You say ${matches[0]}, I say go go go, oh no.`],
             [/high/i, matches => `I say ${matches[0]}, You say low.`],
             [/why/i, matches => `You say ${matches[0]} and I say I don’t know`],
             [/(.*)/, matches => `I dont know why you say ${matches[0]}, I say hello.`]
         ];
-        const router = createRegexFunctionRouter(regexCbPairs);
+        const router = createRegexFunctionRouter(routes);
         t.is(router('foobar HiGH'), 'I say HiGH, You say low.');
         t.is(router('cha cha cha'), 'I dont know why you say cha cha cha, I say hello.');
+    }
+);
+
+test(
+    'object -> comparisonFunction -> callback -> string : Payload function router.',
+    t => {
+        const routes = [
+            [
+                payload => payload.intentName === 'yes',
+                () => 'no'
+            ],
+            [
+                payload => (payload.intentName === 'goodbye' && payload.score > 0.8),
+                () => 'hello'
+            ],
+            [
+                () => true,
+                payload => `I dont know why you say ${payload.query}, I say hello.`
+            ]
+        ];
+        const router = createPayloadFunctionRouter(routes);
+        t.is(router({
+            query: 'Good Bye mate!',
+            intentName: 'goodbye',
+            score: 0.9629247
+        }), 'hello');
+        t.is(router({
+            query: 'cha cha cha'
+        }), 'I dont know why you say cha cha cha, I say hello.');
     }
 );
