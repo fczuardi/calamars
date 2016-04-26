@@ -15,7 +15,7 @@ chat applications.
 npm install --save calamars
 ```
 
-string -> string
+### createExactMatchRouter to create a string -> string map
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -31,7 +31,7 @@ const router = createExactMatchRouter(pairs);
 console.log(router('goodbye')); // hello
 ```
 
-string -> callback -> string
+### createExactMatchRouter to create a string -> callback -> string map
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -54,10 +54,23 @@ const router = createExactMatchRouter(pairs);
 console.log(router('goodbye')()); // hello
 ```
 
-See source code of the tests for the answers lib for more examples:
+### createRegexFunctionRouter to echo all messages:
 
-  - [regex -> string][regexString]
-  - [regex -> callback -> string][regexCallbackString]
+```javascript
+import { createRegexFunctionRouter } from 'calamars';
+
+const regexMap = [
+    [/(.*)/, matches => matches[0]]
+];
+const router = createRegexFunctionRouter(regexMap);
+
+console.log(router('goodbye')()); // goodbye
+```
+
+### More usage examples
+
+  - [string -> regex -> string][regexString] (Using createRegexRouter)
+  - [string -> regex -> callback -> string][regexCallbackString] (Using createRegexFunctionRouter)
 
 string -> LUIS -> intentName -> callback
 
@@ -78,6 +91,6 @@ documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
-[regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L20-L31
-[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L53-L64
+[regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L21-L32
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L75-L89
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
