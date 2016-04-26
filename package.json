@@ -33,6 +33,7 @@
     "prepublish:npm": "npm-run-all clean:npm build:npm",
     "publish:npm": "npm publish",
     "ppp": "npm version patch && git push && npm run publish:npm",
+    "mpp": "npm version minor && git push && npm run publish:npm",
     "precoverage": "npm run build:coverage",
     "coverage": "nyc report",
     "precoverage:html": "npm-run-all build:coverage build:coverage:lcov",
