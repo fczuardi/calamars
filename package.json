@@ -31,7 +31,7 @@
     "build:coverage": "nyc --silent npm run test:dev",
     "build:coverage:lcov": "nyc report --reporter=lcov",
     "prepublish:npm": "npm-run-all clean:npm build:npm",
-    "publish:npm": "npm publish",
+    "publish:npm": "npm publish dist/npm",
     "ppp": "npm version patch && git push && npm run publish:npm",
     "mpp": "npm version minor && git push && npm run publish:npm",
     "precoverage": "npm run build:coverage",
