@@ -51,7 +51,7 @@ test(
     }
 );
 
-test('string -> LUIS -> intentName -> callback -> string', t => {
+test('string → LUIS → intentName → callback → string', t => {
     const luis = new LuisDriver(options);
     const callback = () => 'go go go';
     const routes = [
@@ -65,6 +65,6 @@ test('string -> LUIS -> intentName -> callback -> string', t => {
             t.is(router(intentName)(), 'go go go');
         });
 });
-test.todo('string -> LUIS -> luisPayload -> callback -> string');
-test.todo('chatSession -> string -> LUIS -> intentName -> callback -> string -> chatSession');
-test.todo('chatSession -> string -> LUIS -> luisPayload -> callback -> string -> chatSession');
+test.todo('string → LUIS → luisPayload → callback → string');
+test.todo('chatSession → string → LUIS → intentName → callback → string → chatSession');
+test.todo('chatSession → string → LUIS → luisPayload → callback → string → chatSession');

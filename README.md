@@ -15,7 +15,7 @@ chat applications.
 npm install --save calamars
 ```
 
-### string -> string
+### string → string
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -31,7 +31,7 @@ const router = createExactMatchRouter(routes);
 console.log(router('goodbye')); // hello
 ```
 
-### string -> callback -> string
+### string → callback → string
 
 ```javascript
 import { createExactMatchRouter } from 'calamars';
@@ -67,7 +67,7 @@ const router = createRegexFunctionRouter(routes);
 console.log(router('goodbye')()); // goodbye
 ```
 
-### string -> LUIS -> intentName -> callback -> string
+### string → LUIS → intentName → callback → string
 
 ```javascript
 import { LuisDriver, createExactMatchRouter } from 'calamars';
@@ -90,12 +90,12 @@ luis.query('Good Bye!')
 
 ### More usage examples
 
-  - [string -> regex -> string][regexString] - Using createRegexRouter
-  - [string -> regex -> callback -> string][regexCallbackString] - With matches and default answer using createRegexFunctionRouter
-  - [object -> comparisonFunction -> callback -> string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
+  - [string → regex → string][regexString] - Using createRegexRouter
+  - [string → regex → callback → string][regexCallbackString] - With matches and default answer using createRegexFunctionRouter
+  - [object → comparisonFunction → callback → string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
   - [more][testfolder]
 
-chatSession -> string -> LUIS -> intentName -> callback -> chatSession
+chatSession → string → LUIS → intentName → callback → chatSession
 
 ```javascript
 // TBD
