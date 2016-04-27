@@ -108,8 +108,8 @@ documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
-[regexString]: https://github.com/fczuardi/calamars/blob/master/test/answers.js#L21-L32
-[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L75-L89
+[regexString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L22-L33
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L76-L90
 [createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L92-L119
 [testfolder]: https://github.com/fczuardi/calamars/blob/master/test/router.js
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
