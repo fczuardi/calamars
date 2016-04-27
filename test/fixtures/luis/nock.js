@@ -3,7 +3,9 @@ import { previewApiPath } from 'lib/luis';
 import emptyResponse from './empty.json';
 import hiResponse from './hi.json';
 import goodbyeResponse from './goodbye.json';
+import foobarResponse from './foobar.json';
 
+const repeatLimit = 100000;
 const fake = [
     {
         path: previewApiPath,
@@ -31,6 +33,15 @@ const fake = [
             200,
             goodbyeResponse
         ]
+    },
+    {
+        path: previewApiPath,
+        verb: 'GET',
+        query: qs => (qs.q === 'Foobar'),
+        reply: [
+            200,
+            foobarResponse
+        ]
     }
 ];
 
@@ -39,6 +50,7 @@ const fakeScope = (url) => {
     fake.forEach((endpoint) => {
         const { path, verb, query, reply } = endpoint;
         scope.intercept(path, verb)
+            .times(repeatLimit)
             .query(query)
             .reply(...reply);
     });

@@ -1,0 +1,8 @@
+{
+  "query": "Foobar",
+  "topScoringIntent": {
+    "intent": "None",
+    "score": 0.546681643
+  },
+  "entities": []
+}
