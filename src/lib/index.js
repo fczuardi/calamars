@@ -2,7 +2,8 @@ export { version } from '../../package.json';
 export {
     createExactMatchRouter,
     createRegexRouter,
-    createRegexFunctionRouter
+    createRegexFunctionRouter,
+    createPayloadFunctionRouter
 } from './router';
 export {
     previewBaseURL,
