@@ -3,7 +3,7 @@ import {
     createExactMatchRouter,
     createRegexRouter,
     createRegexFunctionRouter,
-    createPayloadFunctionRouter
+    createRouter
 } from 'lib/router';
 
 test('string → string: Hello/Goodbye exact match router', t => {
@@ -106,7 +106,7 @@ test(
                 payload => `I dont know why you say ${payload.query}, I say hello.`
             ]
         ];
-        const router = createPayloadFunctionRouter(routes);
+        const router = createRouter(routes);
         t.is(router({
             query: 'Good Bye mate!',
             intentName: 'goodbye',

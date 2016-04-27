@@ -15,5 +15,5 @@ test('Have router lib functions', t => {
     t.truthy(lib.createExactMatchRouter);
     t.truthy(lib.createRegexRouter);
     t.truthy(lib.createRegexFunctionRouter);
-    t.truthy(lib.createPayloadFunctionRouter);
+    t.truthy(lib.createRouter);
 });

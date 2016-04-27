@@ -25,7 +25,7 @@ const createRegexFunctionRouter = routes => {
     return findRoute;
 };
 
-const createPayloadFunctionRouter = routes => {
+const createRouter = routes => {
     const findRoute = payload => {
         const route = routes.find(
             item => item[0](payload)
@@ -39,5 +39,5 @@ export {
     createExactMatchRouter,
     createRegexRouter,
     createRegexFunctionRouter,
-    createPayloadFunctionRouter
+    createRouter
 };

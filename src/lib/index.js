@@ -3,7 +3,7 @@ export {
     createExactMatchRouter,
     createRegexRouter,
     createRegexFunctionRouter,
-    createPayloadFunctionRouter
+    createRouter
 } from './router';
 export {
     previewBaseURL,
