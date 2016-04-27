@@ -1,6 +1,6 @@
 import test from 'ava';
 import { LuisDriver, previewBaseURL } from 'lib/luis';
-import { createExactMatchRouter } from 'lib/router';
+import { createExactMatchRouter, createRouter } from 'lib/router';
 import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
@@ -65,6 +65,39 @@ test('string → LUIS → intentName → callback → string', t => {
             t.is(router(intentName)(), 'go go go');
         });
 });
-test.todo('string → LUIS → luisPayload → callback → string');
-test.todo('chatSession → string → LUIS → intentName → callback → string → chatSession');
-test.todo('chatSession → string → LUIS → luisPayload → callback → string → chatSession');
+
+test('string → LUIS → luisPayload → comparisonFunction → callback → string: Simple echo', t => {
+    const routes = [
+        [() => true, (payload) => payload.query]
+    ];
+    const router = createRouter(routes);
+    const luis = new LuisDriver(options);
+    return luis.query('Good Bye!')
+        .then((result) => {
+            t.is(router(result), 'Good Bye!');
+        });
+});
+
+test('str → LUIS → obj → comparison → callback → str: Callback and compare func using obj', t => {
+    const routes = [
+        [
+            obj => {
+                const intent = obj.topScoringIntent;
+                return intent.intent === 'goodbye' && intent.score > 0.9;
+            },
+            obj => `You say ${obj.query}, I say hello.`
+        ],
+        [() => true, (obj) => `I dont know why you say ${obj.query}, I say hello.`]
+    ];
+    const router = createRouter(routes);
+    const luis = new LuisDriver(options);
+    const q1 = luis.query('Good Bye!')
+        .then(resultGoodbye => {
+            t.is(router(resultGoodbye), 'You say Good Bye!, I say hello.');
+        });
+    const q2 = luis.query('Foobar')
+        .then(resultFoobar => {
+            t.is(router(resultFoobar), 'I dont know why you say Foobar, I say hello.');
+        });
+    return Promise.all([q1, q2]);
+});

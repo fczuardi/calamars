@@ -32,7 +32,7 @@ test('string → regex → string: Hello/Goodbye regex router', t => {
     t.is(router('cha cha cha'), null);
 });
 
-test('string → callback → string : Hello/Goodbye exact match router', t => {
+test('string → callback → string: Hello/Goodbye exact match router', t => {
     const callbacks = {
         yes() { return 'no'; },
         halt() { return 'go go go'; },
@@ -65,7 +65,7 @@ test('string → regex → callback → string: Hello/Goodbye regex router', t =
     t.is(router('cha cha cha'), null);
 });
 
-test('string → regex → callback → string : Echo function regex router.', t => {
+test('string → regex → callback → string: Echo function regex router.', t => {
     const routes = [
         [/.*/, matches => matches[0]]
     ];
@@ -74,7 +74,7 @@ test('string → regex → callback → string : Echo function regex router.', t
 });
 
 test(
-    'string → regex → callback → string : Regex router with matches and default answer.',
+    'string → regex → callback → string: Regex router with matches and default answer.',
     t => {
         const routes = [
             [/yes/i, matches => `You say ${matches[0]}, I say no.`],
@@ -90,7 +90,7 @@ test(
 );
 
 test(
-    'object → comparisonFunction → callback → string : Payload function router.',
+    'object → comparisonFunction → callback → string: Routes mapping function to function.',
     t => {
         const routes = [
             [
