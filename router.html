@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>router.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>router.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <h2 id="createrouter">createRouter</h2>
+
+        
+      
+        
+        <p>Creates a router that maps inputs to outputs based on a set of routes.</p>
+<h3 id="syntax">Syntax</h3>
+<pre><code class="lang-javascript">createRouter(routes)
+</code></pre>
+<h4 id="parameters">Parameters</h4>
+<p><strong>routes</strong>: An array of routes</p>
+<h5 id="route">route</h5>
+<p>Each route is a two-elements array in the format <code>[compare(), callback()]</code>.
+The first element is the compare function <code>compare</code>
+and the second is the associated callback function <code>callback</code>.</p>
+<h4 id="return">Return</h4>
+<p>Returns a router function.</p>
+<h3 id="example">Example</h3>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'calamars'</span>;
+<span class="hljs-keyword">const</span> input1 = {
+    query: <span class="hljs-string">'Stop!'</span>,
+    intentName: <span class="hljs-string">'stop'</span>,
+    score: <span class="hljs-number">0.9629247</span>
+};
+<span class="hljs-keyword">const</span> input2 = {
+    query: <span class="hljs-string">'Foobar'</span>,
+    intentName: <span class="hljs-string">'None'</span>,
+    score: <span class="hljs-number">0.546681643</span>
+};
+<span class="hljs-keyword">const</span> routes = [[
+    obj =&gt; obj.intentName === <span class="hljs-string">'stop'</span>,
+    obj =&gt; <span class="hljs-string">`You say <span class="hljs-subst">${obj.query}</span>, I say go go go, oh no.`</span>
+], [
+    obj =&gt; obj.intentName === <span class="hljs-string">'None'</span>,
+    obj =&gt; <span class="hljs-string">`I dont know why you say <span class="hljs-subst">${obj.query}</span>, I say hello.`</span>
+]];
+
+<span class="hljs-keyword">const</span> router = createRouter(routes);
+
+<span class="hljs-built_in">console</span>.log(router(input1)); <span class="hljs-comment">// You say Stop!, I say go go go, oh no.</span>
+<span class="hljs-built_in">console</span>.log(router(input2)); <span class="hljs-comment">// I dont know why you say Foobar, I say hello.</span>
+</code></pre>
+<p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/router.js">test/router.js</a> for more examples.</p>
+<hr>
+
+        
+      
+        
+        <h3 id="source">Source</h3>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = (routes, config = {}) =&gt; input =&gt; {</pre></div>
+        
+      
+        
+        <p>The <code>compare</code> side of a <code>[compare(), callback()]</code> route
+is normally a function. But it can also be a string or a regular
+expression, and on those cases it will be treated as a shortcut
+for exact match or <code>RegExp.test</code> respectively.</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> matchingRoutes = routes.filter(route =&gt; {
+        <span class="hljs-keyword">const</span> cmp = route[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cmp === <span class="hljs-string">'function'</span>) {
+            <span class="hljs-keyword">return</span> cmp(input);
+        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cmp === <span class="hljs-string">'string'</span>) {
+            <span class="hljs-keyword">return</span> cmp === input;
+        }
+        <span class="hljs-keyword">if</span> (cmp <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span>) {
+            <span class="hljs-keyword">return</span> cmp.test(input);
+        }
+        <span class="hljs-keyword">return</span> [<span class="hljs-literal">null</span>, () =&gt; <span class="hljs-literal">null</span>];
+    });</pre></div>
+        
+      
+        
+        <p>if no route is matched, return null</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!matchingRoutes.length) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }</pre></div>
+        
+      
+        
+        <p>first matched route</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> [compare, callback] = matchingRoutes[<span class="hljs-number">0</span>];</pre></div>
+        
+      
+        
+        <p>Expected usage, both elements of a route are functions. When that is the
+case, returns the call to the callback passing the input as argument.</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> compare === <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
+        <span class="hljs-keyword">return</span> callback(input);
+    }</pre></div>
+        
+      
+        
+        <p>Alternative usage, the <code>compare</code> part of a route can be a regular
+expression. When that is the case, returns the call to the callback
+passing the matches as argument.</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (compare <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span> &amp;&amp; <span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
+        <span class="hljs-keyword">const</span> matches = compare.exec(input);
+        <span class="hljs-keyword">if</span> (config === {}) {
+            <span class="hljs-keyword">return</span> callback(matches);
+        }</pre></div>
+        
+      
+        
+        <p>Deprecated uses to be removed after 0.7.0</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span> (config.deprecatedName === <span class="hljs-string">'createRegexRouter'</span>) {
+            <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'createRegexRouter will be deprecated, please use createRouter'</span>);
+            <span class="hljs-keyword">return</span> callback;
+        }
+        <span class="hljs-keyword">if</span> (config.deprecatedName === <span class="hljs-string">'createRegexFunctionRouter'</span>) {
+            <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'createRegexFunctionRouter will be deprecated, please use createRouter'</span>);
+            <span class="hljs-keyword">return</span> callback(matches);
+        }
+    }</pre></div>
+        
+      
+        
+        <p>Alternative usage, the <code>callback</code> part of
+<code>[compare(), callback()]</code> route can be a a value instead of a
+function. When that is the case, returns it</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">return</span> callback;
+};</pre></div>
+        
+      
+        
+        <hr>
+
+        
+      
+        
+        
+        
+      
+        
+        <h3 id="deprecated-on-0-6-x">Deprecated on 0.6.x</h3>
+<p>The functions below will be removed after 0.7.0</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createExactMatchRouter = routes =&gt; {
+    <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'createExactMatchRouter will be deprecated, please use createRouter'</span>);
+    <span class="hljs-keyword">return</span> createRouter(routes);
+};
+
+<span class="hljs-keyword">const</span> createRegexRouter = routes =&gt; createRouter(routes,
+    { deprecatedName: <span class="hljs-string">'createRegexRouter'</span> }
+);
+
+<span class="hljs-keyword">const</span> createRegexFunctionRouter = routes =&gt; createRouter(routes,
+    { deprecatedName: <span class="hljs-string">'createRegexFunctionRouter'</span> }
+);</pre></div>
+        
+      
+        
+        <hr>
+
+        
+      
+        
+        
+        
+          <div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    createExactMatchRouter,
+    createRegexRouter,
+    createRegexFunctionRouter,
+    createRouter
+};</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

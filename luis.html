@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>luis.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>luis.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        
+        
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> request <span class="hljs-keyword">from</span> <span class="hljs-string">'request-promise'</span>;
+
+<span class="hljs-keyword">const</span> previewBaseURL = <span class="hljs-string">'https://api.projectoxford.ai'</span>;
+<span class="hljs-keyword">const</span> previewApiPath = <span class="hljs-string">'/luis/v1/application/preview'</span>;
+<span class="hljs-keyword">const</span> previewURL = previewBaseURL + previewApiPath;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LuisDriver</span> </span>{
+    <span class="hljs-keyword">constructor</span>(options) {
+        <span class="hljs-keyword">const</span> {
+            id,
+            subscriptionKey
+        } = options;
+
+        <span class="hljs-keyword">if</span> (!id || !subscriptionKey) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+                <span class="hljs-string">'LuisDriver could not be instantiated. Missing required options.'</span>
+            );
+        }
+
+        <span class="hljs-keyword">this</span>.brainURL = <span class="hljs-string">`<span class="hljs-subst">${previewURL}</span>?id=<span class="hljs-subst">${id}</span>&amp;subscription-key=<span class="hljs-subst">${subscriptionKey}</span>`</span>;
+    }
+
+    query(text = <span class="hljs-string">''</span>) {
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${text}</span>`</span>;
+        <span class="hljs-keyword">return</span> request(url).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+    }
+}
+
+<span class="hljs-keyword">export</span> { previewBaseURL, previewApiPath, LuisDriver };</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
