@@ -1,6 +1,6 @@
 import test from 'ava';
 import { LuisDriver, previewBaseURL } from 'lib/luis';
-import { createExactMatchRouter, createRouter } from 'lib/router';
+import { createRouter } from 'lib/router';
 import fakeLuisApi from 'fixtures/luis/nock';
 
 const options = {
@@ -57,12 +57,11 @@ test('string → LUIS → intentName → callback → string', t => {
     const routes = [
         ['goodbye', callback]
     ];
-    const router = createExactMatchRouter(routes);
+    const router = createRouter(routes);
     return luis.query('Good Bye!')
         .then(({ topScoringIntent }) => {
             const intentName = topScoringIntent.intent;
-            t.is(router(intentName), callback);
-            t.is(router(intentName)(), 'go go go');
+            t.is(router(intentName), 'go go go');
         });
 });
 

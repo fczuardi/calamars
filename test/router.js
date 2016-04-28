@@ -1,8 +1,5 @@
 import test from 'ava';
 import {
-    createExactMatchRouter,
-    createRegexRouter,
-    createRegexFunctionRouter,
     createRouter
 } from 'lib/router';
 
@@ -14,7 +11,7 @@ test('string → string: Hello/Goodbye exact match router', t => {
         ['high', 'low'],
         ['why', 'I don’t know']
     ];
-    const router = createExactMatchRouter(routes);
+    const router = createRouter(routes);
     t.is(router('high'), 'low');
     t.is(router('cha cha cha'), null);
 });
@@ -27,7 +24,7 @@ test('string → regex → string: Hello/Goodbye regex router', t => {
         [/high/i, 'low'],
         [/why/i, 'I don’t know']
     ];
-    const router = createRegexRouter(routes);
+    const router = createRouter(routes);
     t.is(router('I say HIGH, you say?'), 'low');
     t.is(router('cha cha cha'), null);
 });
@@ -47,8 +44,8 @@ test('string → callback → string: Hello/Goodbye exact match router', t => {
         ['high', callbacks.high],
         ['why', callbacks.why]
     ];
-    const router = createExactMatchRouter(routes);
-    t.is(router('high')(), 'low');
+    const router = createRouter(routes);
+    t.is(router('high'), 'low');
     t.is(router('cha cha cha'), null);
 });
 
@@ -60,8 +57,8 @@ test('string → regex → callback → string: Hello/Goodbye regex router', t =
         [/high/i, () => 'low'],
         [/why/i, () => 'I don’t know']
     ];
-    const router = createRegexRouter(routes);
-    t.is(router('hIGh')(), 'low');
+    const router = createRouter(routes);
+    t.is(router('hIGh'), 'low');
     t.is(router('cha cha cha'), null);
 });
 
@@ -69,7 +66,7 @@ test('string → regex → callback → string: Echo function regex router.', t 
     const routes = [
         [/.*/, matches => matches[0]]
     ];
-    const router = createRegexFunctionRouter(routes);
+    const router = createRouter(routes);
     t.is(router('cha cha cha'), 'cha cha cha');
 });
 
@@ -83,7 +80,7 @@ test(
             [/why/i, matches => `You say ${matches[0]} and I say I don’t know`],
             [/.*/, matches => `I dont know why you say ${matches[0]}, I say hello.`]
         ];
-        const router = createRegexFunctionRouter(routes);
+        const router = createRouter(routes);
         t.is(router('foobar HiGH'), 'I say HiGH, You say low.');
         t.is(router('cha cha cha'), 'I dont know why you say cha cha cha, I say hello.');
     }
