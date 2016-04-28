@@ -39,6 +39,7 @@
     "build:coverage": "nyc --silent npm run test:dev",
     "build:coverage:lcov": "nyc report --reporter=lcov",
     "build:doc": "docco -l linear src/**/*.js",
+    "postbuild:doc": "./tasks/insert-version.js",
     "prepublish:npm": "npm-run-all clean:npm build:npm",
     "publish:npm": "npm publish dist/npm",
     "prepublish:doc": "npm-run-all clean:doc build:doc",
