@@ -18,7 +18,7 @@ npm install --save calamars
 ### string → string
 
 ```javascript
-import { createExactMatchRouter } from 'calamars';
+import { createRouter } from 'calamars';
 const routes = [
     ['yes', 'no'],
     ['stop', 'go go go'],
@@ -26,7 +26,7 @@ const routes = [
     ['high', 'low'],
     ['why', 'I don’t know']
 ];
-const router = createExactMatchRouter(routes);
+const router = createRouter(routes);
 
 console.log(router('goodbye')); // hello
 ```
@@ -34,7 +34,7 @@ console.log(router('goodbye')); // hello
 ### string → callback → string
 
 ```javascript
-import { createExactMatchRouter } from 'calamars';
+import { createRouter } from 'calamars';
 const callbacks = {
     yes() { return 'no'; },
     halt() { return 'go go go'; },
@@ -49,41 +49,41 @@ const routes = [
     ['high', callbacks.high],
     ['why', callbacks.why]
 ];
-const router = createExactMatchRouter(routes);
+const router = createRouter(routes);
 
-console.log(router('goodbye')()); // hello
+console.log(router('goodbye')); // hello
 ```
 
 ### echo any string input
 
 ```javascript
-import { createRegexFunctionRouter } from 'calamars';
+import { createRouter } from 'calamars';
 
 const routes = [
     [/.*/, matches => matches[0]]
 ];
-const router = createRegexFunctionRouter(routes);
+const router = createRouter(routes);
 
-console.log(router('goodbye')()); // goodbye
+console.log(router('goodbye')); // goodbye
 ```
 
 ### string → LUIS → intentName → callback → string
 
 ```javascript
-import { LuisDriver, createExactMatchRouter } from 'calamars';
+import { LuisDriver, createRouter } from 'calamars';
 
 const luis = new LuisDriver(options);
 const callback = () => 'go go go';
 const routes = [
     ['goodbye', callback]
 ];
-const router = createExactMatchRouter(routes);
+const router = createRouter(routes);
 
 luis.query('Good Bye!')
     .then(({ topScoringIntent }) => {
         const intentName = topScoringIntent.intent;
 
-        console.log(router(intentName)()); // 'go go go'
+        console.log(router(intentName)); // 'go go go'
     });
 ```
 
@@ -95,11 +95,11 @@ luis.query('Good Bye!')
   - [object → comparisonFunction → callback → string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
   - [more][testfolder]
 
-chatSession → string → LUIS → intentName → callback → chatSession
 
-```javascript
-// TBD
-```
+
+## Documentation
+
+See the [Library Reference][documentation] for full documentation.
 
 ## Patches are welcome
 
@@ -112,4 +112,5 @@ documentation or any other thing, please refer to the
 [regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L76-L90
 [createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L92-L119
 [testfolder]: https://github.com/fczuardi/calamars/blob/master/test/router.js
+[documentation]: http://fczuardi.github.io/calamars/
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
