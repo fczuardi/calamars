@@ -8,7 +8,7 @@
 // currently there are 2 main components:
 //
 // - [router.js](./router.html)
-//   - a helper function to create input > output mappings
+//   - a helper function to create input → output mappings
 // - [luis.js](./luis.html)
 //   - a driver for the LUIS webservice
 //
