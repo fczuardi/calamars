@@ -108,9 +108,9 @@ documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
-[regexString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L22-L33
-[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L76-L90
-[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L92-L119
+[regexString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L19-L30
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L73-L87
+[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L89-L116
 [testfolder]: https://github.com/fczuardi/calamars/blob/master/test/router.js
 [documentation]: http://fczuardi.github.io/calamars/
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md

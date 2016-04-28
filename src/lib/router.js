@@ -131,7 +131,7 @@ const createRouter = (routes, config = {}) => input => {
     const firstMatch = matchingRoutes[0];
     const [compare, callback] = firstMatch;
 
-    // _Old API to be deprecated after 0.7.0_
+    // _Deprecated API to be removed after 0.7.0_
     if (config.deprecatedName) { return deprecatedResult(firstMatch, config, input); } // eslint-disable-line no-use-before-define, max-len
 
     // When the callback is a function, return the call
