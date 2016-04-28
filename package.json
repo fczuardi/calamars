@@ -43,7 +43,7 @@
     "publish:npm": "npm publish dist/npm",
     "prepublish:doc": "npm-run-all clean:doc build:doc",
     "publish:doc": "gh-pages -d docs",
-    "ppp": "npm version patch && git push && npm-run-all publish:doc publish:npm",
+    "ppp": "npm version patch && git push && npm run publish:doc && npm run publish:npm",
     "mpp": "npm version minor && git push && npm-run-all publish:doc publish:npm",
     "precoverage": "npm run build:coverage",
     "precoverage:html": "npm-run-all build:coverage build:coverage:lcov",
