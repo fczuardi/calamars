@@ -19,7 +19,61 @@
 // #### Return
 // Returns a router function.
 //
-// ### Example
+// ### Examples
+//
+// #### [string, value] routes
+// ```javascript
+// const routes = [
+//     ['yes', 'no'],
+//     ['stop', 'go go go'],
+//     ['goodbye', 'hello'],
+//     ['high', 'low'],
+//     ['why', 'I don’t know']
+// ];
+// const router = createRouter(routes);
+//
+// console.log(router('high')); // 'low'
+// console.log(router('cha cha cha')); // null
+// ```
+//
+// #### [regExp, value] routes
+// ```javascript
+// const routes = [
+//     [/yes/i, 'no'],
+//     [/stop/i, 'go go go'],
+//     [/goodbye/i, 'hello'],
+//     [/high/i, 'low'],
+//     [/why/i, 'I don’t know']
+// ];
+// const router = createRouter(routes);
+//
+// console.log(router('I say HIGH, you say?')); // 'low'
+// console.log(router('cha cha cha')); // null
+// ```
+//
+// #### [string, function] routes
+// ```javascript
+// const callbacks = {
+//     yes() { return 'no'; },
+//     halt() { return 'go go go'; },
+//     goodbye() { return 'hello'; },
+//     high() { return 'low'; },
+//     why() { return 'I don’t know'; }
+// };
+// const routes = [
+//     ['yes', callbacks.yes],
+//     ['stop', callbacks.halt],
+//     ['goodbye', callbacks.goodbye],
+//     ['high', callbacks.high],
+//     ['why', callbacks.why]
+// ];
+// const router = createRouter(routes);
+//
+// console.log(router('high')); // 'low'
+// console.log(router('cha cha cha')); // null
+// ```
+//
+// #### [function, function] routes
 // ```javascript
 // import { createRouter } from 'calamars';
 // const input1 = {
@@ -74,48 +128,53 @@ const createRouter = (routes, config = {}) => input => {
     if (!matchingRoutes.length) { return null; }
 
     // first matched route
-    const [compare, callback] = matchingRoutes[0];
+    const firstMatch = matchingRoutes[0];
+    const [compare, callback] = firstMatch;
 
-    // Expected usage, both elements of a route are functions. When that is the
-    // case, returns the call to the callback passing the input as argument.
-    if (typeof compare === 'function' && typeof callback === 'function') {
+    // _Old API to be deprecated after 0.7.0_
+    if (config.deprecatedName) { return deprecatedResult(firstMatch, config, input); } // eslint-disable-line no-use-before-define, max-len
+
+    // When the callback is a function, return the call
+    // to the callback passing the input as argument
+    if (typeof callback === 'function' && !(compare instanceof RegExp)) {
         return callback(input);
     }
 
-    // Alternative usage, the ```compare``` part of a route can be a regular
-    // expression. When that is the case, returns the call to the callback
-    // passing the matches as argument.
+    // Alternative usage. When the ```compare``` part of a route is a regular
+    // expression, returns the call to the callback passing the matches as argument.
     if (compare instanceof RegExp && typeof callback === 'function') {
         const matches = compare.exec(input);
-        if (config === {}) {
-            return callback(matches);
-        }
-
-        // Deprecated uses to be removed after 0.7.0
-        if (config.deprecatedName === 'createRegexRouter') {
-            console.warn('createRegexRouter will be deprecated, please use createRouter');
-            return callback;
-        }
-        if (config.deprecatedName === 'createRegexFunctionRouter') {
-            console.warn('createRegexFunctionRouter will be deprecated, please use createRouter');
-            return callback(matches);
-        }
+        return callback(matches);
     }
 
-    // Alternative usage, the ```callback``` part of
-    // ```[compare(), callback()]``` route can be a a value instead of a
-    // function. When that is the case, returns it
+    // Alternative usage. When the ```callback``` part of a
+    // ```[compare(), callback()]``` route is a value instead
+    // of a function, return it
     return callback;
 };
+
+export { createRouter };
 
 // ---
 
 // ### Deprecated on 0.6.x
 // The functions below will be removed after 0.7.0
-const createExactMatchRouter = routes => {
-    console.warn('createExactMatchRouter will be deprecated, please use createRouter');
-    return createRouter(routes);
+const deprecatedResult = (route, config, input) => {
+    console.warn(`${config.deprecatedName} will be deprecated, please use createRouter`);
+    const [cmp, cb] = route;
+    if (cmp instanceof RegExp && typeof callback === 'function') {
+        if (config.deprecatedName === 'createRegexRouter') {
+            return cb;
+        }
+        if (config.deprecatedName === 'createRegexFunctionRouter') {
+            return cb(cmp.exec(input));
+        }
+    }
+    return cb;
 };
+const createExactMatchRouter = routes => createRouter(routes,
+    { deprecatedName: 'createExactMatchRouter' }
+);
 
 const createRegexRouter = routes => createRouter(routes,
     { deprecatedName: 'createRegexRouter' }
@@ -124,10 +183,9 @@ const createRegexRouter = routes => createRouter(routes,
 const createRegexFunctionRouter = routes => createRouter(routes,
     { deprecatedName: 'createRegexFunctionRouter' }
 );
-// ---
+
 export {
     createExactMatchRouter,
     createRegexRouter,
-    createRegexFunctionRouter,
-    createRouter
+    createRegexFunctionRouter
 };
