@@ -1,10 +1,5 @@
 import test from 'ava';
-import {
-    createRouter,
-    createExactMatchRouter,
-    createRegexRouter,
-    createRegexFunctionRouter
-} from 'lib/router';
+import { createRouter } from 'lib/router';
 
 test('createRouter with no routes parameters', t => {
     const router = createRouter();
@@ -137,11 +132,3 @@ test(
         }), 'I dont know why you say cha cha cha, I say hello.');
     }
 );
-
-test('Deprecated functions', t => {
-    t.is(createExactMatchRouter([['yes', 'no']])('yes'), 'no');
-    t.is(createRegexRouter([[/yes/i, 'no']])('YES'), 'no');
-    t.is(createRegexRouter([[/yes/i, () => 'no']])('YES')(), 'no');
-    t.is(createRegexFunctionRouter([[/yes/i, function yesCb() { return 'no'; }]])('YES'), 'no');
-    t.is(createRegexFunctionRouter([[/yes/i, function yesCb() { return 'no'; }]])('YES'), 'no');
-});

@@ -137,9 +137,6 @@ const createRouter = (routes, config = {}) => input => {
 
     const [compare, callback] = firstMatch;
 
-    // _Deprecated API to be removed after 0.7.0_
-    if (config.deprecatedName) { return deprecatedResult(firstMatch, config, input); } // eslint-disable-line no-use-before-define, max-len
-
     // When the callback is a function, return the call
     // to the callback passing the input as argument
     if (typeof callback === 'function' && !(compare instanceof RegExp)) {
@@ -161,38 +158,6 @@ const createRouter = (routes, config = {}) => input => {
 
 // ---
 
-// ### Deprecated on 0.6.x
-// The functions below will be removed after 0.7.0
-const deprecatedResult = (route, config, input) => {
-    console.warn(`${config.deprecatedName} will be deprecated, please use createRouter`);
-    const [cmp, cb] = route;
-    if (cmp instanceof RegExp && typeof cb === 'function') {
-        if (config.deprecatedName === 'createRegexRouter') {
-            return cb;
-        }
-        if (config.deprecatedName === 'createRegexFunctionRouter') {
-            return cb(cmp.exec(input));
-        }
-    }
-    return cb;
-};
-const createExactMatchRouter = routes => createRouter(routes,
-    { deprecatedName: 'createExactMatchRouter' }
-);
-
-const createRegexRouter = routes => createRouter(routes,
-    { deprecatedName: 'createRegexRouter' }
-);
-
-const createRegexFunctionRouter = routes => createRouter(routes,
-    { deprecatedName: 'createRegexFunctionRouter' }
-);
-
-// ---
-
 export {
-    createRouter,
-    createExactMatchRouter,
-    createRegexRouter,
-    createRegexFunctionRouter
+    createRouter
 };
