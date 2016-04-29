@@ -1,7 +1,30 @@
 import test from 'ava';
 import {
-    createRouter
+    createRouter,
+    createExactMatchRouter,
+    createRegexRouter,
+    createRegexFunctionRouter
 } from 'lib/router';
+
+test('createRouter with no routes parameters', t => {
+    const router = createRouter();
+    t.truthy(router);
+    t.falsy(router());
+});
+
+test('createRouter with empty routes', t => {
+    const routes = [];
+    const router = createRouter(routes);
+    t.truthy(router);
+    t.falsy(router('hi'));
+});
+
+test('createRouter with invalid routes', t => {
+    const routes = [1, 2, 3];
+    const router = createRouter(routes);
+    t.truthy(router);
+    t.falsy(router('hi'));
+});
 
 test('string → string: Hello/Goodbye exact match router', t => {
     const routes = [
@@ -114,3 +137,11 @@ test(
         }), 'I dont know why you say cha cha cha, I say hello.');
     }
 );
+
+test('Deprecated functions', t => {
+    t.is(createExactMatchRouter([['yes', 'no']])('yes'), 'no');
+    t.is(createRegexRouter([[/yes/i, 'no']])('YES'), 'no');
+    t.is(createRegexRouter([[/yes/i, () => 'no']])('YES')(), 'no');
+    t.is(createRegexFunctionRouter([[/yes/i, function yesCb() { return 'no'; }]])('YES'), 'no');
+    t.is(createRegexFunctionRouter([[/yes/i, function yesCb() { return 'no'; }]])('YES'), 'no');
+});

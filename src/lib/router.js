@@ -106,6 +106,8 @@
 //
 // ### Source
 const createRouter = (routes, config = {}) => input => {
+    if (!routes) { return null; }
+
     // The ```compare``` side of a ```[compare(), callback()]``` route
     // is normally a function. But it can also be a string or a regular
     // expression, and on those cases it will be treated as a shortcut
@@ -121,7 +123,7 @@ const createRouter = (routes, config = {}) => input => {
         if (cmp instanceof RegExp) {
             return cmp.test(input);
         }
-        return [null, () => null];
+        return [null, null];
     });
 
     // if no route is matched, return null
@@ -129,6 +131,10 @@ const createRouter = (routes, config = {}) => input => {
 
     // first matched route
     const firstMatch = matchingRoutes[0];
+
+    // if matched route is not a properly formatted route
+    if (!firstMatch.length) { return null; }
+
     const [compare, callback] = firstMatch;
 
     // _Deprecated API to be removed after 0.7.0_
@@ -153,8 +159,6 @@ const createRouter = (routes, config = {}) => input => {
     return callback;
 };
 
-export { createRouter };
-
 // ---
 
 // ### Deprecated on 0.6.x
@@ -162,7 +166,7 @@ export { createRouter };
 const deprecatedResult = (route, config, input) => {
     console.warn(`${config.deprecatedName} will be deprecated, please use createRouter`);
     const [cmp, cb] = route;
-    if (cmp instanceof RegExp && typeof callback === 'function') {
+    if (cmp instanceof RegExp && typeof cb === 'function') {
         if (config.deprecatedName === 'createRegexRouter') {
             return cb;
         }
@@ -184,7 +188,10 @@ const createRegexFunctionRouter = routes => createRouter(routes,
     { deprecatedName: 'createRegexFunctionRouter' }
 );
 
+// ---
+
 export {
+    createRouter,
     createExactMatchRouter,
     createRegexRouter,
     createRegexFunctionRouter

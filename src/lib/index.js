@@ -17,5 +17,14 @@
 // Source
 // ------
 export { version } from '../../package.json';
-export * from './router';
-export * from './luis';
+export {
+    createRouter,
+    createExactMatchRouter,
+    createRegexRouter,
+    createRegexFunctionRouter
+} from './router';
+export {
+    LuisDriver,
+    previewBaseURL,
+    previewApiPath
+} from './luis';
