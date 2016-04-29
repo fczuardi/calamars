@@ -1,7 +1,8 @@
 // createRouter
 // ------------
 //
-// Creates a router that maps inputs to outputs based on a set of routes.
+// A higher-order function that creates router function that maps inputs
+// to outputs based on a set of routes.
 //
 // ### Syntax
 // ```javascript
@@ -9,15 +10,17 @@
 // ```
 //
 // #### Parameters
-// **routes**: An array of routes
-//
-// ##### route
-// Each route is a two-elements array in the format ```[compare(), callback()]```.
-// The first element is the compare function ```compare```
-// and the second is the associated callback function ```callback```.
+// **routes** - _Array_ - A list of routes. A route is a two-elements array
+// representing a input/output mapping (see below).
 //
 // #### Return
-// Returns a router function.
+// Returns a _function_.
+//
+// **route** - _Array_ - A pair of elements that represents a mapping
+// between a compare function (or _string_ or _RegExp_) and an output function
+// (or a value).
+//
+// ```[compare, output]```
 //
 // ### Examples
 //
@@ -105,7 +108,7 @@
 // ---
 //
 // ### Source
-const createRouter = (routes, config = {}) => input => {
+const createRouter = routes => input => {
     if (!routes) { return null; }
 
     // The ```compare``` side of a ```[compare(), callback()]``` route
