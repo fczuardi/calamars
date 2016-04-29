@@ -147,7 +147,8 @@ and the second is the associated callback function <code>callback</code>.</p>
         <h3 id="source">Source</h3>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = (routes, config = {}) =&gt; input =&gt; {</pre></div>
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = (routes, config = {}) =&gt; input =&gt; {
+    <span class="hljs-keyword">if</span> (!routes) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }</pre></div>
         
       
         
@@ -168,7 +169,7 @@ for exact match or <code>RegExp.test</code> respectively.</p>
         <span class="hljs-keyword">if</span> (cmp <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span>) {
             <span class="hljs-keyword">return</span> cmp.test(input);
         }
-        <span class="hljs-keyword">return</span> [<span class="hljs-literal">null</span>, () =&gt; <span class="hljs-literal">null</span>];
+        <span class="hljs-keyword">return</span> [<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>];
     });</pre></div>
         
       
@@ -183,7 +184,15 @@ for exact match or <code>RegExp.test</code> respectively.</p>
         <p>first matched route</p>
 
         
-          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> firstMatch = matchingRoutes[<span class="hljs-number">0</span>];
+          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> firstMatch = matchingRoutes[<span class="hljs-number">0</span>];</pre></div>
+        
+      
+        
+        <p>if matched route is not a properly formatted route</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!firstMatch.length) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+
     <span class="hljs-keyword">const</span> [compare, callback] = firstMatch;</pre></div>
         
       
@@ -222,9 +231,7 @@ of a function, return it</p>
 
         
           <div class='highlight'><pre>    <span class="hljs-keyword">return</span> callback;
-};
-
-<span class="hljs-keyword">export</span> { createRouter };</pre></div>
+};</pre></div>
         
       
         
@@ -244,7 +251,7 @@ of a function, return it</p>
           <div class='highlight'><pre><span class="hljs-keyword">const</span> deprecatedResult = (route, config, input) =&gt; {
     <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">`<span class="hljs-subst">${config.deprecatedName}</span> will be deprecated, please use createRouter`</span>);
     <span class="hljs-keyword">const</span> [cmp, cb] = route;
-    <span class="hljs-keyword">if</span> (cmp <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span> &amp;&amp; <span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
+    <span class="hljs-keyword">if</span> (cmp <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span> &amp;&amp; <span class="hljs-keyword">typeof</span> cb === <span class="hljs-string">'function'</span>) {
         <span class="hljs-keyword">if</span> (config.deprecatedName === <span class="hljs-string">'createRegexRouter'</span>) {
             <span class="hljs-keyword">return</span> cb;
         }
@@ -264,9 +271,20 @@ of a function, return it</p>
 
 <span class="hljs-keyword">const</span> createRegexFunctionRouter = routes =&gt; createRouter(routes,
     { deprecatedName: <span class="hljs-string">'createRegexFunctionRouter'</span> }
-);
+);</pre></div>
+        
+      
+        
+        <hr>
 
+        
+      
+        
+        
+        
+          <div class='highlight'><pre>
 <span class="hljs-keyword">export</span> {
+    createRouter,
     createExactMatchRouter,
     createRegexRouter,
     createRegexFunctionRouter
