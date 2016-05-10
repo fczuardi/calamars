@@ -1,4 +1,6 @@
-# <a href="https://openclipart.org/detail/230920/remix-of-cartoon-red-planet"><img src="https://openclipart.org/download/230920/planet-remix.svg" width="100"/></a> calamars
+# calamars
+
+<a href="https://openclipart.org/detail/230920/remix-of-cartoon-red-planet"><img src="https://openclipart.org/download/230920/planet-remix.svg" width="100"/></a>
 
 [![npm version](https://badge.fury.io/js/calamars.svg)](https://badge.fury.io/js/calamars)
 [![Build Status](https://travis-ci.org/fczuardi/calamars.svg?branch=master)](https://travis-ci.org/fczuardi/calamars)
