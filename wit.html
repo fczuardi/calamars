@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>LuisDriver</title>
+  <title>WitDriver</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -14,7 +14,7 @@
       <div class="header">
         
           
-          <h1 id="luisdriver">LuisDriver</h1>
+          <h1 id="witdriver">WitDriver</h1>
 
           
         
@@ -59,16 +59,16 @@
 
       
         
-        <p>A wrapper class for the LUIS Webservice (<a href="https://www.luis.ai/">https://www.luis.ai/</a> ).</p>
+        <p>A wrapper class for the Wit Webservice (<a href="https://wit.ai/docs/http/20160330">https://wit.ai/docs/http/20160330</a> ).</p>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> request <span class="hljs-keyword">from</span> <span class="hljs-string">'request-promise'</span>;
 
-<span class="hljs-keyword">const</span> previewBaseURL = <span class="hljs-string">'https://api.projectoxford.ai'</span>;
-<span class="hljs-keyword">const</span> previewApiPath = <span class="hljs-string">'/luis/v1/application/preview'</span>;
-<span class="hljs-keyword">const</span> previewURL = previewBaseURL + previewApiPath;
+<span class="hljs-keyword">const</span> baseURL = <span class="hljs-string">'https://api.wit.ai'</span>;
+<span class="hljs-keyword">const</span> apiVersion = <span class="hljs-string">'20160330'</span>;
+<span class="hljs-keyword">const</span> messageEndpoint = <span class="hljs-string">'/message'</span>;
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LuisDriver</span> </span>{</pre></div>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WitDriver</span> </span>{</pre></div>
         
       
         
@@ -76,8 +76,8 @@
 <h3 id="parameters">Parameters</h3>
 <ul>
 <li><strong>options</strong> - <em>Object</em> - Configuration object.<ul>
-<li><strong>id</strong> - <em>string</em> - A LUIS app ID.</li>
-<li><strong>subscriptionKey</strong> - <em>string</em> - A LUIS subscription key.</li>
+<li><strong>id</strong> - <em>string</em> - A wit app ID.</li>
+<li><strong>serverToken</strong> - <em>string</em> - The Server Access Token for that wit app.</li>
 </ul>
 </li>
 </ul>
@@ -86,16 +86,20 @@
           <div class='highlight'><pre>    <span class="hljs-keyword">constructor</span>(options) {
         <span class="hljs-keyword">const</span> {
             id,
-            subscriptionKey
+            serverToken
         } = options;
 
-        <span class="hljs-keyword">if</span> (!id || !subscriptionKey) {
+        <span class="hljs-keyword">if</span> (!id || !serverToken) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
-                <span class="hljs-string">'LuisDriver could not be instantiated. Missing required options.'</span>
+                <span class="hljs-string">'WitDriver could not be instantiated. Missing required options.'</span>
             );
         }
 
-        <span class="hljs-keyword">this</span>.brainURL = <span class="hljs-string">`<span class="hljs-subst">${previewURL}</span>?id=<span class="hljs-subst">${id}</span>&amp;subscription-key=<span class="hljs-subst">${subscriptionKey}</span>`</span>;
+        <span class="hljs-keyword">this</span>.brainURL = <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
+        <span class="hljs-keyword">this</span>.requestHeaders = {
+            Authorization: <span class="hljs-string">`Bearer <span class="hljs-subst">${serverToken}</span>`</span>,
+            Accept: <span class="hljs-string">`application/vnd.wit.<span class="hljs-subst">${apiVersion}</span>+json`</span>
+        };
     }</pre></div>
         
       
@@ -104,7 +108,7 @@
 <h4 id="query">query</h4>
 <h5 id="parameters">Parameters</h5>
 <ul>
-<li><strong>text</strong> - <em>string</em> - a text query to send to the LUIS webservice.</li>
+<li><strong>text</strong> - <em>string</em> - a text query to send to the Wit webservice.</li>
 </ul>
 <h5 id="return">return</h5>
 <p>Returns a Promise that returns the parsed object from the webservice.</p>
@@ -112,7 +116,10 @@
         
           <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>) {
         <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${text}</span>`</span>;
-        <span class="hljs-keyword">return</span> request(url).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+        <span class="hljs-keyword">return</span> request({
+            url: url,
+            headers: <span class="hljs-keyword">this</span>.requestHeaders
+        }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
     }
 }</pre></div>
         
@@ -120,25 +127,24 @@
         
         <h2 id="examples">Examples</h2>
 <pre><code class="lang-javascript"><span class="hljs-keyword">const</span> options = {
-    id: <span class="hljs-string">'YOUR_LUIS_ID'</span>,
-    subscriptionKey: <span class="hljs-string">'YOUR_SUBSCRIPTION_KEY'</span>
+    id: <span class="hljs-string">'YOUR_WIT_ID'</span>,
+    serverToken: <span class="hljs-string">'YOUR_WIT_TOKEN'</span>
 };
-<span class="hljs-keyword">const</span> luis = <span class="hljs-keyword">new</span> LuisDriver(options);
+<span class="hljs-keyword">const</span> wit = <span class="hljs-keyword">new</span> WitDriver(options);
 luis.query(<span class="hljs-string">'Hi'</span>)
     .then(result =&gt; {
         <span class="hljs-keyword">const</span> {
-            intent,
-            score
-        } = result.topScoringIntent;
-        <span class="hljs-built_in">console</span>.log(result.query); <span class="hljs-comment">// 'Hi'</span>
-        <span class="hljs-built_in">console</span>.log(intent); <span class="hljs-comment">// 'None'</span>
-        <span class="hljs-built_in">console</span>.log(score); <span class="hljs-comment">// 0.9042053</span>
+            _text,
+            outcomes
+        } = result;
+        <span class="hljs-built_in">console</span>.log(_text); <span class="hljs-comment">// 'Hi'</span>
+        <span class="hljs-built_in">console</span>.log(outcomes.length); <span class="hljs-comment">// 1</span>
     });
 </code></pre>
-<p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/luis.js">test/luis.js</a> for more examples.</p>
+<p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/wit.js">test/wit.js</a> for more examples.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">export</span> { previewBaseURL, previewApiPath, LuisDriver };</pre></div>
+          <div class='highlight'><pre><span class="hljs-keyword">export</span> { WitDriver };</pre></div>
         
       
       <div class="fleur">h</div>
