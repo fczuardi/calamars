@@ -11,6 +11,8 @@
 //   - a helper function to create input → output mappings
 // - [luis.js](./luis.html)
 //   - a driver for the LUIS webservice
+// - [wit.js](./wit.html)
+//   - a driver for the wit.ai webservice
 //
 // ---
 //
