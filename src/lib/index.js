@@ -5,7 +5,7 @@
 // conversational applications.
 //
 // This library is a collection of different helper functions and classes,
-// currently there are 2 main components:
+// currently there are 3 main components:
 //
 // - [router.js](./router.html)
 //   - a helper function to create input → output mappings
