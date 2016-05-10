@@ -30,3 +30,6 @@ export {
     previewBaseURL,
     previewApiPath
 } from './luis';
+export {
+    WitDriver
+} from './wit';
