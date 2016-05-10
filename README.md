@@ -1,4 +1,4 @@
-# calamars
+# <a href="https://openclipart.org/detail/230920/remix-of-cartoon-red-planet"><img src="https://openclipart.org/download/230920/planet-remix.svg" width="100"/></a> calamars
 
 [![npm version](https://badge.fury.io/js/calamars.svg)](https://badge.fury.io/js/calamars)
 [![Build Status](https://travis-ci.org/fczuardi/calamars.svg?branch=master)](https://travis-ci.org/fczuardi/calamars)
@@ -9,11 +9,17 @@
 An alpha quality, under heavy development, proto-frramework for building
 chat applications.
 
-## Usage
+## Install
 
 ```sh
 npm install --save calamars
 ```
+
+## Documentation
+
+See the [Library Reference][documentation] for full documentation.
+
+## Quickstart
 
 ### string → string
 
@@ -95,12 +101,6 @@ luis.query('Good Bye!')
   - [object → comparisonFunction → callback → string][createPayloadFunctionRouter] - Using createPayloadFunctionRouter
   - [more][testfolder]
 
-
-
-## Documentation
-
-See the [Library Reference][documentation] for full documentation.
-
 ## Patches are welcome
 
 If you want to help us improve this library with a fix, a feature, better
@@ -108,9 +108,9 @@ documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
-[regexString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L19-L30
-[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L73-L87
-[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L89-L116
+[regexString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L37-L48
+[regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L70-L81
+[createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L107-L134
 [testfolder]: https://github.com/fczuardi/calamars/blob/master/test/router.js
 [documentation]: http://fczuardi.github.io/calamars/
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
