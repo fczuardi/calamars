@@ -109,15 +109,16 @@
 <h5 id="parameters">Parameters</h5>
 <ul>
 <li><strong>text</strong> - <em>string</em> - a text query to send to the Wit webservice.</li>
+<li><strong>n</strong> - <em>number</em> - The number of n-best outcomes you want to get back. default is 1</li>
 </ul>
 <h5 id="return">return</h5>
 <p>Returns a Promise that returns the parsed object from the webservice.</p>
 
         
-          <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>) {
-        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>`</span>;
+          <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>, n = <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>&amp;n=<span class="hljs-subst">${n}</span>`</span>;
         <span class="hljs-keyword">return</span> request({
-            url: url,
+            url,
             headers: <span class="hljs-keyword">this</span>.requestHeaders
         }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
     }
