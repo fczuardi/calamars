@@ -7,7 +7,8 @@ import request from 'request-promise';
 
 const baseURL = 'https://api.wit.ai';
 const apiVersion = '20160330';
-const messageEndpoint = '/message';
+const intentEndpoint = '/message';
+const messageEndpoint = '/messages/';
 
 class WitDriver {
     // ## Constructor
@@ -27,7 +28,9 @@ class WitDriver {
             );
         }
 
-        this.brainURL = `${baseURL}${messageEndpoint}?v=${apiVersion}`;
+        this.queryURL = `${baseURL}${intentEndpoint}?v=${apiVersion}`;
+        this.messageInfoURL = messageId =>
+            `${baseURL}${messageEndpoint}${messageId}/?v=${apiVersion}`;
         this.requestHeaders = {
             Authorization: `Bearer ${serverToken}`,
             Accept: `application/vnd.wit.${apiVersion}+json`
@@ -43,8 +46,24 @@ class WitDriver {
     //
     // ##### return
     // Returns a Promise that returns the parsed object from the webservice.
+    // See https://wit.ai/docs/http/20160330#get-intent-via-text-link
     query(text = '', n = 1) {
-        const url = `${this.brainURL}&q=${encodeURIComponent(text)}&n=${n}`;
+        const url = `${this.queryURL}&q=${encodeURIComponent(text)}&n=${n}`;
+        return request({
+            url,
+            headers: this.requestHeaders
+        }).then(body => JSON.parse(body));
+    }
+
+    // #### getMessage
+    // ##### Parameters
+    // - **id** - _string_ - the id of the message you want to inspect on wit
+    //
+    // ##### return
+    // Returns a Promise that returns the parsed object from the webservice.
+    // See: https://wit.ai/docs/http/20160330#get-message-link
+    getMessage(id) {
+        const url = this.messageInfoURL(id);
         return request({
             url,
             headers: this.requestHeaders
