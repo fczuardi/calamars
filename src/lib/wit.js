@@ -39,13 +39,14 @@ class WitDriver {
     // #### query
     // ##### Parameters
     // - **text** - _string_ - a text query to send to the Wit webservice.
+    // - **n** - _number_ - The number of n-best outcomes you want to get back. default is 1
     //
     // ##### return
     // Returns a Promise that returns the parsed object from the webservice.
-    query(text = '') {
-        const url = `${this.brainURL}&q=${encodeURIComponent(text)}`;
+    query(text = '', n = 1) {
+        const url = `${this.brainURL}&q=${encodeURIComponent(text)}&n=${n}`;
         return request({
-            url: url,
+            url,
             headers: this.requestHeaders
         }).then(body => JSON.parse(body));
     }
