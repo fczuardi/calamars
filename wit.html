@@ -66,7 +66,8 @@
 
 <span class="hljs-keyword">const</span> baseURL = <span class="hljs-string">'https://api.wit.ai'</span>;
 <span class="hljs-keyword">const</span> apiVersion = <span class="hljs-string">'20160330'</span>;
-<span class="hljs-keyword">const</span> messageEndpoint = <span class="hljs-string">'/message'</span>;
+<span class="hljs-keyword">const</span> intentEndpoint = <span class="hljs-string">'/message'</span>;
+<span class="hljs-keyword">const</span> messageEndpoint = <span class="hljs-string">'/messages/'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WitDriver</span> </span>{</pre></div>
         
@@ -95,7 +96,9 @@
             );
         }
 
-        <span class="hljs-keyword">this</span>.brainURL = <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
+        <span class="hljs-keyword">this</span>.queryURL = <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${intentEndpoint}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
+        <span class="hljs-keyword">this</span>.messageInfoURL = messageId =&gt;
+            <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span><span class="hljs-subst">${messageId}</span>/?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
         <span class="hljs-keyword">this</span>.requestHeaders = {
             Authorization: <span class="hljs-string">`Bearer <span class="hljs-subst">${serverToken}</span>`</span>,
             Accept: <span class="hljs-string">`application/vnd.wit.<span class="hljs-subst">${apiVersion}</span>+json`</span>
@@ -112,11 +115,32 @@
 <li><strong>n</strong> - <em>number</em> - The number of n-best outcomes you want to get back. default is 1</li>
 </ul>
 <h5 id="return">return</h5>
-<p>Returns a Promise that returns the parsed object from the webservice.</p>
+<p>Returns a Promise that returns the parsed object from the webservice.
+See <a href="https://wit.ai/docs/http/20160330#get-intent-via-text-link">https://wit.ai/docs/http/20160330#get-intent-via-text-link</a></p>
 
         
           <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>, n = <span class="hljs-number">1</span>) {
-        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>&amp;n=<span class="hljs-subst">${n}</span>`</span>;
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.queryURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>&amp;n=<span class="hljs-subst">${n}</span>`</span>;
+        <span class="hljs-keyword">return</span> request({
+            url,
+            headers: <span class="hljs-keyword">this</span>.requestHeaders
+        }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+    }</pre></div>
+        
+      
+        
+        <h4 id="getmessage">getMessage</h4>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><strong>id</strong> - <em>string</em> - the id of the message you want to inspect on wit</li>
+</ul>
+<h5 id="return">return</h5>
+<p>Returns a Promise that returns the parsed object from the webservice.
+See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai/docs/http/20160330#get-message-link</a></p>
+
+        
+          <div class='highlight'><pre>    getMessage(id) {
+        <span class="hljs-keyword">const</span> url = <span class="hljs-keyword">this</span>.messageInfoURL(id);
         <span class="hljs-keyword">return</span> request({
             url,
             headers: <span class="hljs-keyword">this</span>.requestHeaders
