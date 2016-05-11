@@ -39,7 +39,7 @@ class LuisDriver {
     // ##### return
     // Returns a Promise that returns the parsed object from the webservice.
     query(text = '') {
-        const url = `${this.brainURL}&q=${text}`;
+        const url = `${this.brainURL}&q=${encodeURIComponent(text)}`;
         return request(url).then(body => JSON.parse(body));
     }
 }

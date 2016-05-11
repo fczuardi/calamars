@@ -43,7 +43,7 @@ class WitDriver {
     // ##### return
     // Returns a Promise that returns the parsed object from the webservice.
     query(text = '') {
-        const url = `${this.brainURL}&q=${text}`;
+        const url = `${this.brainURL}&q=${encodeURIComponent(text)}`;
         return request({
             url: url,
             headers: this.requestHeaders
