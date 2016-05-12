@@ -13,14 +13,18 @@
 // **routes** - _Array_ - A list of routes. A route is a two-elements array
 // representing a input/output mapping (see below).
 //
-// #### Return
-// Returns a _function_.
-//
 // **route** - _Array_ - A pair of elements that represents a mapping
 // between a compare function (or _string_ or _RegExp_) and an output function
 // (or a value).
 //
 // ```[compare, output]```
+//
+// #### Return
+// Returns a _function_. The returned function expects the first parameter
+// to be the input object or string that is used for routing to the correct
+// callback. All the parameters (the frist one, input, and any others) are
+// forwarded to the callback. This can be useful for passing context to the
+// callbacks or any extra data.
 //
 // ### Examples
 //

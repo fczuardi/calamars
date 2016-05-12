@@ -132,3 +132,31 @@ test(
         }), 'I dont know why you say cha cha cha, I say hello.');
     }
 );
+
+test(
+    'pass extra parameters to the generated router and use them in the callback',
+    t => {
+        const routes = [[
+            payload => payload.intentName === 'yes',
+            (payload, context) => `You ${context.username} say ${payload.query}, I say no.`
+        ], [
+            () => true,
+            (payload, context, foo) =>
+                `I dont know why you, ${context.username}, say ${payload.query}, I say ${foo}.`
+        ]];
+        const router = createRouter(routes);
+        t.is(
+            router({
+                query: 'Yes',
+                intentName: 'yes',
+                score: 0.9629247
+            }, {
+                username: 'George'
+            }),
+            'You George say Yes, I say no.'
+        );
+        t.is(router({ query: 'foobar' }, { username: 'George M.' }, 'hello'),
+            'I dont know why you, George M., say foobar, I say hello.'
+        );
+    }
+);
