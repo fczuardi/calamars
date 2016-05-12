@@ -42,13 +42,15 @@ class WitDriver {
     // #### query
     // ##### Parameters
     // - **text** - _string_ - a text query to send to the Wit webservice.
+    // - **verbose** - _boolean_ - if the response should include extra info,
+    // like start/end of the entities
     // - **n** - _number_ - The number of n-best outcomes you want to get back. default is 1
     //
     // ##### return
     // Returns a Promise that returns the parsed object from the webservice.
     // See https://wit.ai/docs/http/20160330#get-intent-via-text-link
-    query(text = '', n = 1) {
-        const url = `${this.queryURL}&q=${encodeURIComponent(text)}&n=${n}`;
+    query(text = '', verbose = false, n = 1) {
+        const url = `${this.queryURL}&q=${encodeURIComponent(text)}&verbose=${verbose}&n=${n}`;
         return request({
             url,
             headers: this.requestHeaders
