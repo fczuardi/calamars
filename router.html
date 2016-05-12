@@ -69,12 +69,16 @@ to outputs based on a set of routes.</p>
 <h4 id="parameters">Parameters</h4>
 <p><strong>routes</strong> - <em>Array</em> - A list of routes. A route is a two-elements array
 representing a input/output mapping (see below).</p>
-<h4 id="return">Return</h4>
-<p>Returns a <em>function</em>.</p>
 <p><strong>route</strong> - <em>Array</em> - A pair of elements that represents a mapping
 between a compare function (or <em>string</em> or <em>RegExp</em>) and an output function
 (or a value).</p>
 <p><code>[compare, output]</code></p>
+<h4 id="return">Return</h4>
+<p>Returns a <em>function</em>. The returned function expects the first parameter
+to be the input object or string that is used for routing to the correct
+callback. All the parameters (the frist one, input, and any others) are
+forwarded to the callback. This can be useful for passing context to the
+callbacks or any extra data.</p>
 <h3 id="examples">Examples</h3>
 <h4 id="-string-value-routes">[string, value] routes</h4>
 <pre><code class="lang-javascript"><span class="hljs-keyword">const</span> routes = [
