@@ -108,7 +108,7 @@
 // ---
 //
 // ### Source
-const createRouter = routes => input => {
+const createRouter = (routes, ...other) => input => {
     if (!routes) { return null; }
 
     // The ```compare``` side of a ```[compare(), callback()]``` route
@@ -143,14 +143,14 @@ const createRouter = routes => input => {
     // When the callback is a function, return the call
     // to the callback passing the input as argument
     if (typeof callback === 'function' && !(compare instanceof RegExp)) {
-        return callback(input);
+        return callback(input, ...other);
     }
 
     // Alternative usage. When the ```compare``` part of a route is a regular
     // expression, returns the call to the callback passing the matches as argument.
     if (compare instanceof RegExp && typeof callback === 'function') {
         const matches = compare.exec(input);
-        return callback(matches);
+        return callback(matches, ...other);
     }
 
     // Alternative usage. When the ```callback``` part of a
