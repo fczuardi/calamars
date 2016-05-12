@@ -152,12 +152,25 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
         
       
         
-        <h2 id="static-methods">Static Methods</h2>
-
-        
-      
-        
-        <h4 id="getentity">getEntity</h4>
+        <h2 id="examples">Examples</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> options = {
+    id: <span class="hljs-string">'YOUR_WIT_ID'</span>,
+    serverToken: <span class="hljs-string">'YOUR_WIT_TOKEN'</span>
+};
+<span class="hljs-keyword">const</span> wit = <span class="hljs-keyword">new</span> WitDriver(options);
+luis.query(<span class="hljs-string">'Hi'</span>)
+    .then(result =&gt; {
+        <span class="hljs-keyword">const</span> {
+            _text,
+            outcomes
+        } = result;
+        <span class="hljs-built_in">console</span>.log(_text); <span class="hljs-comment">// 'Hi'</span>
+        <span class="hljs-built_in">console</span>.log(outcomes.length); <span class="hljs-comment">// 1</span>
+    });
+</code></pre>
+<p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/wit.js">test/wit.js</a> for more examples.</p>
+<h2 id="static-methods">Static Methods</h2>
+<h4 id="getentity">getEntity</h4>
 <h5 id="parameters">Parameters</h5>
 <ul>
 <li><strong>outcomes</strong> - <em>object</em> - an outcomes object returned by wit.ai API call</li>
@@ -167,13 +180,15 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
 <p>Returns an entity object or null</p>
 
         
-          <div class='highlight'><pre>WitDriver.getEntity = (outcomes, entityName) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntity = (outcomes, entityName) =&gt; {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> outcomes.entities[entityName][<span class="hljs-number">0</span>];
     } <span class="hljs-keyword">catch</span> (e) {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
-};</pre></div>
+};
+
+WitDriver.getEntity = getEntity;</pre></div>
         
       
         
@@ -189,7 +204,7 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
         
           <div class='highlight'><pre>WitDriver.getEntityValue = (outcomes, entityName) =&gt; {
     <span class="hljs-keyword">try</span> {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getEntity(outcomes, entityName).value;
+        <span class="hljs-keyword">return</span> getEntity(outcomes, entityName).value;
     } <span class="hljs-keyword">catch</span> (e) {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
@@ -212,30 +227,8 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
     } <span class="hljs-keyword">catch</span> (e) {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
-};</pre></div>
-        
-      
-        
-        <h2 id="examples">Examples</h2>
-<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> options = {
-    id: <span class="hljs-string">'YOUR_WIT_ID'</span>,
-    serverToken: <span class="hljs-string">'YOUR_WIT_TOKEN'</span>
 };
-<span class="hljs-keyword">const</span> wit = <span class="hljs-keyword">new</span> WitDriver(options);
-luis.query(<span class="hljs-string">'Hi'</span>)
-    .then(result =&gt; {
-        <span class="hljs-keyword">const</span> {
-            _text,
-            outcomes
-        } = result;
-        <span class="hljs-built_in">console</span>.log(_text); <span class="hljs-comment">// 'Hi'</span>
-        <span class="hljs-built_in">console</span>.log(outcomes.length); <span class="hljs-comment">// 1</span>
-    });
-</code></pre>
-<p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/wit.js">test/wit.js</a> for more examples.</p>
-
-        
-          <div class='highlight'><pre><span class="hljs-keyword">export</span> { WitDriver };</pre></div>
+<span class="hljs-keyword">export</span> { WitDriver };</pre></div>
         
       
       <div class="fleur">h</div>
