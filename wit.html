@@ -147,7 +147,13 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
             url,
             headers: <span class="hljs-keyword">this</span>.requestHeaders
         }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
-    }</pre></div>
+    }
+}</pre></div>
+        
+      
+        
+        <h2 id="static-methods">Static Methods</h2>
+
         
       
         
@@ -161,13 +167,13 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
 <p>Returns an entity object or null</p>
 
         
-          <div class='highlight'><pre>    getEntity(outcomes, entityName) {
-        <span class="hljs-keyword">try</span> {
-            <span class="hljs-keyword">return</span> outcomes.entities[entityName][<span class="hljs-number">0</span>];
-        } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-        }
-    }</pre></div>
+          <div class='highlight'><pre>WitDriver.getEntity = (outcomes, entityName) =&gt; {
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> outcomes.entities[entityName][<span class="hljs-number">0</span>];
+    } <span class="hljs-keyword">catch</span> (e) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    }
+};</pre></div>
         
       
         
@@ -181,13 +187,13 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
 <p>Returns the value of the entity you look for or null</p>
 
         
-          <div class='highlight'><pre>    getEntityValue(outcomes, entityName) {
-        <span class="hljs-keyword">try</span> {
-            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getEntity(outcomes, entityName).value;
-        } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-        }
-    }</pre></div>
+          <div class='highlight'><pre>WitDriver.getEntityValue = (outcomes, entityName) =&gt; {
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getEntity(outcomes, entityName).value;
+    } <span class="hljs-keyword">catch</span> (e) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    }
+};</pre></div>
         
       
         
@@ -200,14 +206,13 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
 <p>Returns the metadata of the entity you look for or null</p>
 
         
-          <div class='highlight'><pre>    getEntityMeta(entity) {
-        <span class="hljs-keyword">try</span> {
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(entity.metadata);
-        } <span class="hljs-keyword">catch</span> (e) {
-            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-        }
+          <div class='highlight'><pre>WitDriver.getEntityMeta = (entity) =&gt; {
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(entity.metadata);
+    } <span class="hljs-keyword">catch</span> (e) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
-}</pre></div>
+};</pre></div>
         
       
         
