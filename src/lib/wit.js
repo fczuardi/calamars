@@ -30,7 +30,7 @@ class WitDriver {
 
         this.queryURL = `${baseURL}${intentEndpoint}?v=${apiVersion}`;
         this.messageInfoURL = messageId =>
-            `${baseURL}${messageEndpoint}${messageId}/?v=${apiVersion}`;
+            `${baseURL}${messageEndpoint}${messageId}?v=${apiVersion}`;
         this.requestHeaders = {
             Authorization: `Bearer ${serverToken}`,
             Accept: `application/vnd.wit.${apiVersion}+json`
