@@ -73,8 +73,27 @@ class WitDriver {
     }
 }
 
+// ## Examples
+// ```javascript
+// const options = {
+//     id: 'YOUR_WIT_ID',
+//     serverToken: 'YOUR_WIT_TOKEN'
+// };
+// const wit = new WitDriver(options);
+// luis.query('Hi')
+//     .then(result => {
+//         const {
+//             _text,
+//             outcomes
+//         } = result;
+//         console.log(_text); // 'Hi'
+//         console.log(outcomes.length); // 1
+//     });
+// ```
+// See [test/wit.js](https://github.com/fczuardi/calamars/blob/master/test/wit.js) for more examples.
+//
 // ## Static Methods
-
+//
 // #### getEntity
 // ##### Parameters
 // - **outcomes** - _object_ - an outcomes object returned by wit.ai API call
@@ -118,23 +137,4 @@ WitDriver.getEntityMeta = (entity) => {
         return null;
     }
 };
-
-// ## Examples
-// ```javascript
-// const options = {
-//     id: 'YOUR_WIT_ID',
-//     serverToken: 'YOUR_WIT_TOKEN'
-// };
-// const wit = new WitDriver(options);
-// luis.query('Hi')
-//     .then(result => {
-//         const {
-//             _text,
-//             outcomes
-//         } = result;
-//         console.log(_text); // 'Hi'
-//         console.log(outcomes.length); // 1
-//     });
-// ```
-// See [test/wit.js](https://github.com/fczuardi/calamars/blob/master/test/wit.js) for more examples.
 export { WitDriver };
