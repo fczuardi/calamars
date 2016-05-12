@@ -98,7 +98,7 @@
 
         <span class="hljs-keyword">this</span>.queryURL = <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${intentEndpoint}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
         <span class="hljs-keyword">this</span>.messageInfoURL = messageId =&gt;
-            <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span><span class="hljs-subst">${messageId}</span>/?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
+            <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span><span class="hljs-subst">${messageId}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
         <span class="hljs-keyword">this</span>.requestHeaders = {
             Authorization: <span class="hljs-string">`Bearer <span class="hljs-subst">${serverToken}</span>`</span>,
             Accept: <span class="hljs-string">`application/vnd.wit.<span class="hljs-subst">${apiVersion}</span>+json`</span>
