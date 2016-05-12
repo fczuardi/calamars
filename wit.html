@@ -147,6 +147,65 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
             url,
             headers: <span class="hljs-keyword">this</span>.requestHeaders
         }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+    }</pre></div>
+        
+      
+        
+        <h4 id="getentity">getEntity</h4>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><strong>outcomes</strong> - <em>object</em> - an outcomes object returned by wit.ai API call</li>
+<li><strong>entityName</strong> - <em>string</em> - the name of the entity you look for</li>
+</ul>
+<h5 id="return">return</h5>
+<p>Returns an entity object or null</p>
+
+        
+          <div class='highlight'><pre>    getEntity(outcomes, entityName) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">return</span> outcomes.entities[entityName][<span class="hljs-number">0</span>];
+        } <span class="hljs-keyword">catch</span> (e) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        }
+    }</pre></div>
+        
+      
+        
+        <h4 id="getentityvalue">getEntityValue</h4>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><strong>outcomes</strong> - <em>object</em> - an outcomes object returned by wit.ai API call</li>
+<li><strong>entityName</strong> - <em>string</em> - the name of the entity you look for</li>
+</ul>
+<h5 id="return">return</h5>
+<p>Returns the value of the entity you look for or null</p>
+
+        
+          <div class='highlight'><pre>    getEntityValue(outcomes, entityName) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getEntity(outcomes, entityName).value;
+        } <span class="hljs-keyword">catch</span> (e) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        }
+    }</pre></div>
+        
+      
+        
+        <h4 id="getentitymeta">getEntityMeta</h4>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><strong>entity</strong> - <em>object</em> - an entity object</li>
+</ul>
+<h5 id="return">return</h5>
+<p>Returns the metadata of the entity you look for or null</p>
+
+        
+          <div class='highlight'><pre>    getEntityMeta(entity) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(entity.metadata);
+        } <span class="hljs-keyword">catch</span> (e) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+        }
     }
 }</pre></div>
         
