@@ -156,7 +156,7 @@ between a compare function (or <em>string</em> or <em>RegExp</em>) and an output
         <h3 id="source">Source</h3>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = (routes, ...other) =&gt; input =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = routes =&gt; (input, ...other) =&gt; {
     <span class="hljs-keyword">if</span> (!routes) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }</pre></div>
         
       
