@@ -156,7 +156,7 @@ between a compare function (or <em>string</em> or <em>RegExp</em>) and an output
         <h3 id="source">Source</h3>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = routes =&gt; input =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = (routes, ...other) =&gt; input =&gt; {
     <span class="hljs-keyword">if</span> (!routes) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }</pre></div>
         
       
@@ -211,7 +211,7 @@ to the callback passing the input as argument</p>
 
         
           <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span> &amp;&amp; !(compare <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span>)) {
-        <span class="hljs-keyword">return</span> callback(input);
+        <span class="hljs-keyword">return</span> callback(input, ...other);
     }</pre></div>
         
       
@@ -222,7 +222,7 @@ expression, returns the call to the callback passing the matches as argument.</p
         
           <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (compare <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span> &amp;&amp; <span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
         <span class="hljs-keyword">const</span> matches = compare.exec(input);
-        <span class="hljs-keyword">return</span> callback(matches);
+        <span class="hljs-keyword">return</span> callback(matches, ...other);
     }</pre></div>
         
       
