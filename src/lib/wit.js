@@ -71,6 +71,50 @@ class WitDriver {
             headers: this.requestHeaders
         }).then(body => JSON.parse(body));
     }
+
+    // #### getEntity
+    // ##### Parameters
+    // - **outcomes** - _object_ - an outcomes object returned by wit.ai API call
+    // - **entityName** - _string_ - the name of the entity you look for
+    //
+    // ##### return
+    // Returns an entity object or null
+    getEntity(outcomes, entityName) {
+        try {
+            return outcomes.entities[entityName][0];
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // #### getEntityValue
+    // ##### Parameters
+    // - **outcomes** - _object_ - an outcomes object returned by wit.ai API call
+    // - **entityName** - _string_ - the name of the entity you look for
+    //
+    // ##### return
+    // Returns the value of the entity you look for or null
+    getEntityValue(outcomes, entityName) {
+        try {
+            return this.getEntity(outcomes, entityName).value;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // #### getEntityMeta
+    // ##### Parameters
+    // - **entity** - _object_ - an entity object
+    //
+    // ##### return
+    // Returns the metadata of the entity you look for or null
+    getEntityMeta(entity) {
+        try {
+            return JSON.parse(entity.metadata);
+        } catch (e) {
+            return null;
+        }
+    }
 }
 
 // ## Examples
