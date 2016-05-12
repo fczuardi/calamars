@@ -108,7 +108,7 @@
 // ---
 //
 // ### Source
-const createRouter = (routes, ...other) => input => {
+const createRouter = routes => (input, ...other) => {
     if (!routes) { return null; }
 
     // The ```compare``` side of a ```[compare(), callback()]``` route
