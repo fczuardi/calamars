@@ -101,13 +101,15 @@ class WitDriver {
 //
 // ##### return
 // Returns an entity object or null
-WitDriver.getEntity = (outcomes, entityName) => {
+const getEntity = (outcomes, entityName) => {
     try {
         return outcomes.entities[entityName][0];
     } catch (e) {
         return null;
     }
 };
+
+WitDriver.getEntity = getEntity;
 
 // #### getEntityValue
 // ##### Parameters
@@ -118,7 +120,7 @@ WitDriver.getEntity = (outcomes, entityName) => {
 // Returns the value of the entity you look for or null
 WitDriver.getEntityValue = (outcomes, entityName) => {
     try {
-        return this.getEntity(outcomes, entityName).value;
+        return getEntity(outcomes, entityName).value;
     } catch (e) {
         return null;
     }
