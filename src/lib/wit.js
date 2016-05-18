@@ -95,6 +95,8 @@ class WitDriver {
 // ## Static Methods
 //
 // #### getEntity
+// Gets the first entityName found.
+//
 // ##### Parameters
 // - **outcomes** - _object_ - an outcomes object returned by wit.ai API call
 // - **entityName** - _string_ - the name of the entity you look for
@@ -109,7 +111,24 @@ const getEntity = (outcomes, entityName) => {
     }
 };
 
-WitDriver.getEntity = getEntity;
+// #### getEntities
+// Gets all entities of name entityName.
+//
+// ##### Parameters
+// - **outcomes** - _object_ - an outcomes object returned by wit.ai API call
+// - **entityName** - _string_ - the name of the entity you look for
+//
+// ##### return
+// Returns an array of entities or null
+const getEntities = (outcomes, entityName) => {
+    try {
+        return outcomes.entities[entityName];
+    } catch (e) {
+        return null;
+    }
+};
+
+WitDriver.getEntity = getEntities;
 
 // #### getEntityValue
 // ##### Parameters
