@@ -171,6 +171,7 @@ luis.query(<span class="hljs-string">'Hi'</span>)
 <p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/wit.js">test/wit.js</a> for more examples.</p>
 <h2 id="static-methods">Static Methods</h2>
 <h4 id="getentity">getEntity</h4>
+<p>Gets the first entityName found.</p>
 <h5 id="parameters">Parameters</h5>
 <ul>
 <li><strong>outcomes</strong> - <em>object</em> - an outcomes object returned by wit.ai API call</li>
@@ -186,9 +187,30 @@ luis.query(<span class="hljs-string">'Hi'</span>)
     } <span class="hljs-keyword">catch</span> (e) {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
+};</pre></div>
+        
+      
+        
+        <h4 id="getentities">getEntities</h4>
+<p>Gets all entities of name entityName.</p>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><strong>outcomes</strong> - <em>object</em> - an outcomes object returned by wit.ai API call</li>
+<li><strong>entityName</strong> - <em>string</em> - the name of the entity you look for</li>
+</ul>
+<h5 id="return">return</h5>
+<p>Returns an array of entities or null</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntities = (outcomes, entityName) =&gt; {
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> outcomes.entities[entityName];
+    } <span class="hljs-keyword">catch</span> (e) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    }
 };
 
-WitDriver.getEntity = getEntity;</pre></div>
+WitDriver.getEntity = getEntities;</pre></div>
         
       
         
