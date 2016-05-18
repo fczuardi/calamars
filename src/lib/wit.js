@@ -111,6 +111,8 @@ const getEntity = (outcomes, entityName) => {
     }
 };
 
+WitDriver.getEntity = getEntity;
+
 // #### getEntities
 // Gets all entities of name entityName.
 //
