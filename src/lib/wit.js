@@ -128,7 +128,7 @@ const getEntities = (outcomes, entityName) => {
     }
 };
 
-WitDriver.getEntity = getEntities;
+WitDriver.getEntities = getEntities;
 
 // #### getEntityValue
 // ##### Parameters
