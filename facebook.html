@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Facebook Messenger Bot</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          
+          <h1 id="facebook-messenger-bot">Facebook Messenger Bot</h1>
+
+          
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="facebook.html">
+                    facebook.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="wit.html">
+                    wit.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>A simple server that listen to facebook messenger webhook calls and is able
+to return authentication challenges.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
+
+<span class="hljs-keyword">const</span> PORT = process.env.PORT || <span class="hljs-number">8082</span>;
+<span class="hljs-keyword">const</span> FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
+<span class="hljs-keyword">const</span> FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;</pre></div>
+        
+      
+        
+        <p>Function that creates an expressjs app with the proper get routes
+for Facebook Messenger authentication in place</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> fbServer = ({ callbackPath, verifyToken }) =&gt; {
+    <span class="hljs-keyword">const</span> app = express();
+    app.get(callbackPath, (req, res) =&gt; {
+        <span class="hljs-keyword">if</span> (req.query[<span class="hljs-string">'hub.verify_token'</span>] === verifyToken) {
+            res.send(req.query[<span class="hljs-string">'hub.challenge'</span>]);
+        } <span class="hljs-keyword">else</span> {
+            res.send(<span class="hljs-string">'Error, wrong validation token'</span>);
+        }
+    });
+    <span class="hljs-keyword">return</span> app;
+};</pre></div>
+        
+      
+        
+        <p>The main class, this represents a facebook messenger chat bot</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bot</span> </span>{
+    <span class="hljs-keyword">constructor</span>() {
+        <span class="hljs-keyword">this</span>.app = fbServer({
+            callbackPath: FB_CALLBACK_PATH,
+            verifyToken: FB_VERIFY_TOKEN
+        });
+    }
+    start() {
+        <span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
+            <span class="hljs-keyword">this</span>.app.listen(PORT, () =&gt; {
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example app listening on port <span class="hljs-subst">${PORT}</span>!`</span>);
+                resolve(<span class="hljs-literal">true</span>);
+            });
+        });
+        <span class="hljs-keyword">return</span> p;
+    }
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Bot;</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
