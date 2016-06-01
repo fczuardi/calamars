@@ -33,3 +33,6 @@ export {
 export {
     WitDriver
 } from './wit';
+export {
+    FacebookMessengerBot
+} from './facebook';
