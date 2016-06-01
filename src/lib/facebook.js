@@ -25,7 +25,7 @@ const fbServer = ({ callbackPath, verifyToken }) => {
 };
 
 // The main class, this represents a facebook messenger chat bot
-class Bot {
+class FacebookMessengerBot {
     constructor() {
         this.app = fbServer({
             callbackPath: FB_CALLBACK_PATH,
@@ -43,4 +43,4 @@ class Bot {
     }
 }
 
-export default Bot;
+export { FacebookMessengerBot };

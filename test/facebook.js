@@ -1,6 +1,6 @@
 import test from 'ava';
 import request from 'request-promise';
-import FBBot from '../src/lib/facebook';
+import { FacebookMessengerBot } from '../src/lib/facebook';
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
@@ -9,14 +9,14 @@ test('Evironment var for the Facebook app is set', t => {
 });
 
 test('Facebook Bot Class empty instantiation', t => {
-    const bot = new FBBot();
+    const bot = new FacebookMessengerBot();
     t.is(typeof bot.app, 'function');
     t.is(typeof bot.app.listen, 'function');
     t.is(typeof bot.start, 'function');
 });
 
 test.only('Facebook Bot Webserver launches and returns expected challenge', async t => {
-    const bot = new FBBot();
+    const bot = new FacebookMessengerBot();
     const serverStarted = await bot.start();
     t.true(serverStarted);
     const challenge = 'Foobar';

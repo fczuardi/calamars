@@ -14,3 +14,7 @@ test('Have LUIS lib functions', t => {
 test('Have router lib functions', t => {
     t.truthy(lib.createRouter);
 });
+
+test('Have FacebookMessenger class', t => {
+    t.truthy(lib.FacebookMessengerBot);
+});
