@@ -18,7 +18,8 @@
     "babel/arrow-parens": [
       2,
       "as-needed"
-    ]
+    ],
+    "import/no-unresolved": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
