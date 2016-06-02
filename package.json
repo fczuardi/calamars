@@ -20,7 +20,7 @@
   "scripts": {
     "info": "npm-scripts-info",
     "test:watch": "npm run test:dev -- --watch",
-    "lint": "eslint src tasks test || true",
+    "lint": "eslint -c .eslintrc-ci src tasks test || true",
     "coverage": "nyc report",
     "coverage:html": "open coverage/lcov-report/index.html",
     "pretest": "npm-run-all --parallel build:eslintrc build:npm build:fixtures",
@@ -30,7 +30,7 @@
     "test:dev": "NODE_PATH=./src:./test ava -v --require babel-register",
     "pretest:windows": "npm run pretest && cp -R dist/npm/src/lib node_modules/lib && cp -R dist/npm/src/fixtures node_modules/fixtures",
     "test:windows": "ava",
-    "build:eslintrc": "node tasks/print-eslintrc.js > .eslintrc",
+    "build:eslintrc": "node tasks/print-eslintrc.js > .eslintrc-ci",
     "clean:npm": "rm -rf dist/npm",
     "clean:doc": "rm -rf dist/docs",
     "build:npm": "babel -d dist/npm/src -D src",
