@@ -1,30 +1,34 @@
 import test from 'ava';
 import request from 'request-promise';
-import { FacebookMessengerBot } from '../src/lib/facebook';
+import { FacebookMessengerBot } from 'lib/facebook';
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
     t.truthy(process.env.FB_PAGE_ACCESS_TOKEN);
+    t.truthy(process.env.PORT);
 });
 
-test('Facebook Bot Class empty instantiation', t => {
+test('Bot Class empty instantiation', t => {
     const bot = new FacebookMessengerBot();
-    t.is(typeof bot.app, 'function');
-    t.is(typeof bot.app.listen, 'function');
-    t.is(typeof bot.start, 'function');
+    t.is(typeof bot.then, 'function');
 });
 
-test.only('Facebook Bot Webserver launches and returns expected challenge', async t => {
-    const bot = new FacebookMessengerBot();
-    const serverStarted = await bot.start();
+let port = parseInt(process.env.PORT, 10);
+const FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
+const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
+
+test('Bot Webserver launches and returns expected challenge', async t => {
+    port += 1;
+    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+    const botConfig = {
+        port
+    };
+    const bot = new FacebookMessengerBot(botConfig);
+    const serverStarted = await bot;
     t.true(serverStarted);
     const challenge = 'Foobar';
     const validationErrorString = 'Error, wrong validation token';
-    const PORT = process.env.PORT || 8082;
-    const FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
-    const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
-    const uri = `http://localhost:${PORT}${FB_CALLBACK_PATH}`;
     const requestOptions = {
         uri,
         qs: {
@@ -32,8 +36,36 @@ test.only('Facebook Bot Webserver launches and returns expected challenge', asyn
             'hub.challenge': challenge
         }
     };
-    const returnedBody = await request.get(requestOptions);
+    const returnedBody = await request(requestOptions);
     t.is(returnedBody, challenge);
     const returnedBody2 = await request.get(uri);
     t.is(returnedBody2, validationErrorString);
 });
+
+test(
+    'Bot instantiated with a message handler calls it when a message POST is received',
+    async t => {
+        port += 1;
+        const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+        const msg = 'Foobar';
+        const messageHandler = ({ text }) => {
+            t.is(text, msg);
+        };
+        const bot = new FacebookMessengerBot({ port, messageHandler });
+        const serverStarted = await bot;
+        t.true(serverStarted);
+        const requestOptions = {
+            uri,
+            method: 'POST',
+            body: { entry: [{ messaging: [{ text: msg }] }] },
+            json: true
+        };
+        const returnedBody = await request(requestOptions);
+        t.true(returnedBody);
+        const returnedBody2 = await request({
+            ...requestOptions,
+            body: {}
+        });
+        t.false(returnedBody2);
+    }
+);

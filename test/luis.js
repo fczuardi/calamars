@@ -67,12 +67,12 @@ test('string → LUIS → intentName → callback → string', t => {
 
 test('string → LUIS → luisPayload → comparisonFunction → callback → string: Simple echo', t => {
     const routes = [
-        [() => true, (payload) => payload.query]
+        [() => true, payload => payload.query]
     ];
     const router = createRouter(routes);
     const luis = new LuisDriver(options);
     return luis.query('Good Bye!')
-        .then((result) => {
+        .then(result => {
             t.is(router(result), 'Good Bye!');
         });
 });
@@ -86,7 +86,7 @@ test('str → LUIS → obj → comparison → callback → str: Callback and com
             },
             obj => `You say ${obj.query}, I say hello.`
         ],
-        [() => true, (obj) => `I dont know why you say ${obj.query}, I say hello.`]
+        [() => true, obj => `I dont know why you say ${obj.query}, I say hello.`]
     ];
     const router = createRouter(routes);
     const luis = new LuisDriver(options);
