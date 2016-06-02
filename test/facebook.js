@@ -62,5 +62,10 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
+        const returnedBody2 = await request({
+            ...requestOptions,
+            body: {}
+        });
+        t.false(returnedBody2);
     }
 );
