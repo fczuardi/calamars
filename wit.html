@@ -252,7 +252,7 @@ WitDriver.getEntities = getEntities;</pre></div>
 <p>Returns the metadata of the entity you look for or null</p>
 
         
-          <div class='highlight'><pre>WitDriver.getEntityMeta = (entity) =&gt; {
+          <div class='highlight'><pre>WitDriver.getEntityMeta = entity =&gt; {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(entity.metadata);
     } <span class="hljs-keyword">catch</span> (e) {

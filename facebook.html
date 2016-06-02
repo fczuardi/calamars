@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Facebook Messenger Bot</title>
+  <title>FacebookMessengerBot</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -14,7 +14,7 @@
       <div class="header">
         
           
-          <h1 id="facebook-messenger-bot">Facebook Messenger Bot</h1>
+          <h1 id="facebookmessengerbot">FacebookMessengerBot</h1>
 
           
         
@@ -66,50 +66,74 @@
 
       
         
-        <p>A simple server that listen to facebook messenger webhook calls and is able
-to return authentication challenges.</p>
+        <p>A class for setting-up and launch a webserver to comunicate with
+Facebook Messenger apps.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
+          <div class='highlight'><pre>
+<span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
+<span class="hljs-keyword">import</span> bodyParser <span class="hljs-keyword">from</span> <span class="hljs-string">'body-parser'</span>;</pre></div>
+        
+      
+        
+        <p>default values can be setup using environment vars</p>
 
-<span class="hljs-keyword">const</span> PORT = process.env.PORT || <span class="hljs-number">8082</span>;
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> PORT = process.env.PORT || <span class="hljs-number">8082</span>;
 <span class="hljs-keyword">const</span> FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
 <span class="hljs-keyword">const</span> FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;</pre></div>
         
       
         
-        <p>Function that creates an expressjs app with the proper get routes
-for Facebook Messenger authentication in place</p>
+        <p>The main class, this represents a facebook messenger chat bot/server</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> fbServer = ({ callbackPath, verifyToken }) =&gt; {
-    <span class="hljs-keyword">const</span> app = express();
-    app.get(callbackPath, (req, res) =&gt; {
-        <span class="hljs-keyword">if</span> (req.query[<span class="hljs-string">'hub.verify_token'</span>] === verifyToken) {
-            res.send(req.query[<span class="hljs-string">'hub.challenge'</span>]);
-        } <span class="hljs-keyword">else</span> {
-            res.send(<span class="hljs-string">'Error, wrong validation token'</span>);
-        }
-    });
-    <span class="hljs-keyword">return</span> app;
-};</pre></div>
+          <div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FacebookMessengerBot</span> </span>{</pre></div>
         
       
         
-        <p>The main class, this represents a facebook messenger chat bot</p>
+        <h2 id="constructor">Constructor</h2>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><strong>options</strong> - <em>Object</em> - Configuration object.<ul>
+<li><strong>port</strong> - <em>number</em> - The port that the server will listen to.</li>
+<li><strong>callbackPath</strong> - <em>string</em> - The endpoint path of the setup <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Callback URL</a></li>
+<li><strong>verifyToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Verify Token</a></li>
+<li><strong>messageHandler</strong> - <em>function</em> - A callback function that will be called
+for each <a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">“messaging”</a> object present in POST requests
+that your bot server receives.</li>
+</ul>
+</li>
+</ul>
 
         
-          <div class='highlight'><pre><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FacebookMessengerBot</span> </span>{
-    <span class="hljs-keyword">constructor</span>() {
-        <span class="hljs-keyword">this</span>.app = fbServer({
-            callbackPath: FB_CALLBACK_PATH,
-            verifyToken: FB_VERIFY_TOKEN
+          <div class='highlight'><pre>    <span class="hljs-keyword">constructor</span>(options = {}) {
+        <span class="hljs-keyword">const</span> { port, callbackPath, verifyToken, messageHandler } = options;
+        <span class="hljs-keyword">const</span> fbWebHook = callbackPath || FB_CALLBACK_PATH;
+        <span class="hljs-keyword">const</span> fbVerifyToken = verifyToken || FB_VERIFY_TOKEN;
+        <span class="hljs-keyword">const</span> fbPort = port || PORT;
+        <span class="hljs-keyword">const</span> app = express();
+        app.use(bodyParser.json());
+        app.get(fbWebHook, (req, res) =&gt; {
+            <span class="hljs-keyword">if</span> (req.query[<span class="hljs-string">'hub.verify_token'</span>] === fbVerifyToken) {
+                res.send(req.query[<span class="hljs-string">'hub.challenge'</span>]);
+            } <span class="hljs-keyword">else</span> {
+                res.send(<span class="hljs-string">'Error, wrong validation token'</span>);
+            }
         });
-    }
-    start() {
+        app.post(fbWebHook, (req, res) =&gt; {
+            <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
+                <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Facebook POST dont have an entry array'</span>, req.body);
+                <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
+            }
+            req.body.entry.forEach(({ messaging }) =&gt; {
+                messaging.forEach(message =&gt; messageHandler(message));
+            });
+            <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">true</span>);
+        });
         <span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
-            <span class="hljs-keyword">this</span>.app.listen(PORT, () =&gt; {
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Example app listening on port <span class="hljs-subst">${PORT}</span>!`</span>);
+            app.listen(fbPort, () =&gt; {
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Facebook Messenger Bot listening on port <span class="hljs-subst">${fbPort}</span>!`</span>);
                 resolve(<span class="hljs-literal">true</span>);
             });
         });
