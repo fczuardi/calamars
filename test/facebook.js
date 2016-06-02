@@ -1,6 +1,6 @@
 import test from 'ava';
 import request from 'request-promise';
-import { FacebookMessengerBot } from '../src/lib/facebook';
+import { FacebookMessengerBot } from 'lib/facebook';
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
