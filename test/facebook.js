@@ -14,12 +14,12 @@ test('Bot Class empty instantiation', t => {
     t.is(typeof bot.then, 'function');
 });
 
-let port = parseInt(process.env.PORT, 10);
+const PORT = parseInt(process.env.PORT, 10);
 const FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 
 test('Bot Webserver launches and returns expected challenge', async t => {
-    port += 1;
+    const port = PORT + 1;
     const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const botConfig = {
         port
@@ -45,7 +45,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
 test(
     'Bot instantiated with a message handler calls it when a message POST is received',
     async t => {
-        port += 1;
+        const port = PORT + 2;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const msg = 'Foobar';
         const messageHandler = ({ text }) => {
