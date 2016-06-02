@@ -153,7 +153,7 @@ WitDriver.getEntityValue = (outcomes, entityName) => {
 //
 // ##### return
 // Returns the metadata of the entity you look for or null
-WitDriver.getEntityMeta = (entity) => {
+WitDriver.getEntityMeta = entity => {
     try {
         return JSON.parse(entity.metadata);
     } catch (e) {

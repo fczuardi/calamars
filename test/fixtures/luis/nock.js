@@ -45,9 +45,9 @@ const fake = [
     }
 ];
 
-const fakeScope = (url) => {
+const fakeScope = url => {
     const scope = nock(url);
-    fake.forEach((endpoint) => {
+    fake.forEach(endpoint => {
         const { path, verb, query, reply } = endpoint;
         scope.intercept(path, verb)
             .times(repeatLimit)
