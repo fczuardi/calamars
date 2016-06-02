@@ -102,6 +102,7 @@
     "nyc": "^6.4.0"
   },
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "request-promise": "^3.0.0"
   }
