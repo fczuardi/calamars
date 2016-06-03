@@ -6,6 +6,8 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/w4ctv2w2fcbgv1fn?svg=true)](https://ci.appveyor.com/project/fczuardi/calamars)
 
+[![CircleCI](https://circleci.com/gh/fczuardi/calamars.svg?style=svg)](https://circleci.com/gh/fczuardi/calamars)
+
 ## npm
 [![npm version](https://badge.fury.io/js/calamars.svg)](https://badge.fury.io/js/calamars)
 
