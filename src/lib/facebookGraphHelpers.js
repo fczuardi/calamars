@@ -9,7 +9,7 @@ const apiURL = 'https://graph.facebook.com/v2.6/';
 // ### Parameters
 // **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
 // [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
-const pageSubscribe = (pageAccessToken) => {
+const pageSubscribe = pageAccessToken => {
     const requestOptions = {
         uri: `${apiURL}me/subscribed_apps`,
         method: 'POST',
