@@ -81,19 +81,18 @@
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> request <span class="hljs-keyword">from</span> <span class="hljs-string">'request-promise'</span>;
 
-<span class="hljs-keyword">const</span> apiURL = <span class="hljs-string">'https://graph.facebook.com/v2.6/'</span>;
-<span class="hljs-keyword">const</span> FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;</pre></div>
+<span class="hljs-keyword">const</span> apiURL = <span class="hljs-string">'https://graph.facebook.com/v2.6/'</span>;</pre></div>
         
       
         
         <h2 id="pagesubscribe-pageaccesstoken-">pageSubscribe(pageAccessToken)</h2>
-<p>Subscribe your facebook app/bot to a facebook page’s webhook updates.
+<p>Subscribe your facebook app/bot to a facebook page&#39;s webhook updates.
 You need to call this for each page you want to receive messages from.</p>
 <h3 id="parameters">Parameters</h3>
 <p><strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token">token</a> for the page</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = (pageAccessToken = FB_PAGE_ACCESS_TOKEN) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = (pageAccessToken) =&gt; {
     <span class="hljs-keyword">const</span> requestOptions = {
         uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/subscribed_apps`</span>,
         method: <span class="hljs-string">'POST'</span>,

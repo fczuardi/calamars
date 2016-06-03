@@ -107,22 +107,79 @@ the requested <code>hub.verify_token</code> parameter value.</p>
         
       
         
-        <h2 id="setuppostwebhook-fbverifytoken-">setupPostWebhook(fbVerifyToken)</h2>
-<p>High order function that given a messageHandler function,
-returns a function that will take POST requests and send received messages
-to the messageHandler or respond false when no entry value is present in the
-body of the POST.</p>
+        <h2 id="setuppostwebhook-options-">setupPostWebhook(options)</h2>
+<p>High order function that given an object with event handlers,
+returns a function that will take POST requests and call the proper handlers
+depending on the contents of the request. Or respond false when no entry
+value is present in the body of the POST.</p>
 <p>The returned function assumes you are using a body parser, such as
 <a href="https://www.npmjs.com/package/body-parser">body-parser</a>, that makes req.body acessible as an object.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><strong>options</strong> - <em>Object</em> - An object with different handler functions for each
+different webhook post format, see <a href="https://developers.facebook.com/docs/messenger-platform/webhook-reference">Webhook reference</a>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onUpdate</td>
+<td>Generic callback, called for every messaging item received.</td>
+</tr>
+<tr>
+<td>onMessage</td>
+<td>Specific callback for messages (text or media)</td>
+</tr>
+<tr>
+<td>onAuthentication</td>
+<td>Specific callback for authentication updates</td>
+</tr>
+<tr>
+<td>onDelivery</td>
+<td>Specific callback for delivery updates</td>
+</tr>
+<tr>
+<td>onPostback</td>
+<td>Specific callback for postback updates</td>
+</tr>
+</tbody>
+</table>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = messageHandler =&gt; (req, res) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = options =&gt; (req, res) =&gt; {
+    <span class="hljs-keyword">const</span> fNull = () =&gt; <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">const</span> {
+        onUpdate = fNull,
+        onMessage = fNull,
+        onAuthentication = fNull,
+        onDelivery = fNull,
+        onPostback = fNull
+    } = options;
     <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
-        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Facebook POST dont have an entry array'</span>, req.body);
         <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
     }
     req.body.entry.forEach(({ messaging }) =&gt; {
-        messaging.forEach(message =&gt; messageHandler(message));
+        messaging.forEach(update =&gt; {
+            <span class="hljs-keyword">const</span> { message, optin, delivery, postback } = update;
+            onUpdate(update);
+            <span class="hljs-keyword">if</span> (message) {
+                onMessage(update);
+            }
+            <span class="hljs-keyword">if</span> (optin) {
+                onAuthentication(update);
+            }
+            <span class="hljs-keyword">if</span> (delivery) {
+                onDelivery(update);
+            }
+            <span class="hljs-keyword">if</span> (postback) {
+                onPostback(update);
+            }
+        });
     });
     <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">true</span>);
 };

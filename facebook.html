@@ -90,7 +90,7 @@ Facebook Messenger apps.</p>
         
       
         
-        <p>Facebook helpers, see <a href="./facebookWebhookSetup.html">facebookWebhookSetup.js</a>
+        <p>Facebook helpers: <a href="./facebookWebhookSetup.html">facebookWebhookSetup.js</a>
 and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 
         
@@ -102,7 +102,7 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
         <p>default values can be setup using environment vars</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> PORT = process.env.PORT || <span class="hljs-number">8082</span>;
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> PORT = process.env.PORT;
 <span class="hljs-keyword">const</span> FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
 <span class="hljs-keyword">const</span> FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 <span class="hljs-keyword">const</span> FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;</pre></div>
@@ -124,9 +124,18 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 <li><strong>callbackPath</strong> - <em>string</em> - The endpoint path of the setup <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Callback URL</a></li>
 <li><strong>verifyToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Verify Token</a></li>
 <li><strong>pageTokens</strong> - <em>Array</em> - A list of page tokens to subscribe to</li>
-<li><strong>messageHandler</strong> - <em>function</em> - A callback function that will be called
-for each <a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">“messaging”</a> object present in POST requests
-that your bot server receives.</li>
+<li><strong>listeners</strong> - <em>Object</em> - An object containing handler functions for
+specific &quot;<a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">messaging</a>&quot; updates or just a generic
+<code>onUpdate</code> handler. (see the
+<a href="./facebookWebhookSetup.html#setuppostwebhook-options-">implementation</a>
+for details):<ul>
+<li>onUpdate</li>
+<li>onMessage</li>
+<li>onAuthentication</li>
+<li>onDelivery</li>
+<li>onPostback</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -134,24 +143,19 @@ that your bot server receives.</li>
         
           <div class='highlight'><pre>    <span class="hljs-keyword">constructor</span>(options = {}) {
         <span class="hljs-keyword">const</span> {
-            port,
-            callbackPath,
-            verifyToken,
-            pageTokens,
-            messageHandler
+            port = PORT,
+            callbackPath = FB_CALLBACK_PATH,
+            verifyToken = FB_VERIFY_TOKEN,
+            pageTokens = [FB_PAGE_ACCESS_TOKEN],
+            listeners = {}
         } = options;
-        <span class="hljs-keyword">const</span> fbWebHook = callbackPath || FB_CALLBACK_PATH;
-        <span class="hljs-keyword">const</span> fbVerifyToken = verifyToken || FB_VERIFY_TOKEN;
-        <span class="hljs-keyword">const</span> fbPageTokens = pageTokens || [FB_PAGE_ACCESS_TOKEN];
-        <span class="hljs-keyword">const</span> fbPort = port || PORT;
         <span class="hljs-keyword">const</span> app = express();
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
             app.use(bodyParser.json());
-            app.get(fbWebHook, setupGetWebhook(fbVerifyToken));
-            app.post(fbWebHook, setupPostWebhook(messageHandler));
-            app.listen(fbPort, () =&gt; {
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Facebook Messenger Bot listening on port <span class="hljs-subst">${fbPort}</span>!`</span>);
-                <span class="hljs-built_in">Promise</span>.all(fbPageTokens.map(token =&gt; pageSubscribe(token)))
+            app.get(callbackPath, setupGetWebhook(verifyToken));
+            app.post(callbackPath, setupPostWebhook(listeners));
+            app.listen(port, () =&gt; {
+                <span class="hljs-built_in">Promise</span>.all(pageTokens.map(token =&gt; pageSubscribe(token)))
                 .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
             });
         });
