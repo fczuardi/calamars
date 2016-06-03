@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>facebookWebhookSetup</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          
+          <h1 id="facebookwebhooksetup">facebookWebhookSetup</h1>
+
+          
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="facebook.html">
+                    facebook.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookGraphHelpers.html">
+                    facebookGraphHelpers.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookWebhookSetup.html">
+                    facebookWebhookSetup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="wit.html">
+                    wit.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>Helpers for generating <a href="http://expressjs.com/">Express</a>-style GET and POST functions to
+be used with Facebook Messenger Webhooks</p>
+<hr>
+
+        
+      
+        
+        
+        
+      
+        
+        <h2 id="setupgetwebhook-fbverifytoken-">setupGetWebhook(fbVerifyToken)</h2>
+<p>High order function that given a verify token returns a function that either
+sends the challenge as response or a validation error message depending on
+the requested <code>hub.verify_token</code> parameter value.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupGetWebhook = fbVerifyToken =&gt; (req, res) =&gt; {
+    <span class="hljs-keyword">if</span> (req.query[<span class="hljs-string">'hub.verify_token'</span>] === fbVerifyToken) {
+        res.send(req.query[<span class="hljs-string">'hub.challenge'</span>]);
+    } <span class="hljs-keyword">else</span> {
+        res.send(<span class="hljs-string">'Error, wrong validation token'</span>);
+    }
+};</pre></div>
+        
+      
+        
+        <h2 id="setuppostwebhook-fbverifytoken-">setupPostWebhook(fbVerifyToken)</h2>
+<p>High order function that given a messageHandler function,
+returns a function that will take POST requests and send received messages
+to the messageHandler or respond false when no entry value is present in the
+body of the POST.</p>
+<p>The returned function assumes you are using a body parser, such as
+<a href="https://www.npmjs.com/package/body-parser">body-parser</a>, that makes req.body acessible as an object.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = messageHandler =&gt; (req, res) =&gt; {
+    <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Facebook POST dont have an entry array'</span>, req.body);
+        <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
+    }
+    req.body.entry.forEach(({ messaging }) =&gt; {
+        messaging.forEach(message =&gt; messageHandler(message));
+    });
+    <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">true</span>);
+};
+
+<span class="hljs-keyword">export</span> { setupGetWebhook, setupPostWebhook };</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Calamars 0.9.5</title>
+  <title>facebookGraphHelpers.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -13,10 +13,7 @@
 
       <div class="header">
         
-          
-          <h1 id="calamars">Calamars 0.9.5</h1>
-
-          
+          <h1>facebookGraphHelpers.js</h1>
         
 
         
@@ -80,58 +77,34 @@
 
       
         
-        <p>An alpha quality, under heavy development, proto-frramework for building
-conversational applications.</p>
-<p>This library is a collection of different helper functions and classes,
-currently there are 4 main components:</p>
-<ul>
-<li><a href="./router.html">router.js</a><ul>
-<li>a helper function to create input → output mappings</li>
-</ul>
-</li>
-<li><a href="./luis.html">luis.js</a><ul>
-<li>a driver for the LUIS webservice</li>
-</ul>
-</li>
-<li><a href="./wit.html">wit.js</a><ul>
-<li>a driver for the wit.ai webservice</li>
-</ul>
-</li>
-<li><a href="./facebook.html">facebook.js</a><ul>
-<li>a webserver/botserver to be used with the Facebook Messenger API</li>
-</ul>
-</li>
-</ul>
-<hr>
+        
+        
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> request <span class="hljs-keyword">from</span> <span class="hljs-string">'request-promise'</span>;
 
+<span class="hljs-keyword">const</span> apiURL = <span class="hljs-string">'https://graph.facebook.com/v2.6/'</span>;
+<span class="hljs-keyword">const</span> FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;</pre></div>
         
       
         
-        <h2 id="source">Source</h2>
+        <h2 id="pagesubscribe-pageaccesstoken-">pageSubscribe(pageAccessToken)</h2>
+<p>Subscribe your facebook app/bot to a facebook page’s webhook updates.
+You need to call this for each page you want to receive messages from.</p>
+<h3 id="parameters">Parameters</h3>
+<p><strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token">token</a> for the page</p>
 
         
-      
-        
-        
-        
-          <div class='highlight'><pre><span class="hljs-keyword">export</span> { version } <span class="hljs-keyword">from</span> <span class="hljs-string">'../../package.json'</span>;
-<span class="hljs-keyword">export</span> {
-    createRouter,
-    createExactMatchRouter,
-    createRegexRouter,
-    createRegexFunctionRouter
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./router'</span>;
-<span class="hljs-keyword">export</span> {
-    LuisDriver,
-    previewBaseURL,
-    previewApiPath
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./luis'</span>;
-<span class="hljs-keyword">export</span> {
-    WitDriver
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./wit'</span>;
-<span class="hljs-keyword">export</span> {
-    FacebookMessengerBot
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebook'</span>;</pre></div>
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = (pageAccessToken = FB_PAGE_ACCESS_TOKEN) =&gt; {
+    <span class="hljs-keyword">const</span> requestOptions = {
+        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/subscribed_apps`</span>,
+        method: <span class="hljs-string">'POST'</span>,
+        qs: {
+            access_token: pageAccessToken
+        }
+    };
+    <span class="hljs-keyword">return</span> request(requestOptions);
+};
+
+<span class="hljs-keyword">export</span> { pageSubscribe };</pre></div>
         
       
       <div class="fleur">h</div>
