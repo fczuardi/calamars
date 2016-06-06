@@ -6,6 +6,8 @@ test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
     t.truthy(process.env.FB_PAGE_ACCESS_TOKEN);
+    t.truthy(process.env.FB_TEST_USER_ID);
+    t.truthy(process.env.FB_TEST_USER_FIRST_NAME);
     t.truthy(process.env.PORT);
 });
 
