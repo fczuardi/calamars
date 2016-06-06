@@ -92,7 +92,7 @@ You need to call this for each page you want to receive messages from.</p>
 <p><strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token">token</a> for the page</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = (pageAccessToken) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = pageAccessToken =&gt; {
     <span class="hljs-keyword">const</span> requestOptions = {
         uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/subscribed_apps`</span>,
         method: <span class="hljs-string">'POST'</span>,
