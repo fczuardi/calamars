@@ -8,5 +8,3 @@ docs
 dist/
 npm-debug.log
 *.swp
-foo.js
-bar.js
