@@ -7,12 +7,14 @@ test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
     t.truthy(process.env.FB_PAGE_ACCESS_TOKEN);
+    t.truthy(process.env.FB_TEST_USER_ID);
+    t.truthy(process.env.FB_TEST_USER_FIRST_NAME);
     t.truthy(process.env.PORT);
 });
 
 test('Bot Class empty instantiation', t => {
     const bot = new FacebookMessengerBot();
-    t.is(typeof bot.then, 'function');
+    t.is(typeof bot.launchPromise.then, 'function');
 });
 
 const PORT = parseInt(process.env.PORT, 10);
@@ -25,7 +27,7 @@ test('Bot with pages to subscribe', t => {
         port: PORT + 1,
         pageTokens: [FB_PAGE_ACCESS_TOKEN]
     });
-    t.is(typeof bot.then, 'function');
+    t.is(typeof bot.launchPromise.then, 'function');
 });
 
 test('Bot Webserver launches and returns expected challenge', async t => {
@@ -35,7 +37,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
         port
     };
     const bot = new FacebookMessengerBot(botConfig);
-    const serverStarted = await bot;
+    const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
     const challenge = 'Foobar';
     const validationErrorString = 'Error, wrong validation token';
@@ -57,8 +59,9 @@ test(
     async t => {
         const port = PORT + 3;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
-        const bot = await new FacebookMessengerBot({ port });
-        t.true(bot);
+        const bot = new FacebookMessengerBot({ port });
+        const serverStarted = await bot.launchPromise;
+        t.true(serverStarted);
         const botResponse = await request({
             uri,
             method: 'POST',
@@ -79,7 +82,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
@@ -104,7 +107,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
@@ -117,10 +120,20 @@ test(
         t.plan(3);
     }
 );
+
+test('Bot get user data', async t => {
+    const port = PORT + 6;
+    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+    const bot = new FacebookMessengerBot({ port });
+    t.is(typeof bot.getUserInfo, 'function');
+    const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
+    t.is(userInfo.first_name, process.env.FB_TEST_USER_FIRST_NAME);
+});
+
 test(
     'Bot with onAuthentication, onDelivery and onPostback listeners',
     async t => {
-        const port = PORT + 6;
+        const port = PORT + 7;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const ref = 'PASS_THROUGH_PARAM';
         const watermark = 1458668856253;
@@ -137,7 +150,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
