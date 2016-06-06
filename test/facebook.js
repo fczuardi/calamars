@@ -117,10 +117,20 @@ test(
         t.plan(3);
     }
 );
+
+test('Bot get user data', async t => {
+    const port = PORT + 6;
+    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+    const bot = new FacebookMessengerBot({ port });
+    t.is(typeof bot.getUserInfo, 'function');
+    const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
+    t.is(userInfo.first_name, process.env.FB_TEST_USER_FIRST_NAME);
+});
+
 test(
     'Bot with onAuthentication, onDelivery and onPostback listeners',
     async t => {
-        const port = PORT + 6;
+        const port = PORT + 7;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const ref = 'PASS_THROUGH_PARAM';
         const watermark = 1458668856253;
