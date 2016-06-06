@@ -13,11 +13,7 @@ test('Evironment var for the Facebook app is set', t => {
 });
 
 test('Bot Class empty instantiation', t => {
-    console.log('Esse erro');
-    const PORT = parseInt(process.env.PORT, 10);
-    const bot = new FacebookMessengerBot({
-        port: PORT
-    });
+    const bot = new FacebookMessengerBot();
     t.is(typeof bot.launchPromise.then, 'function');
 });
 
@@ -127,7 +123,6 @@ test(
 
 test('Bot get user data', async t => {
     const port = PORT + 6;
-    // const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -176,7 +171,7 @@ test(
     }
 );
 
-test.only('Bot sends a text message', t => {
+test('Bot sends a text message', t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 8
     });
@@ -188,7 +183,7 @@ test.only('Bot sends a text message', t => {
     t.plan(1);
     return bot.sendMessage(message, FB_PAGE_ACCESS_TOKEN)
     .then(param => {
-        t.true(param.message_id);
+        t.truthy(param.message_id);
     }).catch(err => {
         t.is(err.error.error.type, 'OAuthException');
     });
