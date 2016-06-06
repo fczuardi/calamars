@@ -21,11 +21,11 @@ const pageSubscribe = pageAccessToken => {
 };
 
 // ## sendTextMessage(message, pageAccessToken)
-// Send a text message with yout Facebook Messenger app/bot.
+// Send a text message with your Facebook Messenger app/bot.
 //
 // ### Parameters
 // - **message** - _Object_ - Message [descrition][textMessage]
-//   - **userId** - _number_ - recipient's messenger ID number
+//   - **userId** - _string_ - recipient's messenger ID
 //   - **text** - _string_ - message's text to be sent.
 // **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
 // [textMessage]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#guidelines
