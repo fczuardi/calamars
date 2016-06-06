@@ -101,9 +101,33 @@ You need to call this for each page you want to receive messages from.</p>
         }
     };
     <span class="hljs-keyword">return</span> request(requestOptions);
-};
+};</pre></div>
+        
+      
+        
+        <h2 id="userinfo-userid-pageaccesstoken-">userInfo(userId, pageAccessToken)</h2>
+<p>Retrieves user information, first name, last name, profile pic, locale,
+time zone and gender, from Facebook&#39;s <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#user_profile_request">User Profile API</a></p>
+<h3 id="parameters">Parameters</h3>
+<p><strong>userId</strong> - <em>string</em> - The user fbid to retriev metadata from
+<strong>pageAccessToken</strong> - <em>string</em> - A page access token that has permissions to
+get information from the userId</p>
 
-<span class="hljs-keyword">export</span> { pageSubscribe };</pre></div>
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> userInfo = (userId, pageAccessToken) =&gt; <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; request({
+    uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${userId}</span>`</span>,
+    qs: {
+        fields: <span class="hljs-string">'first_name,last_name,profile_pic,locale,timezone,gender'</span>,
+        access_token: pageAccessToken
+    }
+}).then(body =&gt;
+    resolve(<span class="hljs-built_in">JSON</span>.parse(body))
+));
+
+<span class="hljs-keyword">export</span> {
+    pageSubscribe,
+    userInfo
+};</pre></div>
         
       
       <div class="fleur">h</div>

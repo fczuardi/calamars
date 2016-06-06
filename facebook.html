@@ -95,7 +95,7 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> { setupGetWebhook, setupPostWebhook } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookWebhookSetup'</span>;
-<span class="hljs-keyword">import</span> { pageSubscribe } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
+<span class="hljs-keyword">import</span> { pageSubscribe, userInfo } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
         
       
         
@@ -149,6 +149,7 @@ for details):<ul>
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             listeners = {}
         } = options;
+        <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
         <span class="hljs-keyword">const</span> app = express();
         <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
             app.use(bodyParser.json());
@@ -159,6 +160,10 @@ for details):<ul>
                 .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
             });
         });
+    }
+
+    getUserInfo(userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> userInfo(userId, pageToken);
     }
 }
 
