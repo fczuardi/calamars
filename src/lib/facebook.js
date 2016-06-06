@@ -50,6 +50,11 @@ class FacebookMessengerBot {
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             listeners = {}
         } = options;
+
+        if (!callbackPath || !verifyToken || !pageTokens[0]) {
+            throw new Error('FacebookMessengerBot could not be created, missing required option');
+        }
+
         this.pageTokens = pageTokens;
         const app = express();
         this.launchPromise = new Promise(resolve => {

@@ -21,16 +21,23 @@ const FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
+test('Bot Class empty instantiation, with default values missing', t => {
+    t.throws(() => new FacebookMessengerBot({
+        port: PORT + 1,
+        callbackPath: null
+    }));
+});
+
 test('Bot with pages to subscribe', t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 1,
+        port: PORT + 2,
         pageTokens: [FB_PAGE_ACCESS_TOKEN]
     });
     t.is(typeof bot.launchPromise.then, 'function');
 });
 
 test('Bot Webserver launches and returns expected challenge', async t => {
-    const port = PORT + 2;
+    const port = PORT + 3;
     const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const botConfig = {
         port
@@ -56,7 +63,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
 test(
     'Bot responds with false when it receives a POST on the webhook with no entry parameter',
     async t => {
-        const port = PORT + 3;
+        const port = PORT + 4;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const bot = new FacebookMessengerBot({ port });
         const serverStarted = await bot.launchPromise;
@@ -73,7 +80,7 @@ test(
 test(
     'Bot with an onUpdate handler calls it when a POST is received',
     async t => {
-        const port = PORT + 4;
+        const port = PORT + 5;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const listeners = {
             onUpdate: update => {
@@ -97,7 +104,7 @@ test(
 test(
     'Bot with an onMessage handler calls it when a message POST is received',
     async t => {
-        const port = PORT + 5;
+        const port = PORT + 6;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const msg = 'Foobar';
         const listeners = {
@@ -121,8 +128,7 @@ test(
 );
 
 test('Bot get user data', async t => {
-    const port = PORT + 6;
-    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+    const port = PORT + 7;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -132,7 +138,7 @@ test('Bot get user data', async t => {
 test(
     'Bot with onAuthentication, onDelivery and onPostback listeners',
     async t => {
-        const port = PORT + 7;
+        const port = PORT + 8;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const ref = 'PASS_THROUGH_PARAM';
         const watermark = 1458668856253;
