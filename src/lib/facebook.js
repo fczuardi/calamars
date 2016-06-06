@@ -64,7 +64,6 @@ class FacebookMessengerBot {
     }
 
     sendMessage(message) {
-        // TODO test if message is atext message or something else
         return sendTextMessage(message, FB_PAGE_ACCESS_TOKEN);
     }
 
