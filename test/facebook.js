@@ -13,7 +13,11 @@ test('Evironment var for the Facebook app is set', t => {
 });
 
 test('Bot Class empty instantiation', t => {
-    const bot = new FacebookMessengerBot();
+    console.log('Esse erro');
+    const PORT = parseInt(process.env.PORT, 10);
+    const bot = new FacebookMessengerBot({
+        port: PORT
+    });
     t.is(typeof bot.launchPromise.then, 'function');
 });
 
@@ -123,7 +127,7 @@ test(
 
 test('Bot get user data', async t => {
     const port = PORT + 6;
-    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+    // const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -172,13 +176,13 @@ test(
     }
 );
 
-test('Bot sends a text message', t => {
+test.only('Bot sends a text message', t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 1
+        port: PORT + 8
     });
-
+    const user = process.env.FB_TEST_USER_ID;
     const message = {
-        userId: '0000000',
+        userId: user,
         text: 'This is a test message!'
     };
     t.plan(1);
