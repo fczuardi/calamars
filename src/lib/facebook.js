@@ -11,7 +11,7 @@ import bodyParser from 'body-parser';
 // Facebook helpers: [facebookWebhookSetup.js](./facebookWebhookSetup.html)
 // and [facebookGraphHelpers.js](./facebookGraphHelpers.html)
 import { setupGetWebhook, setupPostWebhook } from './facebookWebhookSetup';
-import { pageSubscribe } from './facebookGraphHelpers';
+import { pageSubscribe, userInfo } from './facebookGraphHelpers';
 
 // default values can be setup using environment vars
 const PORT = process.env.PORT;
@@ -50,8 +50,9 @@ class FacebookMessengerBot {
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             listeners = {}
         } = options;
+        this.pageTokens = pageTokens;
         const app = express();
-        return new Promise(resolve => {
+        this.launchPromise = new Promise(resolve => {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners));
@@ -60,6 +61,10 @@ class FacebookMessengerBot {
                 .then(() => resolve(true));
             });
         });
+    }
+
+    getUserInfo(userId, pageToken = this.pageTokens[0]) {
+        return userInfo(userId, pageToken);
     }
 }
 
