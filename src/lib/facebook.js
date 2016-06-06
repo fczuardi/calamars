@@ -51,7 +51,7 @@ class FacebookMessengerBot {
             listeners = {}
         } = options;
         const app = express();
-        return new Promise(resolve => {
+        this.launchPromise = new Promise(resolve => {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners));

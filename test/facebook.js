@@ -11,7 +11,7 @@ test('Evironment var for the Facebook app is set', t => {
 
 test('Bot Class empty instantiation', t => {
     const bot = new FacebookMessengerBot();
-    t.is(typeof bot.then, 'function');
+    t.is(typeof bot.launchPromise.then, 'function');
 });
 
 const PORT = parseInt(process.env.PORT, 10);
@@ -24,7 +24,7 @@ test('Bot with pages to subscribe', t => {
         port: PORT + 1,
         pageTokens: [FB_PAGE_ACCESS_TOKEN]
     });
-    t.is(typeof bot.then, 'function');
+    t.is(typeof bot.launchPromise.then, 'function');
 });
 
 test('Bot Webserver launches and returns expected challenge', async t => {
@@ -34,7 +34,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
         port
     };
     const bot = new FacebookMessengerBot(botConfig);
-    const serverStarted = await bot;
+    const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
     const challenge = 'Foobar';
     const validationErrorString = 'Error, wrong validation token';
@@ -56,8 +56,9 @@ test(
     async t => {
         const port = PORT + 3;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
-        const bot = await new FacebookMessengerBot({ port });
-        t.true(bot);
+        const bot = new FacebookMessengerBot({ port });
+        const serverStarted = await bot.launchPromise;
+        t.true(serverStarted);
         const botResponse = await request({
             uri,
             method: 'POST',
@@ -78,7 +79,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
@@ -103,7 +104,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
@@ -136,7 +137,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot;
+        const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
         const requestOptions = {
             uri,
