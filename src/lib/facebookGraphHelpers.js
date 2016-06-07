@@ -73,8 +73,29 @@ const userInfo = (userId, pageAccessToken) => new Promise(resolve => request({
     resolve(JSON.parse(body))
 ));
 
+// ## setWelcomeMessage(message, pageId, pageAccessToken)
+// Change the Welcome Message for the messenger of a page.
+// A helper function to make graph api calls to set new thread state message
+// [setting][welcome_message_configuration].
+//
+// [welcome_message_configuration]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#welcome_message_configuration
+const setWelcomeMessage = (message, pageId, pageAccessToken) => request({
+    uri: `${apiURL}${pageId}/thread_settings`,
+    qs: {
+        access_token: pageAccessToken
+    },
+    method: 'POST',
+    json: true,
+    body: {
+        setting_type: 'call_to_actions',
+        thread_state: 'new_thread',
+        call_to_actions: [{ message }]
+    }
+});
+
 export {
     pageSubscribe,
     sendTextMessage,
-    userInfo
+    userInfo,
+    setWelcomeMessage
 };
