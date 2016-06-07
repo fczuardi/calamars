@@ -21,7 +21,7 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
     }
 };
 
-// ## setupPostWebhook(options)
+// ## setupPostWebhook(bot, listeners)
 //
 // High order function that given an object with event handlers,
 // returns a function that will take POST requests and call the proper handlers
@@ -32,10 +32,12 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
 // [body-parser][npmbodyparser], that makes req.body acessible as an object.
 //
 // ### Parameters
-// - **options** - _Object_ - An object with different handler functions for each
+// - **listeners** - _Object_ - An object with different handler functions for each
 // different webhook post format, see [Webhook reference][webhookreference].
+// - **bot** - _FacebookMessengerBot_ - A bot server instance to be passed as
+// parameter to the listener callbacks.
 //
-// | Option | Description |
+// | Listener | Description |
 // |--------|-------------|
 // | onUpdate | Generic callback, called for every messaging item received. |
 // | onMessage | Specific callback for messages (text or media) |
@@ -46,7 +48,7 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
 //
 // [npmbodyparser]: https://www.npmjs.com/package/body-parser
 // [webhookreference]: https://developers.facebook.com/docs/messenger-platform/webhook-reference
-const setupPostWebhook = options => (req, res) => {
+const setupPostWebhook = (listeners, bot) => (req, res) => {
     const fNull = () => null;
     const {
         onUpdate = fNull,
@@ -54,25 +56,29 @@ const setupPostWebhook = options => (req, res) => {
         onAuthentication = fNull,
         onDelivery = fNull,
         onPostback = fNull
-    } = options;
+    } = listeners;
     if (!req.body.entry || !Array.isArray(req.body.entry)) {
         return res.send(false);
     }
     req.body.entry.forEach(({ messaging }) => {
         messaging.forEach(update => {
             const { message, optin, delivery, postback } = update;
-            onUpdate(update);
+            const payload = {
+                update,
+                bot
+            };
+            onUpdate(payload);
             if (message) {
-                onMessage(update);
+                onMessage(payload);
             }
             if (optin) {
-                onAuthentication(update);
+                onAuthentication(payload);
             }
             if (delivery) {
-                onDelivery(update);
+                onDelivery(payload);
             }
             if (postback) {
-                onPostback(update);
+                onPostback(payload);
             }
         });
     });

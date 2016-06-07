@@ -1,6 +1,6 @@
 import test from 'ava';
 import request from 'request-promise';
-import { FacebookMessengerBot } from 'lib/facebook';
+import { FacebookMessengerBot } from 'lib/facebook'; // eslint-disable-line
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
@@ -83,7 +83,7 @@ test(
         const port = PORT + 5;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const listeners = {
-            onUpdate: update => {
+            onUpdate: ({ update }) => {
                 t.is(typeof update, 'object');
             }
         };
@@ -98,7 +98,6 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(3);
     }
 );
 test(
@@ -108,7 +107,8 @@ test(
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const msg = 'Foobar';
         const listeners = {
-            onMessage: ({ message }) => {
+            onMessage: ({ update }) => {
+                const { message } = update;
                 t.is(message.text, msg);
             }
         };
@@ -123,7 +123,6 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(3);
     }
 );
 
@@ -144,13 +143,16 @@ test(
         const watermark = 1458668856253;
         const payload = 'USER_DEFINED_PAYLOAD';
         const listeners = {
-            onAuthentication: ({ optin }) => {
+            onAuthentication: ({ update }) => {
+                const { optin } = update;
                 t.is(optin.ref, ref);
             },
-            onDelivery: ({ delivery }) => {
+            onDelivery: ({ update }) => {
+                const { delivery } = update;
                 t.is(delivery.watermark, watermark);
             },
-            onPostback: ({ postback }) => {
+            onPostback: ({ update }) => {
+                const { postback } = update;
                 t.is(postback.payload, payload);
             }
         };
@@ -173,6 +175,38 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(5);
+    }
+);
+
+test(
+    'Bot with an onMessage handler that calls a method of the owner bot (issue #11)',
+    t => {
+        const port = PORT + 9;
+        const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+        const msg = 'Foobar';
+        return new Promise(async resolve => {
+            const onMessage = async ({ bot, update }) => {
+                const userInfo = await bot.getUserInfo(update.sender.id);
+                t.is(userInfo.first_name, process.env.FB_TEST_USER_FIRST_NAME);
+                return resolve();
+            };
+            const listeners = {
+                onMessage
+            };
+            const bot = new FacebookMessengerBot({ port, listeners });
+            const serverStarted = await bot.launchPromise;
+            t.true(serverStarted);
+            const requestOptions = {
+                uri,
+                method: 'POST',
+                body: { entry: [{ messaging: [{
+                    sender: { id: process.env.FB_TEST_USER_ID },
+                    message: { text: msg }
+                }] }] },
+                json: true
+            };
+            const returnedBody = await request(requestOptions);
+            t.true(returnedBody);
+        });
     }
 );

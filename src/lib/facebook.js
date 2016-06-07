@@ -60,7 +60,7 @@ class FacebookMessengerBot {
         this.launchPromise = new Promise(resolve => {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
-            app.post(callbackPath, setupPostWebhook(listeners));
+            app.post(callbackPath, setupPostWebhook(listeners, this));
             app.listen(port, () => {
                 Promise.all(pageTokens.map(token => pageSubscribe(token)))
                 .then(() => resolve(true));
