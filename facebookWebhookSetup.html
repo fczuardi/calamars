@@ -107,7 +107,7 @@ the requested <code>hub.verify_token</code> parameter value.</p>
         
       
         
-        <h2 id="setuppostwebhook-options-">setupPostWebhook(options)</h2>
+        <h2 id="setuppostwebhook-bot-listeners-">setupPostWebhook(bot, listeners)</h2>
 <p>High order function that given an object with event handlers,
 returns a function that will take POST requests and call the proper handlers
 depending on the contents of the request. Or respond false when no entry
@@ -116,13 +116,15 @@ value is present in the body of the POST.</p>
 <a href="https://www.npmjs.com/package/body-parser">body-parser</a>, that makes req.body acessible as an object.</p>
 <h3 id="parameters">Parameters</h3>
 <ul>
-<li><strong>options</strong> - <em>Object</em> - An object with different handler functions for each
+<li><strong>listeners</strong> - <em>Object</em> - An object with different handler functions for each
 different webhook post format, see <a href="https://developers.facebook.com/docs/messenger-platform/webhook-reference">Webhook reference</a>.</li>
+<li><strong>bot</strong> - <em>FacebookMessengerBot</em> - A bot server instance to be passed as
+parameter to the listener callbacks.</li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>Option</th>
+<th>Listener</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -151,7 +153,7 @@ different webhook post format, see <a href="https://developers.facebook.com/docs
 </table>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = options =&gt; (req, res) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = (listeners, bot) =&gt; (req, res) =&gt; {
     <span class="hljs-keyword">const</span> fNull = () =&gt; <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">const</span> {
         onUpdate = fNull,
@@ -159,25 +161,29 @@ different webhook post format, see <a href="https://developers.facebook.com/docs
         onAuthentication = fNull,
         onDelivery = fNull,
         onPostback = fNull
-    } = options;
+    } = listeners;
     <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
         <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
     }
     req.body.entry.forEach(({ messaging }) =&gt; {
         messaging.forEach(update =&gt; {
             <span class="hljs-keyword">const</span> { message, optin, delivery, postback } = update;
-            onUpdate(update);
+            <span class="hljs-keyword">const</span> payload = {
+                update,
+                bot
+            };
+            onUpdate(payload);
             <span class="hljs-keyword">if</span> (message) {
-                onMessage(update);
+                onMessage(payload);
             }
             <span class="hljs-keyword">if</span> (optin) {
-                onAuthentication(update);
+                onAuthentication(payload);
             }
             <span class="hljs-keyword">if</span> (delivery) {
-                onDelivery(update);
+                onDelivery(payload);
             }
             <span class="hljs-keyword">if</span> (postback) {
-                onPostback(update);
+                onPostback(payload);
             }
         });
     });

@@ -159,7 +159,7 @@ for details):<ul>
         <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
-            app.post(callbackPath, setupPostWebhook(listeners));
+            app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
             app.listen(port, () =&gt; {
                 <span class="hljs-built_in">Promise</span>.all(pageTokens.map(token =&gt; pageSubscribe(token)))
                 .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
