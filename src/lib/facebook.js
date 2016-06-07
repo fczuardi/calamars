@@ -68,8 +68,8 @@ class FacebookMessengerBot {
         });
     }
 
-    sendMessage(message) {
-        return sendTextMessage(message, FB_PAGE_ACCESS_TOKEN);
+    sendMessage(message, pageToken = this.pageTokens[0]) {
+        return sendTextMessage(message, pageToken);
     }
 
     getUserInfo(userId, pageToken = this.pageTokens[0]) {

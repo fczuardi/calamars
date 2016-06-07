@@ -211,20 +211,24 @@ test(
     }
 );
 
-test('Bot sends a text message', t => {
+test('Bot sends a text message', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 10
     });
-    const user = process.env.FB_TEST_USER_ID;
-    const message = {
-        userId: user,
-        text: 'This is a test message!'
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const invalidUserIdMessage = {
+        userId: 'Foo12345',
+        text: 'This is a test message to an unauthorized user.'
     };
-    t.plan(1);
-    return bot.sendMessage(message, FB_PAGE_ACCESS_TOKEN)
-    .then(param => {
-        t.truthy(param.message_id);
-    }).catch(err => {
+    bot.sendMessage(invalidUserIdMessage).catch(err => {
         t.is(err.error.error.type, 'OAuthException');
     });
+    const userId = process.env.FB_TEST_USER_ID;
+    const message = {
+        userId,
+        text: 'This is a test message!'
+    };
+    const sendMessageResult = await bot.sendMessage(message);
+    t.truthy(sendMessageResult.message_id);
 });
