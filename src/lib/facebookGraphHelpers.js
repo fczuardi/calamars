@@ -31,15 +31,20 @@ const pageSubscribe = pageAccessToken => {
 // [textMessage]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#guidelines
 // [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
 const sendTextMessage = (message, pageAccessToken) => {
+    const croppedText = message.text.substring(0, 319) +
+        (message.text.length > 320 ? '…' : '');
     const requestOptions = {
-        uri: `${apiURL}me/messages?access_token=${pageAccessToken}`,
+        uri: `${apiURL}me/messages`,
+        qs: {
+            access_token: pageAccessToken
+        },
         method: 'POST',
         body: {
             recipient: {
                 id: message.userId
             },
             message: {
-                text: message.text
+                text: croppedText
             }
         },
         json: true

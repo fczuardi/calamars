@@ -232,3 +232,25 @@ test('Bot sends a text message', async t => {
     const sendMessageResult = await bot.sendMessage(message);
     t.truthy(sendMessageResult.message_id);
 });
+
+test.only('Bot sends a long text message', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 11
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const userId = process.env.FB_TEST_USER_ID;
+    const message = {
+        userId,
+        text: `
+Out of death, though grant thou, residing here, where it holds well served in post;
+If I heard breaking through the burden do now,
+Taking the ladies both, must eat,
+That meat is not frantic,--
+As I could have at the moon and all gaze upon thine eyes, which of goods at fainting under
+The pleasing punishment that deceive the Capitol!
+        `
+    };
+    const sendMessageResult = await bot.sendMessage(message);
+    console.log('sendMessageResult', sendMessageResult);
+});
