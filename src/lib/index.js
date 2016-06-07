@@ -38,3 +38,6 @@ export {
 export {
     FacebookMessengerBot
 } from './facebook';
+export {
+    calamarMessageFormat
+} from './calamar';
