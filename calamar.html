@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>calamar.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>calamar.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="calamar.html">
+                    calamar.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebook.html">
+                    facebook.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookGraphHelpers.html">
+                    facebookGraphHelpers.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookWebhookSetup.html">
+                    facebookWebhookSetup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="wit.html">
+                    wit.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        <p>constants</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> PLATFORM_FACEBOOK_MESSENGER = <span class="hljs-string">'facebookMessenger'</span>;
+<span class="hljs-keyword">const</span> PLATFORM_TELEGRAM = <span class="hljs-string">'telegram'</span>;</pre></div>
+        
+      
+        
+        <p>Test to see if an update object is a
+facebook messenger <a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">&quot;messaging&quot; item</a></p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> isFacebookMessengerMessagingItem = item =&gt;
+    (item &amp;&amp; item.timestamp &amp;&amp; item.sender &amp;&amp; item.recipient);</pre></div>
+        
+      
+        
+        <p>Test to see if an update object is a
+<a href="https://core.telegram.org/bots/api#update">telegram update object</a></p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> isTelegramUpdate = update =&gt; (update &amp;&amp; update.update_id);</pre></div>
+        
+      
+        
+        <h2 id="calamarmessageformat-update-">calamarMessageFormat(update)</h2>
+<p>Translate message updates from Telegram or Facebook to a generic
+message update object format containing commonly used attributes.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> calamarMessageFormat = update =&gt; {
+    <span class="hljs-keyword">if</span> (isFacebookMessengerMessagingItem(update)) {
+        <span class="hljs-keyword">const</span> { message, timestamp, sender, recipient } = update;
+        <span class="hljs-keyword">const</span> { mid, text } = message;
+        <span class="hljs-keyword">return</span> {
+            text,
+            timestamp,
+            messageId: mid,
+            senderId: sender.id,
+            chatId: recipient.id,
+            platform: PLATFORM_FACEBOOK_MESSENGER
+        };
+    }
+    <span class="hljs-keyword">if</span> (isTelegramUpdate(update)) {
+        <span class="hljs-keyword">const</span> { message_id, text, date, <span class="hljs-keyword">from</span>, chat } = update.message;
+        <span class="hljs-keyword">const</span> timestamp = date.toString().length &lt; <span class="hljs-number">13</span> ? date * <span class="hljs-number">1000</span> : date;
+        <span class="hljs-keyword">return</span> {
+            text,
+            timestamp,
+            messageId: message_id,
+            senderId: <span class="hljs-keyword">from</span>.id,
+            chatId: chat.id,
+            platform: PLATFORM_TELEGRAM
+        };
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+};
+
+<span class="hljs-keyword">export</span> { calamarMessageFormat };</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
