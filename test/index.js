@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as lib from 'lib';
+import * as lib from 'lib'; // eslint-disable-line
 
 test('Get version function', t => {
     t.truthy(lib.version);
@@ -17,4 +17,8 @@ test('Have router lib functions', t => {
 
 test('Have FacebookMessenger class', t => {
     t.truthy(lib.FacebookMessengerBot);
+});
+
+test('Have Calamar lib functions', t => {
+    t.truthy(lib.calamarMessageFormat);
 });

@@ -1,8 +1,7 @@
 import test from 'ava';
 import request from 'request-promise';
-/* eslint-disable */
-import { FacebookMessengerBot } from 'lib/facebook';
-/* eslint-enable */
+import { FacebookMessengerBot } from 'lib/facebook'; // eslint-disable-line
+
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
@@ -22,16 +21,23 @@ const FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
+test('Bot Class empty instantiation, with default values missing', t => {
+    t.throws(() => new FacebookMessengerBot({
+        port: PORT + 1,
+        callbackPath: null
+    }));
+});
+
 test('Bot with pages to subscribe', t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 1,
+        port: PORT + 2,
         pageTokens: [FB_PAGE_ACCESS_TOKEN]
     });
     t.is(typeof bot.launchPromise.then, 'function');
 });
 
 test('Bot Webserver launches and returns expected challenge', async t => {
-    const port = PORT + 2;
+    const port = PORT + 3;
     const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const botConfig = {
         port
@@ -57,7 +63,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
 test(
     'Bot responds with false when it receives a POST on the webhook with no entry parameter',
     async t => {
-        const port = PORT + 3;
+        const port = PORT + 4;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const bot = new FacebookMessengerBot({ port });
         const serverStarted = await bot.launchPromise;
@@ -74,10 +80,10 @@ test(
 test(
     'Bot with an onUpdate handler calls it when a POST is received',
     async t => {
-        const port = PORT + 4;
+        const port = PORT + 5;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const listeners = {
-            onUpdate: update => {
+            onUpdate: ({ update }) => {
                 t.is(typeof update, 'object');
             }
         };
@@ -92,17 +98,17 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(3);
     }
 );
 test(
     'Bot with an onMessage handler calls it when a message POST is received',
     async t => {
-        const port = PORT + 5;
+        const port = PORT + 6;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const msg = 'Foobar';
         const listeners = {
-            onMessage: ({ message }) => {
+            onMessage: ({ update }) => {
+                const { message } = update;
                 t.is(message.text, msg);
             }
         };
@@ -117,12 +123,11 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(3);
     }
 );
 
 test('Bot get user data', async t => {
-    const port = PORT + 6;
+    const port = PORT + 7;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -132,19 +137,22 @@ test('Bot get user data', async t => {
 test(
     'Bot with onAuthentication, onDelivery and onPostback listeners',
     async t => {
-        const port = PORT + 7;
+        const port = PORT + 8;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const ref = 'PASS_THROUGH_PARAM';
         const watermark = 1458668856253;
         const payload = 'USER_DEFINED_PAYLOAD';
         const listeners = {
-            onAuthentication: ({ optin }) => {
+            onAuthentication: ({ update }) => {
+                const { optin } = update;
                 t.is(optin.ref, ref);
             },
-            onDelivery: ({ delivery }) => {
+            onDelivery: ({ update }) => {
+                const { delivery } = update;
                 t.is(delivery.watermark, watermark);
             },
-            onPostback: ({ postback }) => {
+            onPostback: ({ update }) => {
+                const { postback } = update;
                 t.is(postback.payload, payload);
             }
         };
@@ -167,24 +175,60 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
-        t.plan(5);
     }
 );
 
-test('Bot sends a text message', t => {
+test(
+    'Bot with an onMessage handler that calls a method of the owner bot (issue #11)',
+    t => {
+        const port = PORT + 9;
+        const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+        const msg = 'Foobar';
+        return new Promise(async resolve => {
+            const onMessage = async ({ bot, update }) => {
+                const userInfo = await bot.getUserInfo(update.sender.id);
+                t.is(userInfo.first_name, process.env.FB_TEST_USER_FIRST_NAME);
+                return resolve();
+            };
+            const listeners = {
+                onMessage
+            };
+            const bot = new FacebookMessengerBot({ port, listeners });
+            const serverStarted = await bot.launchPromise;
+            t.true(serverStarted);
+            const requestOptions = {
+                uri,
+                method: 'POST',
+                body: { entry: [{ messaging: [{
+                    sender: { id: process.env.FB_TEST_USER_ID },
+                    message: { text: msg }
+                }] }] },
+                json: true
+            };
+            const returnedBody = await request(requestOptions);
+            t.true(returnedBody);
+        });
+    }
+);
+
+test('Bot sends a text message', async t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 8
+        port: PORT + 10
     });
-    const user = process.env.FB_TEST_USER_ID;
-    const message = {
-        userId: user,
-        text: 'This is a test message!'
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const invalidUserIdMessage = {
+        userId: 'Foo12345',
+        text: 'This is a test message to an unauthorized user.'
     };
-    t.plan(1);
-    return bot.sendMessage(message, FB_PAGE_ACCESS_TOKEN)
-    .then(param => {
-        t.truthy(param.message_id);
-    }).catch(err => {
+    bot.sendMessage(invalidUserIdMessage).catch(err => {
         t.is(err.error.error.type, 'OAuthException');
     });
+    const userId = process.env.FB_TEST_USER_ID;
+    const message = {
+        userId,
+        text: 'This is a test message!'
+    };
+    const sendMessageResult = await bot.sendMessage(message);
+    t.truthy(sendMessageResult.message_id);
 });

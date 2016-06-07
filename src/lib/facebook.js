@@ -50,12 +50,17 @@ class FacebookMessengerBot {
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             listeners = {}
         } = options;
+
+        if (!callbackPath || !verifyToken || !pageTokens[0]) {
+            throw new Error('FacebookMessengerBot could not be created, missing required option');
+        }
+
         this.pageTokens = pageTokens;
         const app = express();
         this.launchPromise = new Promise(resolve => {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
-            app.post(callbackPath, setupPostWebhook(listeners));
+            app.post(callbackPath, setupPostWebhook(listeners, this));
             app.listen(port, () => {
                 Promise.all(pageTokens.map(token => pageSubscribe(token)))
                 .then(() => resolve(true));
@@ -63,8 +68,8 @@ class FacebookMessengerBot {
         });
     }
 
-    sendMessage(message) {
-        return sendTextMessage(message, FB_PAGE_ACCESS_TOKEN);
+    sendMessage(message, pageToken = this.pageTokens[0]) {
+        return sendTextMessage(message, pageToken);
     }
 
     getUserInfo(userId, pageToken = this.pageTokens[0]) {
