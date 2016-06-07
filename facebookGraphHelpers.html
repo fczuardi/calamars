@@ -105,6 +105,38 @@ You need to call this for each page you want to receive messages from.</p>
         
       
         
+        <h2 id="sendtextmessage-message-pageaccesstoken-">sendTextMessage(message, pageAccessToken)</h2>
+<p>Send a text message with your Facebook Messenger app/bot.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><strong>message</strong> - <em>Object</em> - Message <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#guidelines">descrition</a><ul>
+<li><strong>userId</strong> - <em>string</em> - recipient&#39;s messenger ID</li>
+<li><strong>text</strong> - <em>string</em> - message&#39;s text to be sent.
+<strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token">token</a> for the page</li>
+</ul>
+</li>
+</ul>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> sendTextMessage = (message, pageAccessToken) =&gt; {
+    <span class="hljs-keyword">const</span> requestOptions = {
+        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages?access_token=<span class="hljs-subst">${pageAccessToken}</span>`</span>,
+        method: <span class="hljs-string">'POST'</span>,
+        body: {
+            recipient: {
+                id: message.userId
+            },
+            message: {
+                text: message.text
+            }
+        },
+        json: <span class="hljs-literal">true</span>
+    };
+    <span class="hljs-keyword">return</span> request(requestOptions);
+};</pre></div>
+        
+      
+        
         <h2 id="userinfo-userid-pageaccesstoken-">userInfo(userId, pageAccessToken)</h2>
 <p>Retrieves user information, first name, last name, profile pic, locale,
 time zone and gender, from Facebook&#39;s <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#user_profile_request">User Profile API</a></p>
@@ -126,6 +158,7 @@ get information from the userId</p>
 
 <span class="hljs-keyword">export</span> {
     pageSubscribe,
+    sendTextMessage,
     userInfo
 };</pre></div>
         

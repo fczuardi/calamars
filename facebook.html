@@ -95,7 +95,7 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> { setupGetWebhook, setupPostWebhook } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookWebhookSetup'</span>;
-<span class="hljs-keyword">import</span> { pageSubscribe, userInfo } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
+<span class="hljs-keyword">import</span> { pageSubscribe, sendTextMessage, userInfo } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
         
       
         
@@ -165,6 +165,10 @@ for details):<ul>
                 .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
             });
         });
+    }
+
+    sendMessage(message, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> sendTextMessage(message, pageToken);
     }
 
     getUserInfo(userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
