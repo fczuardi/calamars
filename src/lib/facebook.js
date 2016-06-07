@@ -11,7 +11,7 @@ import bodyParser from 'body-parser';
 // Facebook helpers: [facebookWebhookSetup.js](./facebookWebhookSetup.html)
 // and [facebookGraphHelpers.js](./facebookGraphHelpers.html)
 import { setupGetWebhook, setupPostWebhook } from './facebookWebhookSetup';
-import { pageSubscribe, userInfo } from './facebookGraphHelpers';
+import { pageSubscribe, sendTextMessage, userInfo } from './facebookGraphHelpers';
 
 // default values can be setup using environment vars
 const PORT = process.env.PORT;
@@ -66,6 +66,10 @@ class FacebookMessengerBot {
                 .then(() => resolve(true));
             });
         });
+    }
+
+    sendMessage(message) {
+        return sendTextMessage(message, FB_PAGE_ACCESS_TOKEN);
     }
 
     getUserInfo(userId, pageToken = this.pageTokens[0]) {

@@ -5,3 +5,6 @@ coverage
 coverage.lcov
 notes.md
 docs
+dist/
+npm-debug.log
+*.swp
