@@ -1,7 +1,8 @@
 import test from 'ava';
 import request from 'request-promise';
+/* eslint-disable */
 import { FacebookMessengerBot } from 'lib/facebook';
-
+/* eslint-enable */
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
@@ -122,7 +123,6 @@ test(
 
 test('Bot get user data', async t => {
     const port = PORT + 6;
-    const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -170,3 +170,21 @@ test(
         t.plan(5);
     }
 );
+
+test('Bot sends a text message', t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 8
+    });
+    const user = process.env.FB_TEST_USER_ID;
+    const message = {
+        userId: user,
+        text: 'This is a test message!'
+    };
+    t.plan(1);
+    return bot.sendMessage(message, FB_PAGE_ACCESS_TOKEN)
+    .then(param => {
+        t.truthy(param.message_id);
+    }).catch(err => {
+        t.is(err.error.error.type, 'OAuthException');
+    });
+});

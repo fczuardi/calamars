@@ -20,6 +20,34 @@ const pageSubscribe = pageAccessToken => {
     return request(requestOptions);
 };
 
+// ## sendTextMessage(message, pageAccessToken)
+// Send a text message with your Facebook Messenger app/bot.
+//
+// ### Parameters
+// - **message** - _Object_ - Message [descrition][textMessage]
+//   - **userId** - _string_ - recipient's messenger ID
+//   - **text** - _string_ - message's text to be sent.
+// **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
+// [textMessage]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#guidelines
+// [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
+const sendTextMessage = (message, pageAccessToken) => {
+    const requestOptions = {
+        uri: `${apiURL}me/messages?access_token=${pageAccessToken}`,
+        method: 'POST',
+        body: {
+            recipient: {
+                id: message.userId
+            },
+            message: {
+                text: message.text
+            }
+        },
+        json: true
+    };
+    return request(requestOptions);
+};
+
+
 // ## userInfo(userId, pageAccessToken)
 // Retrieves user information, first name, last name, profile pic, locale,
 // time zone and gender, from Facebook's [User Profile API][userprofileapi]
@@ -42,5 +70,6 @@ const userInfo = (userId, pageAccessToken) => new Promise(resolve => request({
 
 export {
     pageSubscribe,
+    sendTextMessage,
     userInfo
 };
