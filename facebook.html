@@ -102,17 +102,25 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> { setupGetWebhook, setupPostWebhook } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookWebhookSetup'</span>;
-<span class="hljs-keyword">import</span> { pageSubscribe, sendTextMessage, userInfo } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
+<span class="hljs-keyword">import</span> {
+    pageSubscribe,
+    sendTextMessage,
+    userInfo,
+    setWelcomeMessage
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
         
       
         
         <p>default values can be setup using environment vars</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> PORT = process.env.PORT;
-<span class="hljs-keyword">const</span> FB_CALLBACK_PATH = process.env.FB_CALLBACK_PATH;
-<span class="hljs-keyword">const</span> FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
-<span class="hljs-keyword">const</span> FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;</pre></div>
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> {
+    PORT,
+    FB_CALLBACK_PATH,
+    FB_VERIFY_TOKEN,
+    FB_PAGE_ID,
+    FB_PAGE_ACCESS_TOKEN
+} = process.env;</pre></div>
         
       
         
@@ -153,6 +161,7 @@ for details):<ul>
             port = PORT,
             callbackPath = FB_CALLBACK_PATH,
             verifyToken = FB_VERIFY_TOKEN,
+            pageIds = [FB_PAGE_ID],
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             listeners = {}
         } = options;
@@ -161,6 +170,7 @@ for details):<ul>
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'FacebookMessengerBot could not be created, missing required option'</span>);
         }
 
+        <span class="hljs-keyword">this</span>.pageIds = pageIds;
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
         <span class="hljs-keyword">const</span> app = express();
         <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
@@ -180,6 +190,10 @@ for details):<ul>
 
     getUserInfo(userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
         <span class="hljs-keyword">return</span> userInfo(userId, pageToken);
+    }
+
+    setWelcomeMessage(message, pageId = <span class="hljs-keyword">this</span>.pageIds[<span class="hljs-number">0</span>], pageAccessToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> setWelcomeMessage(message, pageId, pageAccessToken);
     }
 }
 

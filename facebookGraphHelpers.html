@@ -166,12 +166,35 @@ get information from the userId</p>
     }
 }).then(body =&gt;
     resolve(<span class="hljs-built_in">JSON</span>.parse(body))
-));
+));</pre></div>
+        
+      
+        
+        <h2 id="setwelcomemessage-message-pageid-pageaccesstoken-">setWelcomeMessage(message, pageId, pageAccessToken)</h2>
+<p>Change the Welcome Message for the messenger of a page.
+A helper function to make graph api calls to set new thread state message
+<a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#welcome_message_configuration">setting</a>.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setWelcomeMessage = (message, pageId, pageAccessToken) =&gt; request({
+    uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${pageId}</span>/thread_settings`</span>,
+    qs: {
+        access_token: pageAccessToken
+    },
+    method: <span class="hljs-string">'POST'</span>,
+    json: <span class="hljs-literal">true</span>,
+    body: {
+        setting_type: <span class="hljs-string">'call_to_actions'</span>,
+        thread_state: <span class="hljs-string">'new_thread'</span>,
+        call_to_actions: [{ message }]
+    }
+});
 
 <span class="hljs-keyword">export</span> {
     pageSubscribe,
     sendTextMessage,
-    userInfo
+    userInfo,
+    setWelcomeMessage
 };</pre></div>
         
       
