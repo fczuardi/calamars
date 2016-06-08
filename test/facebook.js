@@ -5,6 +5,7 @@ import { FacebookMessengerBot } from 'lib/facebook'; // eslint-disable-line
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
     t.truthy(process.env.FB_VERIFY_TOKEN);
+    t.truthy(process.env.FB_PAGE_ID);
     t.truthy(process.env.FB_PAGE_ACCESS_TOKEN);
     t.truthy(process.env.FB_TEST_USER_ID);
     t.truthy(process.env.FB_TEST_USER_FIRST_NAME);
@@ -227,13 +228,13 @@ test('Bot sends a text message', async t => {
     const userId = process.env.FB_TEST_USER_ID;
     const message = {
         userId,
-        text: 'This is a test message!'
+        text: 'This is a test message! 🐙'
     };
     const sendMessageResult = await bot.sendMessage(message);
     t.truthy(sendMessageResult.message_id);
 });
 
-test.only('Bot sends a long text message', async t => {
+test('Bot sends a long text message', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 11
     });
@@ -252,5 +253,19 @@ The pleasing punishment that deceive the Capitol!
         `
     };
     const sendMessageResult = await bot.sendMessage(message);
-    console.log('sendMessageResult', sendMessageResult);
+    t.truthy(sendMessageResult.message_id);
+    t.truthy(sendMessageResult.recipient_id);
+});
+
+test('Change welcome message of a bot', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 12
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const message = {
+        text: 'A new test welcome message. 🐨'
+    };
+    const setWelcomeMessageResult = await bot.setWelcomeMessage(message);
+    t.truthy(setWelcomeMessageResult.result);
 });
