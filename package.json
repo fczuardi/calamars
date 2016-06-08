@@ -24,7 +24,7 @@
     "coverage": "nyc report",
     "coverage:html": "open coverage/lcov-report/index.html",
     "pretest": "run-p build:eslintrc build:npm build:fixtures",
-    "test": "NODE_PATH=./dist/npm/src ava",
+    "test": "NODE_PATH=./dist/npm/src ava --serial",
     "doc": "npm run build:doc",
     "postdoc": "open docs/index.html",
     "test:dev": "NODE_PATH=./src:./test ava -v --require babel-register",
