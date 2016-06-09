@@ -126,8 +126,10 @@ You need to call this for each page you want to receive messages from.</p>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">const</span> sendTextMessage = (message, pageAccessToken) =&gt; {
-    <span class="hljs-keyword">const</span> croppedText = message.text.substring(<span class="hljs-number">0</span>, <span class="hljs-number">319</span>) +
-        (message.text.length &gt; <span class="hljs-number">320</span> ? <span class="hljs-string">'…'</span> : <span class="hljs-string">''</span>);
+    <span class="hljs-keyword">const</span> { attachment, text } = message;
+    <span class="hljs-keyword">const</span> croppedText = text
+        ? text.substring(<span class="hljs-number">0</span>, <span class="hljs-number">319</span>) + (message.text.length &gt; <span class="hljs-number">320</span> ? <span class="hljs-string">'…'</span> : <span class="hljs-string">''</span>)
+        : <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">const</span> requestOptions = {
         uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
         qs: {
@@ -139,7 +141,8 @@ You need to call this for each page you want to receive messages from.</p>
                 id: message.userId
             },
             message: {
-                text: croppedText
+                text: croppedText,
+                attachment
             }
         },
         json: <span class="hljs-literal">true</span>
