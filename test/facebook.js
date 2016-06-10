@@ -234,7 +234,7 @@ test('Bot sends a text message', async t => {
     t.truthy(sendMessageResult.message_id);
 });
 
-test.only('Bot sends a long text message', async t => {
+test('Bot sends a long text message', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 11
     });
@@ -257,7 +257,7 @@ The pleasing punishment that deceive the Capitol!
     t.truthy(sendMessageResult.recipient_id);
 });
 
-test.only('Bot sends a message with image attachment', async t => {
+test('Bot sends a message with image attachment', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 12
     });
