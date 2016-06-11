@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/fczuardi/calamars.svg?branch=master)](https://travis-ci.org/fczuardi/calamars)
 [![Dependency Status](https://david-dm.org/fczuardi/calamars.svg)](https://david-dm.org/fczuardi/calamars)
 [![coveralls](https://coveralls.io/repos/github/fczuardi/calamars/badge.svg?branch=master)](https://coveralls.io/github/fczuardi/calamars?branch=master)
+[![License](https://img.shields.io/badge/license-AGPL-lightgrey.svg)][license]
 [see all badges…][badges]
 
 An alpha quality, under heavy development, proto-frramework for building
@@ -173,6 +174,10 @@ for brazilian intercity bus schedules and tickets using natural language
 If you are using it or know of someone else using it please let us know, open a
 pull request expanding this list, or file an issue :)
 
+## License
+
+- [AGPL-3.0][license]
+
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [documentation]: http://fczuardi.github.io/calamars/
 [testfolder]: https://github.com/fczuardi/calamars/tree/master/test
@@ -184,3 +189,4 @@ pull request expanding this list, or file an issue :)
 [createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L107-L134
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
 [pollo]: https://github.com/fczuardi/calamarcopollo
+[license]: https://github.com/fczuardi/calamars/blob/master/LICENSE
