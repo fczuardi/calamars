@@ -7,7 +7,7 @@ const apiURL = 'https://graph.facebook.com/v2.6/';
 // You need to call this for each page you want to receive messages from.
 //
 // ### Parameters
-// **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
+// - **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
 // [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
 const pageSubscribe = pageAccessToken => {
     const requestOptions = {
@@ -31,8 +31,10 @@ const pageSubscribe = pageAccessToken => {
 // [textMessage]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#guidelines
 // [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
 const sendTextMessage = (message, pageAccessToken) => {
-    const croppedText = message.text.substring(0, 319) +
-        (message.text.length > 320 ? '…' : '');
+    const { attachment, text } = message;
+    const croppedText = text
+        ? text.substring(0, 319) + (message.text.length > 320 ? '…' : '')
+        : null;
     const requestOptions = {
         uri: `${apiURL}me/messages`,
         qs: {
@@ -44,7 +46,8 @@ const sendTextMessage = (message, pageAccessToken) => {
                 id: message.userId
             },
             message: {
-                text: croppedText
+                text: croppedText,
+                attachment
             }
         },
         json: true
@@ -58,8 +61,8 @@ const sendTextMessage = (message, pageAccessToken) => {
 // time zone and gender, from Facebook's [User Profile API][userprofileapi]
 //
 // ### Parameters
-// **userId** - _string_ - The user fbid to retriev metadata from
-// **pageAccessToken** - _string_ - A page access token that has permissions to
+// - **userId** - _string_ - The user fbid to retriev metadata from
+// - **pageAccessToken** - _string_ - A page access token that has permissions to
 // get information from the userId
 //
 // [userprofileapi]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#user_profile_request

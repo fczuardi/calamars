@@ -42,12 +42,6 @@ npm run lint
 If you are working on a patch, please test it with the existing tests by running
 
 ```sh
-npm run test:dev
-```
-
-Or use the watch feature to keep them running while you work:
-
-```sh
 npm run test:watch
 ```
 

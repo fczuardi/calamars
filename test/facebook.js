@@ -257,9 +257,30 @@ The pleasing punishment that deceive the Capitol!
     t.truthy(sendMessageResult.recipient_id);
 });
 
-test('Change welcome message of a bot', async t => {
+test('Bot sends a message with image attachment', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 12
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const userId = process.env.FB_TEST_USER_ID;
+    const message = {
+        userId,
+        attachment: {
+            type: 'image',
+            payload: {
+                url: 'https://openclipart.org/image/200px/svg_to_png/230920/planet-remix.png'
+            }
+        }
+    };
+    const sendMessageResult = await bot.sendMessage(message);
+    t.truthy(sendMessageResult.message_id);
+    t.truthy(sendMessageResult.recipient_id);
+});
+
+test('Change welcome message of a bot', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 13
     });
     const serverStarted = await bot.launchPromise;
     t.true(serverStarted);

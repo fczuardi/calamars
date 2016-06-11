@@ -15,4 +15,5 @@ before_script:
   - npm run lint
 
 after_success:
-    - npm run upload:coverage
+    - echo "${TRAVIS_NODE_VERSION}"
+    - 'if [ "${TRAVIS_NODE_VERSION}" = "6" ]; then npm run upload:coverage; fi'
