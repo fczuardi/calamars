@@ -156,6 +156,7 @@ callbacks or any extra data.</p>
 </code></pre>
 <h4 id="-function-function-routes">[function, function] routes</h4>
 <pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'calamars'</span>;
+
 <span class="hljs-keyword">const</span> input1 = {
     query: <span class="hljs-string">'Stop!'</span>,
     intentName: <span class="hljs-string">'stop'</span>,
@@ -166,18 +167,20 @@ callbacks or any extra data.</p>
     intentName: <span class="hljs-string">'None'</span>,
     score: <span class="hljs-number">0.546681643</span>
 };
+<span class="hljs-keyword">const</span> extraParam = <span class="hljs-string">'hello.'</span>;
+
 <span class="hljs-keyword">const</span> routes = [[
     obj =&gt; obj.intentName === <span class="hljs-string">'stop'</span>,
     obj =&gt; <span class="hljs-string">`You say <span class="hljs-subst">${obj.query}</span>, I say go go go, oh no.`</span>
 ], [
     obj =&gt; obj.intentName === <span class="hljs-string">'None'</span>,
-    obj =&gt; <span class="hljs-string">`I dont know why you say <span class="hljs-subst">${obj.query}</span>, I say hello.`</span>
+    (obj, extra) =&gt; <span class="hljs-string">`I dont know why you say <span class="hljs-subst">${obj.query}</span>, I say <span class="hljs-subst">${extra}</span>`</span>
 ]];
 
 <span class="hljs-keyword">const</span> router = createRouter(routes);
 
 <span class="hljs-built_in">console</span>.log(router(input1)); <span class="hljs-comment">// You say Stop!, I say go go go, oh no.</span>
-<span class="hljs-built_in">console</span>.log(router(input2)); <span class="hljs-comment">// I dont know why you say Foobar, I say hello.</span>
+<span class="hljs-built_in">console</span>.log(router(input2, extraParam)); <span class="hljs-comment">// I dont know why you say Foobar, I say hello.</span>
 </code></pre>
 <p>See <a href="https://github.com/fczuardi/calamars/blob/master/test/router.js">test/router.js</a> for more examples.</p>
 <hr>
@@ -239,7 +242,8 @@ for exact match or <code>RegExp.test</code> respectively.</p>
       
         
         <p>When the callback is a function, return the call
-to the callback passing the input as argument</p>
+to that callback passing the input as argument and any other arguments
+used on the router() call</p>
 
         
           <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span> &amp;&amp; !(compare <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span>)) {
@@ -249,7 +253,8 @@ to the callback passing the input as argument</p>
       
         
         <p>Alternative usage. When the <code>compare</code> part of a route is a regular
-expression, returns the call to the callback passing the matches as argument.</p>
+expression, returns the call to the callback passing the matches as
+first argument and any other extra arguments after that.</p>
 
         
           <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (compare <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">RegExp</span> &amp;&amp; <span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
