@@ -7,14 +7,14 @@
 // This library is a collection of different helper functions and classes,
 // currently there are 4 main components:
 //
-// - [router.js](./router.html)
-//   - a helper function to create input → output mappings
-// - [luis.js](./luis.html)
-//   - a driver for the LUIS webservice
-// - [wit.js](./wit.html)
-//   - a driver for the wit.ai webservice
 // - [facebook.js](./facebook.html)
 //   - a webserver/botserver to be used with the Facebook Messenger API
+// - [router.js](./router.html)
+//   - a helper function to create question → answers mappings
+// - [wit.js](./wit.html)
+//   - a driver for the wit.ai webservice
+// - [luis.js](./luis.html)
+//   - a driver for the LUIS webservice
 //
 // ---
 //

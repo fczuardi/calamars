@@ -83,6 +83,7 @@
 // #### [function, function] routes
 // ```javascript
 // import { createRouter } from 'calamars';
+//
 // const input1 = {
 //     query: 'Stop!',
 //     intentName: 'stop',
@@ -93,18 +94,20 @@
 //     intentName: 'None',
 //     score: 0.546681643
 // };
+// const extraParam = 'hello.';
+//
 // const routes = [[
 //     obj => obj.intentName === 'stop',
 //     obj => `You say ${obj.query}, I say go go go, oh no.`
 // ], [
 //     obj => obj.intentName === 'None',
-//     obj => `I dont know why you say ${obj.query}, I say hello.`
+//     (obj, extra) => `I dont know why you say ${obj.query}, I say ${extra}`
 // ]];
 //
 // const router = createRouter(routes);
 //
 // console.log(router(input1)); // You say Stop!, I say go go go, oh no.
-// console.log(router(input2)); // I dont know why you say Foobar, I say hello.
+// console.log(router(input2, extraParam)); // I dont know why you say Foobar, I say hello.
 // ```
 //
 // See [test/router.js](https://github.com/fczuardi/calamars/blob/master/test/router.js) for more examples.
@@ -145,13 +148,15 @@ const createRouter = routes => (input, ...other) => {
     const [compare, callback] = firstMatch;
 
     // When the callback is a function, return the call
-    // to the callback passing the input as argument
+    // to that callback passing the input as argument and any other arguments
+    // used on the router() call
     if (typeof callback === 'function' && !(compare instanceof RegExp)) {
         return callback(input, ...other);
     }
 
     // Alternative usage. When the ```compare``` part of a route is a regular
-    // expression, returns the call to the callback passing the matches as argument.
+    // expression, returns the call to the callback passing the matches as
+    // first argument and any other extra arguments after that.
     if (compare instanceof RegExp && typeof callback === 'function') {
         const matches = compare.exec(input);
         return callback(matches, ...other);
