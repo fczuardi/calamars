@@ -162,6 +162,17 @@ If you want to help us improve this library with a fix, a feature, better
 documentation or any other thing, please refer to the
 [contributing guide][contributing].
 
+## Showcase
+
+Who is using calamars in the real world:
+
+- [Calamarcopollo][pollo]: an open-source Telegram/Facebook Messenger bot that searches
+for brazilian intercity bus schedules and tickets using natural language
+(powered by wit.ai and clickbus api).
+
+If you are using it or know of someone else using it please let us know, open a
+pull request expanding this list, or file an issue :)
+
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [documentation]: http://fczuardi.github.io/calamars/
 [testfolder]: https://github.com/fczuardi/calamars/tree/master/test
@@ -172,3 +183,4 @@ documentation or any other thing, please refer to the
 [regexCallbackString]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L70-L81
 [createPayloadFunctionRouter]: https://github.com/fczuardi/calamars/blob/master/test/router.js#L107-L134
 [contributing]: https://github.com/fczuardi/calamars/blob/master/CONTRIBUTING.md
+[pollo]: https://github.com/fczuardi/calamarcopollo
