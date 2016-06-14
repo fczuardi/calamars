@@ -93,7 +93,8 @@ Facebook Messenger apps.</p>
         
           <div class='highlight'><pre>
 <span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">'express'</span>;
-<span class="hljs-keyword">import</span> bodyParser <span class="hljs-keyword">from</span> <span class="hljs-string">'body-parser'</span>;</pre></div>
+<span class="hljs-keyword">import</span> bodyParser <span class="hljs-keyword">from</span> <span class="hljs-string">'body-parser'</span>;
+<span class="hljs-keyword">import</span> { resolve <span class="hljs-keyword">as</span> resolvePath } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>;</pre></div>
         
       
         
@@ -139,6 +140,10 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 <li><strong>callbackPath</strong> - <em>string</em> - The endpoint path of the setup <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Callback URL</a></li>
 <li><strong>verifyToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Verify Token</a></li>
 <li><strong>pageTokens</strong> - <em>Array</em> - A list of page tokens to subscribe to</li>
+<li><strong>staticFiles</strong> - <em>Array</em> - List of specific static files to be served
+by the same expressjs server that runs the bot. Each item of this array
+should be an object in the format
+<code>{path: &#39;\some_get_endpoit&#39;, file: &#39;path/to/static.file&#39;}</code></li>
 <li><strong>listeners</strong> - <em>Object</em> - An object containing handler functions for
 specific &quot;<a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">messaging</a>&quot; updates or just a generic
 <code>onUpdate</code> handler. (see the
@@ -163,6 +168,7 @@ for details):<ul>
             verifyToken = FB_VERIFY_TOKEN,
             pageIds = [FB_PAGE_ID],
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
+            staticFiles = [],
             listeners = {}
         } = options;
 
@@ -177,6 +183,9 @@ for details):<ul>
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
+            staticFiles.forEach(item =&gt; {
+                app.get(item.path, (req, res) =&gt; res.sendFile(resolvePath(item.file)));
+            });
             app.listen(port, () =&gt; {
                 <span class="hljs-built_in">Promise</span>.all(pageTokens.map(token =&gt; pageSubscribe(token)))
                 .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
