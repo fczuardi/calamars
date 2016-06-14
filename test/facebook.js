@@ -1,6 +1,7 @@
 import test from 'ava';
 import request from 'request-promise';
 import { FacebookMessengerBot } from 'lib/facebook'; // eslint-disable-line
+import { readFileSync } from 'fs';
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
@@ -289,4 +290,21 @@ test('Change welcome message of a bot', async t => {
     };
     const setWelcomeMessageResult = await bot.setWelcomeMessage(message);
     t.truthy(setWelcomeMessageResult.result);
+});
+
+test('Bot server can also serve static files', async t => {
+    const port = PORT + 14;
+    const path = '/foo';
+    const file = '../LICENSE';
+    const uri = `http://localhost:${port}${path}`;
+    const staticFiles = [{ path, file }];
+    const bot = new FacebookMessengerBot({
+        port,
+        staticFiles
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const returnedBody = await request(uri);
+    const fileContents = readFileSync(file);
+    t.is(returnedBody, fileContents.toString());
 });
