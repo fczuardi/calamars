@@ -7,6 +7,7 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import { resolve as resolvePath } from 'path';
 
 // Facebook helpers: [facebookWebhookSetup.js](./facebookWebhookSetup.html)
 // and [facebookGraphHelpers.js](./facebookGraphHelpers.html)
@@ -36,6 +37,10 @@ class FacebookMessengerBot {
     //   - **callbackPath** - _string_ - The endpoint path of the setup [Callback URL][fbwebhook]
     //   - **verifyToken** - _string_ - The [Verify Token][fbwebhook]
     //   - **pageTokens** - _Array_ - A list of page tokens to subscribe to
+    //   - **staticFiles** - _Array_ - List of specific static files to be served
+    // by the same expressjs server that runs the bot. Each item of this array
+    // should be an object in the format
+    // ```{path: '\some_get_endpoit', file: 'path/to/static.file'}```
     //   - **listeners** - _Object_ - An object containing handler functions for
     // specific "[messaging][fbmessageformat]" updates or just a generic
     // ```onUpdate``` handler. (see the
@@ -57,6 +62,7 @@ class FacebookMessengerBot {
             verifyToken = FB_VERIFY_TOKEN,
             pageIds = [FB_PAGE_ID],
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
+            staticFiles = [],
             listeners = {}
         } = options;
 
@@ -71,6 +77,9 @@ class FacebookMessengerBot {
             app.use(bodyParser.json());
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, this));
+            staticFiles.forEach(item => {
+                app.get(item.path, (req, res) => res.sendFile(resolvePath(item.file)));
+            });
             app.listen(port, () => {
                 Promise.all(pageTokens.map(token => pageSubscribe(token)))
                 .then(() => resolve(true));
