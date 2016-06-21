@@ -205,7 +205,7 @@ for exact match or <code>RegExp.test</code> respectively.</p>
           <div class='highlight'><pre>    <span class="hljs-keyword">const</span> matchingRoutes = routes.filter(route =&gt; {
         <span class="hljs-keyword">const</span> cmp = route[<span class="hljs-number">0</span>];
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cmp === <span class="hljs-string">'function'</span>) {
-            <span class="hljs-keyword">return</span> cmp(input);
+            <span class="hljs-keyword">return</span> cmp(input, ...other);
         }
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cmp === <span class="hljs-string">'string'</span>) {
             <span class="hljs-keyword">return</span> cmp === input;
