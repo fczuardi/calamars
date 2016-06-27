@@ -27,7 +27,8 @@ const calamarMessageFormat = update => {
             timestamp,
             messageId: mid,
             senderId: sender.id,
-            chatId: recipient.id,
+            recipientId: recipient.id,
+            chatId: sender.id,
             platform: PLATFORM_FACEBOOK_MESSENGER
         };
     }
