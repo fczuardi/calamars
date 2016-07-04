@@ -78,6 +78,13 @@ const setupPostWebhook = (listeners, bot) => (req, res) => {
                 onDelivery(payload);
             }
             if (postback) {
+                const postbackPayload = JSON.parse(postback.payload);
+                if (postbackPayload.type && postbackPayload.type === 'legacy-welcome') {
+                    bot.sendMessage({
+                        userId: update.sender.id,
+                        text: postbackPayload.message.text
+                    });
+                }
                 onPostback(payload);
             }
         });

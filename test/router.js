@@ -134,6 +134,34 @@ test(
 );
 
 test(
+    'comparisonFunction receiving extra arguments',
+    t => {
+        const routes = [
+            [
+                (payload, context) => (payload.intentName === 'yes' && context.foo === 'bar'),
+                () => 'no'
+            ],
+            [
+                () => true,
+                payload => `I dont know why you say ${payload.query}, I say hello.`
+            ]
+        ];
+        const context = {
+            foo: 'bar'
+        };
+        const router = createRouter(routes);
+        t.is(router({
+            query: 'Yes',
+            intentName: 'yes',
+            score: 0.9629247
+        }, context), 'no');
+        t.is(router({
+            query: 'cha cha cha'
+        }), 'I dont know why you say cha cha cha, I say hello.');
+    }
+);
+
+test(
     'pass extra parameters to the generated router and use them in the callback',
     t => {
         const routes = [[

@@ -92,7 +92,12 @@ const setWelcomeMessage = (message, pageId, pageAccessToken) => request({
     body: {
         setting_type: 'call_to_actions',
         thread_state: 'new_thread',
-        call_to_actions: [{ message }]
+        call_to_actions: [{
+            payload: JSON.stringify({
+                type: 'legacy-welcome',
+                message
+            })
+        }]
     }
 });
 

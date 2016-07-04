@@ -125,7 +125,7 @@ const createRouter = routes => (input, ...other) => {
     const matchingRoutes = routes.filter(route => {
         const cmp = route[0];
         if (typeof cmp === 'function') {
-            return cmp(input);
+            return cmp(input, ...other);
         }
         if (typeof cmp === 'string') {
             return cmp === input;

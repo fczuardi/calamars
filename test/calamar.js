@@ -27,7 +27,8 @@ test('Translate Facebook Messenger messaging item to Calamar message format', t 
         timestamp,
         messageId: mid,
         senderId,
-        chatId: recipientId,
+        recipientId,
+        chatId: senderId,
         platform: platformName
     };
     t.deepEqual(calamarMessageFormat(facebookMessagingItem), calamarMessage);
