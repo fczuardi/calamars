@@ -190,6 +190,13 @@ parameter to the listener callbacks.</li>
                 onDelivery(payload);
             }
             <span class="hljs-keyword">if</span> (postback) {
+                <span class="hljs-keyword">const</span> postbackPayload = <span class="hljs-built_in">JSON</span>.parse(postback.payload);
+                <span class="hljs-keyword">if</span> (postbackPayload.type &amp;&amp; postbackPayload.type === <span class="hljs-string">'legacy-welcome'</span>) {
+                    bot.sendMessage({
+                        userId: update.sender.id,
+                        text: postbackPayload.message.text
+                    });
+                }
                 onPostback(payload);
             }
         });

@@ -193,7 +193,12 @@ A helper function to make graph api calls to set new thread state message
     body: {
         setting_type: <span class="hljs-string">'call_to_actions'</span>,
         thread_state: <span class="hljs-string">'new_thread'</span>,
-        call_to_actions: [{ message }]
+        call_to_actions: [{
+            payload: <span class="hljs-built_in">JSON</span>.stringify({
+                type: <span class="hljs-string">'legacy-welcome'</span>,
+                message
+            })
+        }]
     }
 });
 
