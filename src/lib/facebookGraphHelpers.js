@@ -76,34 +76,69 @@ const userInfo = (userId, pageAccessToken) => new Promise(resolve => request({
     resolve(JSON.parse(body))
 ));
 
+// ## threadSettings(options, pageId, pageAccessToken)
+// Generic method for the various thread settings that can be set, such as
+// Greeting Text, Get Start Button or Persistent Menu
+//
+// A helper function to make graph api calls to
+// [thread_settings endpoint][thread_settings_reference].
+//
+// [thread_settings_reference]: https://developers.facebook.com/docs/messenger-platform/thread-settings
+const threadSettings = ({ type, state, text, cta }, pageId, pageAccessToken) => {
+    const requestOptions = {
+        uri: `${apiURL}${pageId}/thread_settings`,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: 'POST',
+        json: true
+    };
+    if (type === 'greeting') {
+        return request({
+            ...requestOptions,
+            body: {
+                setting_type: type,
+                greeting: {
+                    text
+                }
+            }
+        });
+    }
+    return request({
+        ...requestOptions,
+        body: {
+            thread_state: state,
+            setting_type: type,
+            call_to_actions: cta
+        }
+    });
+};
+
 // ## setWelcomeMessage(message, pageId, pageAccessToken)
 // Change the Welcome Message for the messenger of a page.
 // A helper function to make graph api calls to set new thread state message
 // [setting][welcome_message_configuration].
 //
 // [welcome_message_configuration]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#welcome_message_configuration
-const setWelcomeMessage = (message, pageId, pageAccessToken) => request({
-    uri: `${apiURL}${pageId}/thread_settings`,
-    qs: {
-        access_token: pageAccessToken
-    },
-    method: 'POST',
-    json: true,
-    body: {
-        setting_type: 'call_to_actions',
-        thread_state: 'new_thread',
-        call_to_actions: [{
+const setWelcomeMessage = (message, pageId, pageAccessToken) => threadSettings(
+    {
+        type: 'call_to_actions',
+        state: 'new_thread',
+        cta: [{
             payload: JSON.stringify({
                 type: 'legacy-welcome',
                 message
             })
         }]
-    }
-});
+    },
+    pageId,
+    pageAccessToken
+);
 
 export {
     pageSubscribe,
     sendTextMessage,
     userInfo,
-    setWelcomeMessage
+    setWelcomeMessage,
+    threadSettings
 };
