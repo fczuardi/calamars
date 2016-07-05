@@ -177,36 +177,72 @@ get information from the userId</li>
         
       
         
+        <h2 id="threadsettings-options-pageid-pageaccesstoken-">threadSettings(options, pageId, pageAccessToken)</h2>
+<p>Generic method for the various thread settings that can be set, such as
+Greeting Text, Get Start Button or Persistent Menu</p>
+<p>A helper function to make graph api calls to
+<a href="https://developers.facebook.com/docs/messenger-platform/thread-settings">thread_settings endpoint</a>.</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> threadSettings = ({ type, state, text, cta }, pageId, pageAccessToken) =&gt; {
+    <span class="hljs-keyword">const</span> requestOptions = {
+        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${pageId}</span>/thread_settings`</span>,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: <span class="hljs-string">'POST'</span>,
+        json: <span class="hljs-literal">true</span>
+    };
+    <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'greeting'</span>) {
+        <span class="hljs-keyword">return</span> request({
+            ...requestOptions,
+            body: {
+                setting_type: type,
+                greeting: {
+                    text
+                }
+            }
+        });
+    }
+    <span class="hljs-keyword">return</span> request({
+        ...requestOptions,
+        body: {
+            thread_state: state,
+            setting_type: type,
+            call_to_actions: cta
+        }
+    });
+};</pre></div>
+        
+      
+        
         <h2 id="setwelcomemessage-message-pageid-pageaccesstoken-">setWelcomeMessage(message, pageId, pageAccessToken)</h2>
 <p>Change the Welcome Message for the messenger of a page.
 A helper function to make graph api calls to set new thread state message
 <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#welcome_message_configuration">setting</a>.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setWelcomeMessage = (message, pageId, pageAccessToken) =&gt; request({
-    uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${pageId}</span>/thread_settings`</span>,
-    qs: {
-        access_token: pageAccessToken
-    },
-    method: <span class="hljs-string">'POST'</span>,
-    json: <span class="hljs-literal">true</span>,
-    body: {
-        setting_type: <span class="hljs-string">'call_to_actions'</span>,
-        thread_state: <span class="hljs-string">'new_thread'</span>,
-        call_to_actions: [{
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setWelcomeMessage = (message, pageId, pageAccessToken) =&gt; threadSettings(
+    {
+        type: <span class="hljs-string">'call_to_actions'</span>,
+        state: <span class="hljs-string">'new_thread'</span>,
+        cta: [{
             payload: <span class="hljs-built_in">JSON</span>.stringify({
                 type: <span class="hljs-string">'legacy-welcome'</span>,
                 message
             })
         }]
-    }
-});
+    },
+    pageId,
+    pageAccessToken
+);
 
 <span class="hljs-keyword">export</span> {
     pageSubscribe,
     sendTextMessage,
     userInfo,
-    setWelcomeMessage
+    setWelcomeMessage,
+    threadSettings
 };</pre></div>
         
       

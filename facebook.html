@@ -107,7 +107,8 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
     pageSubscribe,
     sendTextMessage,
     userInfo,
-    setWelcomeMessage
+    setWelcomeMessage,
+    threadSettings
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
         
       
@@ -203,6 +204,10 @@ for details):<ul>
 
     setWelcomeMessage(message, pageId = <span class="hljs-keyword">this</span>.pageIds[<span class="hljs-number">0</span>], pageAccessToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
         <span class="hljs-keyword">return</span> setWelcomeMessage(message, pageId, pageAccessToken);
+    }
+
+    setThreadSettings(options, pageId = <span class="hljs-keyword">this</span>.pageIds[<span class="hljs-number">0</span>], pageAccessToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> threadSettings(options, pageId, pageAccessToken);
     }
 }
 
