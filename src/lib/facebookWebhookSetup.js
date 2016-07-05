@@ -78,12 +78,16 @@ const setupPostWebhook = (listeners, bot) => (req, res) => {
                 onDelivery(payload);
             }
             if (postback) {
-                const postbackPayload = JSON.parse(postback.payload);
-                if (postbackPayload.type && postbackPayload.type === 'legacy-welcome') {
-                    bot.sendMessage({
-                        userId: update.sender.id,
-                        text: postbackPayload.message.text
-                    });
+                try {
+                    const postbackPayload = JSON.parse(postback.payload);
+                    if (postbackPayload.type && postbackPayload.type === 'legacy-welcome') {
+                        bot.sendMessage({
+                            userId: update.sender.id,
+                            text: postbackPayload.message.text
+                        });
+                    }
+                } catch (e) {
+                    console.warn('postback is not json');
                 }
                 onPostback(payload);
             }
