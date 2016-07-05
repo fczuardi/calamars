@@ -292,8 +292,31 @@ test('Change welcome message of a bot', async t => {
     t.truthy(setWelcomeMessageResult.result);
 });
 
+test('Setup persistent menu of a bot', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 14
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const type = 'call_to_actions';
+    const state = 'existing_thread';
+    const cta = [
+        {
+            type: 'web_url',
+            title: 'Foo',
+            url: 'http://example.com'
+        }
+    ];
+    const setThreadSettingResult = await bot.setThreadSettings({
+        type,
+        state,
+        cta
+    });
+    t.truthy(setThreadSettingResult);
+});
+
 test('Bot server can also serve static files', async t => {
-    const port = PORT + 14;
+    const port = PORT + 15;
     const path = '/foo';
     const file = '../LICENSE';
     const uri = `http://localhost:${port}${path}`;
