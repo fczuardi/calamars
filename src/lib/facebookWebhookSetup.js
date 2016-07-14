@@ -1,3 +1,8 @@
+import crypto from 'crypto';
+import jsesc from 'jsesc';
+
+const appSecret = process.env.FB_APP_SECRET;
+
 // facebookWebhookSetup
 // ====================
 //
@@ -49,6 +54,12 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
 // [npmbodyparser]: https://www.npmjs.com/package/body-parser
 // [webhookreference]: https://developers.facebook.com/docs/messenger-platform/webhook-reference
 const setupPostWebhook = (listeners, bot) => (req, res) => {
+    const signature = req.headers['x-hub-signature'];
+    const escapedText = jsesc(req.body, { json: true, lowercaseHex: true });
+    const sha1Bot = crypto.createHmac('sha1', appSecret).update(escapedText).digest('hex');
+    const sha1Fb = signature ? signature.slice('sha1='.length) : null;
+    // console.log('sha1Bot__', sha1Bot);
+    // console.log('sha1Fb___', sha1Fb, escapedText);
     const fNull = () => null;
     const {
         onUpdate = fNull,
@@ -57,7 +68,7 @@ const setupPostWebhook = (listeners, bot) => (req, res) => {
         onDelivery = fNull,
         onPostback = fNull
     } = listeners;
-    if (!req.body.entry || !Array.isArray(req.body.entry)) {
+    if (!req.body.entry || !Array.isArray(req.body.entry) || sha1Bot !== sha1Fb) {
         return res.send(false);
     }
     req.body.entry.forEach(({ messaging }) => {
