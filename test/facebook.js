@@ -119,17 +119,20 @@ test(
                 }]
             }]
         };
-        const botResponse = await request({
-            uri,
-            method: 'POST',
-            headers: {
-                'x-hub-signature': `${bodyDigest(body)}foo`
-            },
-            body,
-            json: true
-        });
-        t.pass();
-        t.false(botResponse);
+        try {
+            const botResponse = await request({
+                uri,
+                method: 'POST',
+                headers: {
+                    'x-hub-signature': `${bodyDigest(body)}foo`
+                },
+                body,
+                json: true
+            });
+            t.fail(botResponse);
+        } catch (e) {
+            t.is(e.message, '401 - false');
+        }
     }
 );
 
@@ -165,7 +168,7 @@ test(
     async t => {
         const port = PORT + 7;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
-        const msg = 'Foobar';
+        const msg = '/reset';
         const listeners = {
             onMessage: ({ update }) => {
                 const { message } = update;
