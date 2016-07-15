@@ -17,7 +17,6 @@
           
           
             <div class='highlight'><pre><span class="hljs-keyword">import</span> crypto <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;
-<span class="hljs-keyword">import</span> jsesc <span class="hljs-keyword">from</span> <span class="hljs-string">'jsesc'</span>;
 
 <span class="hljs-keyword">const</span> appSecret = process.env.FB_APP_SECRET;</pre></div>
           
@@ -119,6 +118,23 @@ the requested <code>hub.verify_token</code> parameter value.</p>
     } <span class="hljs-keyword">else</span> {
         res.send(<span class="hljs-string">'Error, wrong validation token'</span>);
     }
+};
+
+<span class="hljs-keyword">const</span> verifySignature = (req, res, buf) =&gt; {
+    <span class="hljs-keyword">const</span> signature = req.headers[<span class="hljs-string">'x-hub-signature'</span>];
+    <span class="hljs-keyword">const</span> sha1Bot = crypto.createHmac(<span class="hljs-string">'sha1'</span>, appSecret).update(buf).digest(<span class="hljs-string">'hex'</span>);
+    <span class="hljs-keyword">const</span> sha1Fb = signature ? signature.slice(<span class="hljs-string">'sha1='</span>.length) : <span class="hljs-literal">null</span>;</pre></div>
+        
+      
+        
+        <p>console.log(&#39;sha1Bot<strong>&#39;, sha1Bot);
+console.log(&#39;sha1Fb_</strong>&#39;, sha1Fb);</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-keyword">if</span> (sha1Bot !== sha1Fb) {
+        <span class="hljs-keyword">return</span> res.status(<span class="hljs-number">401</span>).send(<span class="hljs-literal">false</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div>
         
       
@@ -170,18 +186,10 @@ parameter to the listener callbacks.</li>
 
         
           <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = (listeners, bot) =&gt; (req, res) =&gt; {
-    <span class="hljs-keyword">const</span> signature = req.headers[<span class="hljs-string">'x-hub-signature'</span>];
-    <span class="hljs-keyword">const</span> escapedText = jsesc(req.body, { json: <span class="hljs-literal">true</span>, lowercaseHex: <span class="hljs-literal">true</span> });
-    <span class="hljs-keyword">const</span> sha1Bot = crypto.createHmac(<span class="hljs-string">'sha1'</span>, appSecret).update(escapedText).digest(<span class="hljs-string">'hex'</span>);
-    <span class="hljs-keyword">const</span> sha1Fb = signature ? signature.slice(<span class="hljs-string">'sha1='</span>.length) : <span class="hljs-literal">null</span>;</pre></div>
-        
-      
-        
-        <p>console.log(&#39;sha1Bot<strong>&#39;, sha1Bot);
-console.log(&#39;sha1Fb_</strong>&#39;, sha1Fb, escapedText);</p>
-
-        
-          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> fNull = () =&gt; <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (res.headersSent) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+    <span class="hljs-keyword">const</span> fNull = () =&gt; <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">const</span> {
         onUpdate = fNull,
         onMessage = fNull,
@@ -189,7 +197,7 @@ console.log(&#39;sha1Fb_</strong>&#39;, sha1Fb, escapedText);</p>
         onDelivery = fNull,
         onPostback = fNull
     } = listeners;
-    <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry) || sha1Bot !== sha1Fb) {
+    <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
         <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
     }
     req.body.entry.forEach(({ messaging }) =&gt; {
@@ -228,7 +236,7 @@ console.log(&#39;sha1Fb_</strong>&#39;, sha1Fb, escapedText);</p>
     <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">true</span>);
 };
 
-<span class="hljs-keyword">export</span> { setupGetWebhook, setupPostWebhook };</pre></div>
+<span class="hljs-keyword">export</span> { setupGetWebhook, setupPostWebhook, verifySignature };</pre></div>
         
       
       <div class="fleur">h</div>

@@ -102,7 +102,7 @@ Facebook Messenger apps.</p>
 and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">import</span> { setupGetWebhook, setupPostWebhook } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookWebhookSetup'</span>;
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> { setupGetWebhook, setupPostWebhook, verifySignature } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookWebhookSetup'</span>;
 <span class="hljs-keyword">import</span> {
     pageSubscribe,
     sendTextMessage,
@@ -181,7 +181,7 @@ for details):<ul>
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
         <span class="hljs-keyword">const</span> app = express();
         <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
-            app.use(bodyParser.json());
+            app.use(bodyParser.json({ verify: verifySignature }));
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
             staticFiles.forEach(item =&gt; {
