@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>dbLocalStorage.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>dbLocalStorage.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="calamar.html">
+                    calamar.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="contextSet.html">
+                    contextSet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dbLocalStorage.html">
+                    dbLocalStorage.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebook.html">
+                    facebook.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookGraphHelpers.html">
+                    facebookGraphHelpers.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookWebhookSetup.html">
+                    facebookWebhookSetup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="wit.html">
+                    wit.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        
+        
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> { LocalStorage } <span class="hljs-keyword">from</span> <span class="hljs-string">'node-localstorage'</span>;
+<span class="hljs-keyword">import</span> {
+    propEq, find, findIndex, remove, defaultTo,
+    update, gte, concat, <span class="hljs-keyword">of</span>, merge
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>;
+
+<span class="hljs-keyword">const</span> getDb = config =&gt; <span class="hljs-keyword">new</span> LocalStorage(config.localPath);
+
+<span class="hljs-keyword">const</span> setTable = (db, tableName, data) =&gt; db.setItem(tableName, <span class="hljs-built_in">JSON</span>.stringify(data));
+<span class="hljs-keyword">const</span> getTable = (db, tableName) =&gt; <span class="hljs-built_in">JSON</span>.parse(db.getItem(tableName));
+
+<span class="hljs-keyword">const</span> getUsers = db =&gt; getTable(db, <span class="hljs-string">'users'</span>);
+<span class="hljs-keyword">const</span> setUsers = (db, data) =&gt; setTable(db, <span class="hljs-string">'users'</span>, data);
+
+<span class="hljs-keyword">const</span> getUser = (db, userId) =&gt; {
+    <span class="hljs-keyword">const</span> users = getUsers(db);
+    <span class="hljs-keyword">const</span> propEqIdUserId = propEq(<span class="hljs-string">'id'</span>, userId);
+    <span class="hljs-keyword">const</span> user = defaultTo({}, find(propEqIdUserId, users));
+    <span class="hljs-keyword">return</span> user;
+};
+<span class="hljs-keyword">const</span> getUserIndex = (users, userId) =&gt; {
+    <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+    <span class="hljs-keyword">const</span> propEqIdUserId = propEq(<span class="hljs-string">'id'</span>, userId);
+    <span class="hljs-keyword">return</span> findIndex(propEqIdUserId, users);
+};
+<span class="hljs-keyword">const</span> setUser = (db, userId, nextUser) =&gt; {
+    <span class="hljs-keyword">if</span> (!nextUser) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">const</span> users = getUsers(db);
+    <span class="hljs-keyword">const</span> userIndex = getUserIndex(users, userId);
+    <span class="hljs-keyword">const</span> updatedUsers = <span class="hljs-keyword">of</span>(merge({ id: userId }, nextUser));
+    <span class="hljs-keyword">const</span> nextUsers = gte(userIndex, <span class="hljs-number">0</span>)
+        ? update(userIndex, nextUser, users)
+        : concat(users, updatedUsers);
+    <span class="hljs-keyword">return</span> setUsers(db, nextUsers);
+};
+<span class="hljs-keyword">const</span> removeUser = (db, userId) =&gt; {
+    <span class="hljs-keyword">const</span> users = getUsers(db);
+    <span class="hljs-keyword">const</span> userIndex = getUserIndex(users, userId);
+    <span class="hljs-keyword">return</span> setUsers(db, remove(userIndex, <span class="hljs-number">1</span>, users));
+};
+
+<span class="hljs-keyword">const</span> getUserProp = (db, userId, key) =&gt; getUser(db, userId)[key];
+<span class="hljs-keyword">const</span> setUserProp = (db, userId, key, value) =&gt; setUser(db, userId, {
+    id: userId,
+    [key]: value,
+    ...getUser(db, userId)
+});
+<span class="hljs-keyword">const</span> removeUserProp = (db, userId, key) =&gt; {
+    <span class="hljs-keyword">const</span> { [key]: oldItem, ...other } = getUser(db, userId);
+    <span class="hljs-keyword">return</span> setUser(db, userId, { ...other });
+};
+
+<span class="hljs-keyword">export</span> {
+    getDb,
+    getUsers,
+    setUsers,
+    getUser,
+    setUser,
+    removeUser,
+    getUserProp,
+    setUserProp,
+    removeUserProp
+};</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
