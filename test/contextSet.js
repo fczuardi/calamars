@@ -4,18 +4,18 @@ import ContextSet from 'lib/contextSet';
 
 const storage = new ContextSet({ localPath: '../cache-test' });
 
-test.only('removeContext', t => {
+test('removeContext', t => {
     const contextId = 1;
     storage.removeContext(contextId);
     t.deepEqual(storage.getContext(contextId), {});
 });
 
-test.only('setContext without id or next context returns null', t => {
+test('setContext without id or next context returns null', t => {
     t.falsy(storage.setContext());
     t.falsy(storage.setContext('2'));
 });
 
-test.only('setContext, getContext, getContextProp', t => {
+test('setContext, getContext, getContextProp', t => {
     const contextId = '2';
     const nextContext = {
         id: contextId,
@@ -27,7 +27,7 @@ test.only('setContext, getContext, getContextProp', t => {
     t.is(storage.getContextProp(contextId, 'name'), nextContext.name);
 });
 
-test.only('setContextProp, removeContextProp', t => {
+test('setContextProp, removeContextProp', t => {
     const contextId = '345';
     const context = {
         firstName: 'foo',
