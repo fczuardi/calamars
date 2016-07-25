@@ -22,3 +22,7 @@ test('Have FacebookMessenger class', t => {
 test('Have Calamar lib functions', t => {
     t.truthy(lib.calamarMessageFormat);
 });
+
+test('Have ContextSet lib class', t => {
+    t.truthy(lib.ContextSet);
+});

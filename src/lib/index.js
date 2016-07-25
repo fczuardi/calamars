@@ -41,3 +41,6 @@ export {
 export {
     calamarMessageFormat
 } from './calamar';
+export {
+    default as ContextSet
+} from './contextSet';
