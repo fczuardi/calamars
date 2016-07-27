@@ -41,9 +41,9 @@ const removeUser = (db, userId) => {
 
 const getUserProp = (db, userId, key) => getUser(db, userId)[key];
 const setUserProp = (db, userId, key, value) => setUser(db, userId, {
+    ...getUser(db, userId),
     id: userId,
-    [key]: value,
-    ...getUser(db, userId)
+    [key]: value
 });
 const removeUserProp = (db, userId, key) => {
     const { [key]: oldItem, ...other } = getUser(db, userId);

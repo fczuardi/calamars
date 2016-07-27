@@ -34,11 +34,14 @@ test('setContextProp, removeContextProp', t => {
         lastName: 'bar'
     };
     const age = 37;
+    const age2 = 18;
     storage.removeContext(contextId);
     storage.setContext(contextId, context);
     storage.setContextProp(contextId, 'age', age);
     t.is(storage.getContextProp(contextId, 'age'), age);
     t.deepEqual(storage.getContext(contextId), { id: contextId, age, ...context });
+    storage.setContextProp(contextId, 'age', age2);
+    t.deepEqual(storage.getContext(contextId), { id: contextId, age: age2, ...context });
 
     storage.removeContextProp(contextId, 'age');
     t.deepEqual(storage.getContext(contextId), { id: contextId, ...context });
