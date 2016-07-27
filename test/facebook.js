@@ -388,8 +388,29 @@ test('Setup persistent menu of a bot', async t => {
     t.truthy(setThreadSettingResult);
 });
 
+test('Setup Get Start button postback of a bot', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 16
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const type = 'call_to_actions';
+    const state = 'new_thread';
+    const cta = [
+        {
+            payload: 'START'
+        }
+    ];
+    const setThreadSettingResult = await bot.setThreadSettings({
+        type,
+        state,
+        cta
+    });
+    t.truthy(setThreadSettingResult);
+});
+
 test('Bot server can also serve static files', async t => {
-    const port = PORT + 16;
+    const port = PORT + 17;
     const path = '/foo';
     const file = '../LICENSE';
     const uri = `http://localhost:${port}${path}`;
