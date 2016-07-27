@@ -143,9 +143,9 @@
 
 <span class="hljs-keyword">const</span> getUserProp = (db, userId, key) =&gt; getUser(db, userId)[key];
 <span class="hljs-keyword">const</span> setUserProp = (db, userId, key, value) =&gt; setUser(db, userId, {
+    ...getUser(db, userId),
     id: userId,
-    [key]: value,
-    ...getUser(db, userId)
+    [key]: value
 });
 <span class="hljs-keyword">const</span> removeUserProp = (db, userId, key) =&gt; {
     <span class="hljs-keyword">const</span> { [key]: oldItem, ...other } = getUser(db, userId);
