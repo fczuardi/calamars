@@ -50,7 +50,6 @@ const removeUserProp = (db, userId, key) => {
     return setUser(db, userId, { ...other });
 };
 
-// SKEEEEETCH!!! GOTTA TEST IT!!
 const getSelectWhereList = (db, key, value) => {
     var isValue = n => n[key] === value
     const users = getUsers(db);

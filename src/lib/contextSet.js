@@ -36,7 +36,6 @@ class ContextSet {
     removeContextProp(id, key) {
         return removeUserProp(this.db, id, key);
     }
-    // SKETCHH!! GOTTA TEST
     getPropValueList (key, value) {
         return getSelectWhereList (this.db, key, value)
     }
