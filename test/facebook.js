@@ -2,6 +2,8 @@ import test from 'ava';
 import request from 'request-promise';
 import { FacebookMessengerBot } from 'lib/facebook'; // eslint-disable-line
 import { readFileSync } from 'fs';
+import crypto from 'crypto';
+import jsesc from 'jsesc';
 
 test('Evironment var for the Facebook app is set', t => {
     t.truthy(process.env.FB_CALLBACK_PATH);
@@ -62,6 +64,14 @@ test('Bot Webserver launches and returns expected challenge', async t => {
     t.is(returnedBody2, validationErrorString);
 });
 
+const appSecret = process.env.FB_APP_SECRET;
+const bodyDigest = body => {
+    const digest = crypto.createHmac('sha1', appSecret)
+        .update(jsesc(body, { json: true, lowercaseHex: true }))
+        .digest('hex');
+    return `sha1=${digest}`;
+};
+
 test(
     'Bot responds with false when it receives a POST on the webhook with no entry parameter',
     async t => {
@@ -70,19 +80,66 @@ test(
         const bot = new FacebookMessengerBot({ port });
         const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
+        const body = {};
         const botResponse = await request({
             uri,
             method: 'POST',
-            body: {},
+            body,
+            headers: {
+                'x-hub-signature': `${bodyDigest(body)}`
+            },
             json: true
         });
         t.false(botResponse);
     }
 );
+
+test(
+    'Bot responds with false when it receives a POST on the webhook with wrong sha1 hash',
+    async t => {
+        const port = PORT + 5;
+        const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
+        const bot = new FacebookMessengerBot({ port });
+        const serverStarted = await bot.launchPromise;
+        t.true(serverStarted);
+        const body = {
+            object: 'page',
+            entry: [{
+                id: '721458654659118',
+                time: 1468468354711,
+                messaging: [{
+                    sender: { id: '10154319360809636' },
+                    recipient: { id: '721458654659118' },
+                    timestamp: 1468468354680,
+                    message: {
+                        mid: 'mid.1468468354673:414fa177e7544ac274',
+                        seq: 5225,
+                        text: 'äöå'
+                    }
+                }]
+            }]
+        };
+        try {
+            const botResponse = await request({
+                uri,
+                method: 'POST',
+                headers: {
+                    'x-hub-signature': `${bodyDigest(body)}foo`
+                },
+                body,
+                json: true
+            });
+            t.fail(botResponse);
+        } catch (e) {
+            t.is(e.message, '401 - false');
+        }
+    }
+);
+
 test(
     'Bot with an onUpdate handler calls it when a POST is received',
     async t => {
-        const port = PORT + 5;
+        const port = PORT + 6;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const listeners = {
             onUpdate: ({ update }) => {
@@ -92,10 +149,14 @@ test(
         const bot = new FacebookMessengerBot({ port, listeners });
         const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
+        const body = { entry: [{ messaging: [{ }] }] };
         const requestOptions = {
             uri,
             method: 'POST',
-            body: { entry: [{ messaging: [{ }] }] },
+            body,
+            headers: {
+                'x-hub-signature': `${bodyDigest(body)}`
+            },
             json: true
         };
         const returnedBody = await request(requestOptions);
@@ -105,9 +166,9 @@ test(
 test(
     'Bot with an onMessage handler calls it when a message POST is received',
     async t => {
-        const port = PORT + 6;
+        const port = PORT + 7;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
-        const msg = 'Foobar';
+        const msg = '/reset';
         const listeners = {
             onMessage: ({ update }) => {
                 const { message } = update;
@@ -117,10 +178,14 @@ test(
         const bot = new FacebookMessengerBot({ port, listeners });
         const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
+        const body = { entry: [{ messaging: [{ message: { text: msg } }] }] };
         const requestOptions = {
             uri,
             method: 'POST',
-            body: { entry: [{ messaging: [{ message: { text: msg } }] }] },
+            body,
+            headers: {
+                'x-hub-signature': `${bodyDigest(body)}`
+            },
             json: true
         };
         const returnedBody = await request(requestOptions);
@@ -129,7 +194,7 @@ test(
 );
 
 test('Bot get user data', async t => {
-    const port = PORT + 7;
+    const port = PORT + 8;
     const bot = new FacebookMessengerBot({ port });
     t.is(typeof bot.getUserInfo, 'function');
     const userInfo = await bot.getUserInfo(process.env.FB_TEST_USER_ID);
@@ -139,7 +204,7 @@ test('Bot get user data', async t => {
 test(
     'Bot with onAuthentication, onDelivery and onPostback listeners',
     async t => {
-        const port = PORT + 8;
+        const port = PORT + 9;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const ref = 'PASS_THROUGH_PARAM';
         const watermark = 1458668856253;
@@ -161,18 +226,22 @@ test(
         const bot = new FacebookMessengerBot({ port, listeners });
         const serverStarted = await bot.launchPromise;
         t.true(serverStarted);
+        const body = { entry: [
+            { messaging: [
+                { optin: { ref } },
+                { delivery: { watermark } }
+            ] },
+            { messaging: [
+                { postback: { payload } }
+            ] }
+        ] };
         const requestOptions = {
             uri,
             method: 'POST',
-            body: { entry: [
-                { messaging: [
-                    { optin: { ref } },
-                    { delivery: { watermark } }
-                ] },
-                { messaging: [
-                    { postback: { payload } }
-                ] }
-            ] },
+            body,
+            headers: {
+                'x-hub-signature': `${bodyDigest(body)}`
+            },
             json: true
         };
         const returnedBody = await request(requestOptions);
@@ -183,7 +252,7 @@ test(
 test(
     'Bot with an onMessage handler that calls a method of the owner bot (issue #11)',
     t => {
-        const port = PORT + 9;
+        const port = PORT + 10;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const msg = 'Foobar';
         return new Promise(async resolve => {
@@ -198,13 +267,17 @@ test(
             const bot = new FacebookMessengerBot({ port, listeners });
             const serverStarted = await bot.launchPromise;
             t.true(serverStarted);
+            const body = { entry: [{ messaging: [{
+                sender: { id: process.env.FB_TEST_USER_ID },
+                message: { text: msg }
+            }] }] };
             const requestOptions = {
                 uri,
                 method: 'POST',
-                body: { entry: [{ messaging: [{
-                    sender: { id: process.env.FB_TEST_USER_ID },
-                    message: { text: msg }
-                }] }] },
+                body,
+                headers: {
+                    'x-hub-signature': `${bodyDigest(body)}`
+                },
                 json: true
             };
             const returnedBody = await request(requestOptions);
@@ -215,7 +288,7 @@ test(
 
 test('Bot sends a text message', async t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 10
+        port: PORT + 11
     });
     const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
@@ -237,7 +310,7 @@ test('Bot sends a text message', async t => {
 
 test('Bot sends a long text message', async t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 11
+        port: PORT + 12
     });
     const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
@@ -260,7 +333,7 @@ The pleasing punishment that deceive the Capitol!
 
 test('Bot sends a message with image attachment', async t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 12
+        port: PORT + 13
     });
     const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
@@ -281,7 +354,7 @@ test('Bot sends a message with image attachment', async t => {
 
 test('Change welcome message of a bot', async t => {
     const bot = new FacebookMessengerBot({
-        port: PORT + 13
+        port: PORT + 14
     });
     const serverStarted = await bot.launchPromise;
     t.true(serverStarted);
@@ -292,8 +365,31 @@ test('Change welcome message of a bot', async t => {
     t.truthy(setWelcomeMessageResult.result);
 });
 
+test('Setup persistent menu of a bot', async t => {
+    const bot = new FacebookMessengerBot({
+        port: PORT + 15
+    });
+    const serverStarted = await bot.launchPromise;
+    t.true(serverStarted);
+    const type = 'call_to_actions';
+    const state = 'existing_thread';
+    const cta = [
+        {
+            type: 'web_url',
+            title: 'Foo',
+            url: 'http://example.com'
+        }
+    ];
+    const setThreadSettingResult = await bot.setThreadSettings({
+        type,
+        state,
+        cta
+    });
+    t.truthy(setThreadSettingResult);
+});
+
 test('Bot server can also serve static files', async t => {
-    const port = PORT + 14;
+    const port = PORT + 16;
     const path = '/foo';
     const file = '../LICENSE';
     const uri = `http://localhost:${port}${path}`;

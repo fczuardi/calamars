@@ -11,12 +11,13 @@ import { resolve as resolvePath } from 'path';
 
 // Facebook helpers: [facebookWebhookSetup.js](./facebookWebhookSetup.html)
 // and [facebookGraphHelpers.js](./facebookGraphHelpers.html)
-import { setupGetWebhook, setupPostWebhook } from './facebookWebhookSetup';
+import { setupGetWebhook, setupPostWebhook, verifySignature } from './facebookWebhookSetup';
 import {
     pageSubscribe,
     sendTextMessage,
     userInfo,
-    setWelcomeMessage
+    setWelcomeMessage,
+    threadSettings
 } from './facebookGraphHelpers';
 
 // default values can be setup using environment vars
@@ -74,7 +75,7 @@ class FacebookMessengerBot {
         this.pageTokens = pageTokens;
         const app = express();
         this.launchPromise = new Promise(resolve => {
-            app.use(bodyParser.json());
+            app.use(bodyParser.json({ verify: verifySignature }));
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, this));
             staticFiles.forEach(item => {
@@ -97,6 +98,10 @@ class FacebookMessengerBot {
 
     setWelcomeMessage(message, pageId = this.pageIds[0], pageAccessToken = this.pageTokens[0]) {
         return setWelcomeMessage(message, pageId, pageAccessToken);
+    }
+
+    setThreadSettings(options, pageId = this.pageIds[0], pageAccessToken = this.pageTokens[0]) {
+        return threadSettings(options, pageId, pageAccessToken);
     }
 }
 

@@ -8,3 +8,5 @@ docs
 dist/
 npm-debug.log
 *.swp
+cache
+cache-test

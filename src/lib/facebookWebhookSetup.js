@@ -1,3 +1,7 @@
+import crypto from 'crypto';
+
+const appSecret = process.env.FB_APP_SECRET;
+
 // facebookWebhookSetup
 // ====================
 //
@@ -19,6 +23,18 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
     } else {
         res.send('Error, wrong validation token');
     }
+};
+
+const verifySignature = (req, res, buf) => {
+    const signature = req.headers['x-hub-signature'];
+    const sha1Bot = crypto.createHmac('sha1', appSecret).update(buf).digest('hex');
+    const sha1Fb = signature ? signature.slice('sha1='.length) : null;
+    // console.log('sha1Bot__', sha1Bot);
+    // console.log('sha1Fb___', sha1Fb);
+    if (sha1Bot !== sha1Fb) {
+        return res.status(401).send(false);
+    }
+    return true;
 };
 
 // ## setupPostWebhook(bot, listeners)
@@ -49,6 +65,9 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
 // [npmbodyparser]: https://www.npmjs.com/package/body-parser
 // [webhookreference]: https://developers.facebook.com/docs/messenger-platform/webhook-reference
 const setupPostWebhook = (listeners, bot) => (req, res) => {
+    if (res.headersSent) {
+        return false;
+    }
     const fNull = () => null;
     const {
         onUpdate = fNull,
@@ -78,6 +97,17 @@ const setupPostWebhook = (listeners, bot) => (req, res) => {
                 onDelivery(payload);
             }
             if (postback) {
+                try {
+                    const postbackPayload = JSON.parse(postback.payload);
+                    if (postbackPayload.type && postbackPayload.type === 'legacy-welcome') {
+                        bot.sendMessage({
+                            userId: update.sender.id,
+                            text: postbackPayload.message.text
+                        });
+                    }
+                } catch (e) {
+                    console.warn('postback is not json');
+                }
                 onPostback(payload);
             }
         });
@@ -85,4 +115,4 @@ const setupPostWebhook = (listeners, bot) => (req, res) => {
     return res.send(true);
 };
 
-export { setupGetWebhook, setupPostWebhook };
+export { setupGetWebhook, setupPostWebhook, verifySignature };
