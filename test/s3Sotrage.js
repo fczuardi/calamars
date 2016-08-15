@@ -85,6 +85,7 @@ test('setUserProp works with valid data input', async t => {
     const nextUserId = '1234567891';
     await setUser(storage, nextUserId, nextUser);
     const updatedUser = await setUserProp(storage, nextUserId, 'info', 'bar');
+    console.log(updatedUser);
     t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
 });
 

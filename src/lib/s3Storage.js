@@ -1,7 +1,7 @@
 import config from '../../s3Config';
 import AWS from 'aws-sdk';
 import {
-    prop, lensProp, set
+    prop, merge
 } from 'ramda';
 
 AWS.config.update(config.AWS);
@@ -70,7 +70,7 @@ const setUserProp = (db, userId, key, value) => {
     .then(u => {
         if (!u || !key) { return undefined; }
         const user = JSON.parse(u);
-        return set(lensProp(key), value, user);
+        return merge(user, { [key]: value });
     })
     .catch(err => {
         console.log(err);

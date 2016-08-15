@@ -46,7 +46,7 @@ const setUserProp = (db, userId, key, value) => setUser(db, userId, {
     ...getUser(db, userId)
 });
 const removeUserProp = (db, userId, key) => {
-    const { [key]: oldItem, ...other } = getUser(db, userId);
+    const { [key]: oldItem, ...other } = getUser(db, userId); // eslint-disable-line
     return setUser(db, userId, { ...other });
 };
 
