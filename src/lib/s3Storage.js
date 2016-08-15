@@ -40,7 +40,7 @@ const removeUser = (db, userId) => {
     if (!userId) { return null; }
     return db.deleteObject({
         Key: `${path}/${userId}.json`
-    }).promisse()
+    }).promise()
     .then(() => userId)
     .catch(err => {
         console.log(err);
@@ -52,7 +52,7 @@ const getUserProp = (db, userId, key) => {
     if (!userId) { return null; }
     return getUser(db, userId)
     .then(u => {
-        if (!u || !keys(u).length) { return undefined; }
+        if (!u || !key) { return undefined; }
         const user = JSON.parse(u);
         if (!key) {
             return '';
