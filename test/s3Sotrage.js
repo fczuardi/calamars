@@ -12,7 +12,6 @@ import {
     removeUserProp
 } from '../src/lib/s3Storage';
 
-const path = config.path;
 const storage = getDb(config);
 
 test('Check if env vars is properly defined', t => {
@@ -68,7 +67,7 @@ test('remove user works with valid data input', async t => {
     t.deepEqual(removedUser, Object({}));
 });
 
-test('getUserProp works with valid data inpu', async t => {
+test('getUserProp works with valid data input', async t => {
     const nextUser = {
         name: 'foo',
         info: 'bar'
@@ -77,4 +76,26 @@ test('getUserProp works with valid data inpu', async t => {
     await setUser(storage, nextUserId, nextUser);
     const userProp = await getUserProp(storage, nextUserId, 'name');
     t.is(userProp, 'foo');
+});
+
+test('setUserProp works with valid data input', async t => {
+    const nextUser = {
+        name: 'foo'
+    };
+    const nextUserId = '1234567891';
+    await setUser(storage, nextUserId, nextUser);
+    const updatedUser = await setUserProp(storage, nextUserId, 'info', 'bar');
+    t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
+});
+
+test('removeUserProp works with valid data input', async t => {
+    const nextUser = {
+        name: 'foo',
+        info: 'bar'
+    };
+    const nextUserId = '12345678912';
+    await setUser(storage, nextUserId, nextUser);
+    const newUserId = await removeUserProp(storage, nextUserId, 'info');
+    const newUser = JSON.parse(await getUser(storage, newUserId));
+    t.deepEqual(newUser, { name: 'foo' });
 });

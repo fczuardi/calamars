@@ -1,7 +1,7 @@
 import config from '../../s3Config';
 import AWS from 'aws-sdk';
 import {
-    prop, keys
+    prop, lensProp, set
 } from 'ramda';
 
 AWS.config.update(config.AWS);
@@ -68,10 +68,9 @@ const setUserProp = (db, userId, key, value) => {
     if (!userId) { return null; }
     return getUser(db, userId)
     .then(u => {
-        if (!u || !keys(u).length) { return undefined; }
+        if (!u || !key) { return undefined; }
         const user = JSON.parse(u);
-        user[key] = value;
-        return user;
+        return set(lensProp(key), value, user);
     })
     .catch(err => {
         console.log(err);
@@ -83,7 +82,7 @@ const removeUserProp = (db, userId, key) => {
     if (!userId || !key) { return null; }
     return getUser(db, userId)
     .then(u => {
-        if (!u || !keys(u).length) { return undefined; }
+        if (!u) { return undefined; }
         const { [key]: oldItem, ...other} = JSON.parse(u); // eslint-disable-line
         return setUser(db, userId, { ...other });
     })
