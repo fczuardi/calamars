@@ -124,32 +124,35 @@
     getUserProp,
     setUserProp,
     removeUserProp
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'././s3Storage'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'./s3Storage'</span>;
+<span class="hljs-keyword">import</span> AWS <span class="hljs-keyword">from</span> <span class="hljs-string">'aws-sdk'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContextSet</span> </span>{
     <span class="hljs-keyword">constructor</span>(config) {
+        AWS.config.update(config.AWS);
         <span class="hljs-keyword">this</span>.db = getDb(config);
+        <span class="hljs-keyword">this</span>.path = config.path;
         <span class="hljs-keyword">if</span> (!getUsers(<span class="hljs-keyword">this</span>.db)) {
             setUsers(<span class="hljs-keyword">this</span>.db, []);
         }
     }
     setContext(id, nextContext) {
-        <span class="hljs-keyword">return</span> setUser(<span class="hljs-keyword">this</span>.db, id, nextContext);
+        <span class="hljs-keyword">return</span> setUser(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id, nextContext);
     }
     getContext(id) {
-        <span class="hljs-keyword">return</span> getUser(<span class="hljs-keyword">this</span>.db, id);
+        <span class="hljs-keyword">return</span> getUser(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id);
     }
     removeContext(id) {
-        <span class="hljs-keyword">return</span> removeUser(<span class="hljs-keyword">this</span>.db, id);
+        <span class="hljs-keyword">return</span> removeUser(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id);
     }
     setContextProp(id, key, value) {
-        <span class="hljs-keyword">return</span> setUserProp(<span class="hljs-keyword">this</span>.db, id, key, value);
+        <span class="hljs-keyword">return</span> setUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path id, key, value);
     }
     getContextProp(id, key) {
-        <span class="hljs-keyword">return</span> getUserProp(<span class="hljs-keyword">this</span>.db, id, key);
+        <span class="hljs-keyword">return</span> getUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id, key);
     }
     removeContextProp(id, key) {
-        <span class="hljs-keyword">return</span> removeUserProp(<span class="hljs-keyword">this</span>.db, id, key);
+        <span class="hljs-keyword">return</span> removeUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.pat, hid, key);
     }
 }
 
