@@ -1,5 +1,5 @@
 import {
-    prop, merge
+    prop, merge, keys, length
 } from 'ramda';
 import AWS from 'aws-sdk';
 
@@ -13,15 +13,14 @@ const getUser = (db, path, userId) =>
     db.getObject({
         Key: `${path}/${userId}.json`
     }).promise()
-    .then(body => body.Body.toString())
+    .then(body => JSON.parse(body.Body.toString()))
     .catch(err => {
         console.log(err);
-        return {};
+        return undefined;
     });
 
 const setUser = (db, path, userId, nextUser) => {
     if (!nextUser) { return null; }
-    console.log('db path ', path);
     return db.putObject({
         Key: `${path}/${userId}.json`,
         Body: JSON.stringify(nextUser)
@@ -51,9 +50,8 @@ const removeUser = (db, path, userId) => {
 const getUserProp = (db, path, userId, key) => {
     if (!userId) { return null; }
     return getUser(db, path, userId)
-    .then(u => {
-        if (!u || !key) { return undefined; }
-        const user = JSON.parse(u);
+    .then(user => {
+        if (!user || !length(keys(user))) { return undefined; }
         if (!key) {
             return '';
         }
@@ -67,9 +65,8 @@ const getUserProp = (db, path, userId, key) => {
 const setUserProp = (db, path, userId, key, value) => {
     if (!userId) { return null; }
     return getUser(db, path, userId)
-    .then(u => {
-        if (!u || !key) { return undefined; }
-        const user = JSON.parse(u);
+    .then(user => {
+        if (!user || !length(keys(user))) { return undefined; }
         const newUser = merge(user, { [key]: value });
         return setUser(db, path, userId, newUser);
     })
@@ -82,9 +79,9 @@ const setUserProp = (db, path, userId, key, value) => {
 const removeUserProp = (db, path, userId, key) => {
     if (!userId || !key) { return null; }
     return getUser(db, path, userId)
-    .then(u => {
-        if (!u) { return undefined; }
-        const { [key]: oldItem, ...other} = JSON.parse(u); // eslint-disable-line
+    .then(user => {
+        if (!user || !length(keys(user))) { return undefined; }
+        const { [key]: oldItem, ...other} = user; // eslint-disable-line
         return setUser(db, path, userId, { ...other });
     })
     .catch(err => {

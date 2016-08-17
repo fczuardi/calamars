@@ -44,18 +44,20 @@ test('setUser works with valid data input', async t => {
     t.is(userId, nextUserId);
 });
 
+test('get unvaid user dosent crash application', async t => {
+    const nextUserId = 'foo';
+    const nextUser = await getUser(storage, path, nextUserId);
+    t.is(nextUser, undefined);
+});
+
 test('setUser works with valid data input', async t => {
     const nextUser = {
         name: 'foo',
         info: 'bar'
     };
     const nextUserId = '1234567';
-    console.log('a');
     await setUser(storage, path, nextUserId, nextUser);
-    console.log('b');
-    const user = JSON.parse(await getUser(storage, path, nextUserId));
-    console.log('c');
-    console.log('user ', user);
+    const user = await getUser(storage, path, nextUserId);
     t.is(user.name, nextUser.name);
     t.is(user.info, nextUser.info);
 });
@@ -70,7 +72,7 @@ test('remove user works with valid data input', async t => {
     const removedUserId = await removeUser(storage, path, nextUserId);
     t.is(removedUserId, nextUserId);
     const removedUser = await getUser(storage, path, removedUserId);
-    t.deepEqual(removedUser, Object({}));
+    t.deepEqual(removedUser, undefined);
 });
 
 test('getUserProp works with valid data input', async t => {
@@ -91,8 +93,7 @@ test('setUserProp works with valid data input', async t => {
     const nextUserId = '1234567891';
     await setUser(storage, path, nextUserId, nextUser);
     const updatedUserId = await setUserProp(storage, path, nextUserId, 'info', 'bar');
-    const updatedUser = JSON.parse(await getUser(storage, path, updatedUserId));
-    console.log('updatedUser ', updatedUser);
+    const updatedUser = await getUser(storage, path, updatedUserId);
     t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
 });
 
@@ -104,6 +105,6 @@ test('removeUserProp works with valid data input', async t => {
     const nextUserId = '12345678912';
     await setUser(storage, path, nextUserId, nextUser);
     const newUserId = await removeUserProp(storage, path, nextUserId, 'info');
-    const newUser = JSON.parse(await getUser(storage, path, newUserId));
+    const newUser = await getUser(storage, path, newUserId);
     t.deepEqual(newUser, { name: 'foo' });
 });

@@ -26,7 +26,7 @@ test('getContext works with valid data', async t => {
     };
     const nextUserId = '1234';
     const userId = await db.setContext(nextUserId, nextUser);
-    const newUser = JSON.parse(await db.getContext(userId));
+    const newUser = await db.getContext(userId);
     t.deepEqual(newUser, nextUser);
 });
 
@@ -36,7 +36,8 @@ test('setContextProp works with valid data', async t => {
     };
     const nextUserId = '12345';
     const userId = await db.setContext(nextUserId, nextUser);
-    const newUser = await db.setContextProp(userId, 'info', 'bar');
+    const newUserId = await db.setContextProp(userId, 'info', 'bar');
+    const newUser = await db.getContext(newUserId);
     const foo = { ...nextUser, info: 'bar' }; // this is ava bitchin me
     t.deepEqual(foo, newUser);
 });
@@ -60,6 +61,6 @@ test('removeContextProp works with valid data', async t => {
     const nextUserId = '123456';
     const userId = await db.setContext(nextUserId, nextUser);
     const newUserId = await db.removeContextProp(userId, 'info');
-    const newUser = JSON.parse(await db.getContext(newUserId));
+    const newUser = await db.getContext(newUserId);
     t.deepEqual(newUser, { name: 'foo' });
 });
