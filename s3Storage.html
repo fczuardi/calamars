@@ -115,7 +115,7 @@
         
         
           <div class='highlight'><pre><span class="hljs-keyword">import</span> {
-    prop, merge
+    prop, merge, keys, length
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>;
 <span class="hljs-keyword">import</span> AWS <span class="hljs-keyword">from</span> <span class="hljs-string">'aws-sdk'</span>;
 
@@ -133,15 +133,14 @@
     db.getObject({
         Key: <span class="hljs-string">`<span class="hljs-subst">${path}</span>/<span class="hljs-subst">${userId}</span>.json`</span>
     }).promise()
-    .then(body =&gt; body.Body.toString())
+    .then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body.Body.toString()))
     .catch(err =&gt; {
         <span class="hljs-built_in">console</span>.log(err);
-        <span class="hljs-keyword">return</span> {};
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
     });
 
 <span class="hljs-keyword">const</span> setUser = (db, path, userId, nextUser) =&gt; {
     <span class="hljs-keyword">if</span> (!nextUser) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'db path '</span>, path);
     <span class="hljs-keyword">return</span> db.putObject({
         Key: <span class="hljs-string">`<span class="hljs-subst">${path}</span>/<span class="hljs-subst">${userId}</span>.json`</span>,
         Body: <span class="hljs-built_in">JSON</span>.stringify(nextUser)
@@ -171,9 +170,8 @@
 <span class="hljs-keyword">const</span> getUserProp = (db, path, userId, key) =&gt; {
     <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
     <span class="hljs-keyword">return</span> getUser(db, path, userId)
-    .then(u =&gt; {
-        <span class="hljs-keyword">if</span> (!u || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
-        <span class="hljs-keyword">const</span> user = <span class="hljs-built_in">JSON</span>.parse(u);
+    .then(user =&gt; {
+        <span class="hljs-keyword">if</span> (!user || !length(keys(user))) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
         <span class="hljs-keyword">if</span> (!key) {
             <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
         }
@@ -187,9 +185,8 @@
 <span class="hljs-keyword">const</span> setUserProp = (db, path, userId, key, value) =&gt; {
     <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
     <span class="hljs-keyword">return</span> getUser(db, path, userId)
-    .then(u =&gt; {
-        <span class="hljs-keyword">if</span> (!u || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
-        <span class="hljs-keyword">const</span> user = <span class="hljs-built_in">JSON</span>.parse(u);
+    .then(user =&gt; {
+        <span class="hljs-keyword">if</span> (!user || !length(keys(user))) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
         <span class="hljs-keyword">const</span> newUser = merge(user, { [key]: value });
         <span class="hljs-keyword">return</span> setUser(db, path, userId, newUser);
     })
@@ -202,9 +199,9 @@
 <span class="hljs-keyword">const</span> removeUserProp = (db, path, userId, key) =&gt; {
     <span class="hljs-keyword">if</span> (!userId || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
     <span class="hljs-keyword">return</span> getUser(db, path, userId)
-    .then(u =&gt; {
-        <span class="hljs-keyword">if</span> (!u) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
-        <span class="hljs-keyword">const</span> { [key]: oldItem, ...other} = <span class="hljs-built_in">JSON</span>.parse(u); <span class="hljs-comment">// eslint-disable-line</span>
+    .then(user =&gt; {
+        <span class="hljs-keyword">if</span> (!user || !length(keys(user))) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
+        <span class="hljs-keyword">const</span> { [key]: oldItem, ...other} = user; <span class="hljs-comment">// eslint-disable-line</span>
         <span class="hljs-keyword">return</span> setUser(db, path, userId, { ...other });
     })
     .catch(err =&gt; {
