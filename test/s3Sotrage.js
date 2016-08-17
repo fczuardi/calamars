@@ -44,18 +44,20 @@ test('setUser works with valid data input', async t => {
     t.is(userId, nextUserId);
 });
 
+test('get unvaid user dosent crash application', async t => {
+    const nextUserId = 'foo';
+    const nextUser = await getUser(storage, path, nextUserId);
+    t.is(Object.keys(nextUser).length, 0);
+});
+
 test('setUser works with valid data input', async t => {
     const nextUser = {
         name: 'foo',
         info: 'bar'
     };
     const nextUserId = '1234567';
-    console.log('a');
     await setUser(storage, path, nextUserId, nextUser);
-    console.log('b');
     const user = JSON.parse(await getUser(storage, path, nextUserId));
-    console.log('c');
-    console.log('user ', user);
     t.is(user.name, nextUser.name);
     t.is(user.info, nextUser.info);
 });
@@ -92,7 +94,6 @@ test('setUserProp works with valid data input', async t => {
     await setUser(storage, path, nextUserId, nextUser);
     const updatedUserId = await setUserProp(storage, path, nextUserId, 'info', 'bar');
     const updatedUser = JSON.parse(await getUser(storage, path, updatedUserId));
-    console.log('updatedUser ', updatedUser);
     t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
 });
 
