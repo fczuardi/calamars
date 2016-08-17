@@ -45,5 +45,5 @@ export {
     default as ContextSet
 } from './contextSet';
 export {
-    default as #3ContextSet
+    default as S3ContextSet
 } from './s3ContextSet.js';
