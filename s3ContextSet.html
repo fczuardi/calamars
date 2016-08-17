@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>contextSet.js</title>
+  <title>s3ContextSet.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -13,7 +13,7 @@
 
       <div class="header">
         
-          <h1>contextSet.js</h1>
+          <h1>s3ContextSet.js</h1>
         
 
         
@@ -123,9 +123,8 @@
     removeUser,
     getUserProp,
     setUserProp,
-    removeUserProp,
-    getSelectWhereList
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./dbLocalStorage'</span>;
+    removeUserProp
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'././s3Storage'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContextSet</span> </span>{
     <span class="hljs-keyword">constructor</span>(config) {
@@ -152,10 +151,6 @@
     removeContextProp(id, key) {
         <span class="hljs-keyword">return</span> removeUserProp(<span class="hljs-keyword">this</span>.db, id, key);
     }
-    getPropValueList (key, value) {
-        <span class="hljs-keyword">return</span> getSelectWhereList (<span class="hljs-keyword">this</span>.db, key, value)
-    }
-
 }
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ContextSet;</pre></div>

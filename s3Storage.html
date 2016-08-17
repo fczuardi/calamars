@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>s3Storage.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>s3Storage.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="calamar.html">
+                    calamar.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="contextSet.html">
+                    contextSet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="dbLocalStorage.html">
+                    dbLocalStorage.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebook.html">
+                    facebook.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookGraphHelpers.html">
+                    facebookGraphHelpers.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="facebookWebhookSetup.html">
+                    facebookWebhookSetup.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="index.html">
+                    index.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="luis.html">
+                    luis.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="router.html">
+                    router.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="s3ContextSet.html">
+                    s3ContextSet.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="s3Storage.html">
+                    s3Storage.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="wit.html">
+                    wit.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        
+        
+          <div class='highlight'><pre><span class="hljs-keyword">import</span> config <span class="hljs-keyword">from</span> <span class="hljs-string">'../../s3Config'</span>;
+<span class="hljs-keyword">import</span> AWS <span class="hljs-keyword">from</span> <span class="hljs-string">'aws-sdk'</span>;
+<span class="hljs-keyword">import</span> {
+    prop, merge
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>;
+
+AWS.config.update(config.AWS);
+<span class="hljs-keyword">const</span> path = config.path;
+
+<span class="hljs-keyword">const</span> getDb = param =&gt; <span class="hljs-keyword">new</span> AWS.S3(param.S3);</pre></div>
+        
+      
+        
+        <p>Just for compability</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> getUsers = db =&gt; <span class="hljs-literal">true</span>;  <span class="hljs-comment">// eslint-disable-line</span>
+<span class="hljs-keyword">const</span> setUsers = (db, data) =&gt; <span class="hljs-literal">true</span>; <span class="hljs-comment">// eslint-disable-line</span>
+
+<span class="hljs-keyword">const</span> getUser = (db, userId) =&gt;
+    db.getObject({
+        Key: <span class="hljs-string">`<span class="hljs-subst">${path}</span>/<span class="hljs-subst">${userId}</span>.json`</span>
+    }).promise()
+    .then(body =&gt; body.Body.toString())
+    .catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> {};
+    });
+
+<span class="hljs-keyword">const</span> setUser = (db, userId, nextUser) =&gt; {
+    <span class="hljs-keyword">if</span> (!nextUser) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">return</span> db.putObject({
+        Key: <span class="hljs-string">`<span class="hljs-subst">${path}</span>/<span class="hljs-subst">${userId}</span>.json`</span>,
+        Body: <span class="hljs-built_in">JSON</span>.stringify(nextUser)
+    }).promise()
+    .then(() =&gt; userId)
+    .catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> nextUser;
+    });
+};
+
+<span class="hljs-keyword">const</span> removeUser = (db, userId) =&gt; {
+    <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">return</span> db.deleteObject({
+        Key: <span class="hljs-string">`<span class="hljs-subst">${path}</span>/<span class="hljs-subst">${userId}</span>.json`</span>
+    }).promise()
+    .then(() =&gt; userId)
+    .catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    });
+};
+
+<span class="hljs-keyword">const</span> getUserProp = (db, userId, key) =&gt; {
+    <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">return</span> getUser(db, userId)
+    .then(u =&gt; {
+        <span class="hljs-keyword">if</span> (!u || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
+        <span class="hljs-keyword">const</span> user = <span class="hljs-built_in">JSON</span>.parse(u);
+        <span class="hljs-keyword">if</span> (!key) {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        }
+        <span class="hljs-keyword">return</span> prop(key, user);
+    }).catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    });
+};
+
+<span class="hljs-keyword">const</span> setUserProp = (db, userId, key, value) =&gt; {
+    <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">return</span> getUser(db, userId)
+    .then(u =&gt; {
+        <span class="hljs-keyword">if</span> (!u || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
+        <span class="hljs-keyword">const</span> user = <span class="hljs-built_in">JSON</span>.parse(u);
+        <span class="hljs-keyword">return</span> merge(user, { [key]: value });
+    })
+    .catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    });
+};
+
+<span class="hljs-keyword">const</span> removeUserProp = (db, userId, key) =&gt; {
+    <span class="hljs-keyword">if</span> (!userId || !key) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
+    <span class="hljs-keyword">return</span> getUser(db, userId)
+    .then(u =&gt; {
+        <span class="hljs-keyword">if</span> (!u) { <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>; }
+        <span class="hljs-keyword">const</span> { [key]: oldItem, ...other} = <span class="hljs-built_in">JSON</span>.parse(u); <span class="hljs-comment">// eslint-disable-line</span>
+        <span class="hljs-keyword">return</span> setUser(db, userId, { ...other });
+    })
+    .catch(err =&gt; {
+        <span class="hljs-built_in">console</span>.log(err);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
+    });
+};
+
+
+<span class="hljs-keyword">export</span> {
+    getDb,
+    getUsers,
+    setUsers,
+    getUser,
+    setUser,
+    removeUser,
+    getUserProp,
+    setUserProp,
+    removeUserProp
+};</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
