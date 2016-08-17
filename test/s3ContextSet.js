@@ -36,7 +36,8 @@ test('setContextProp works with valid data', async t => {
     };
     const nextUserId = '12345';
     const userId = await db.setContext(nextUserId, nextUser);
-    const newUser = await db.setContextProp(userId, 'info', 'bar');
+    const newUserId = await db.setContextProp(userId, 'info', 'bar');
+    const newUser = JSON.parse(await db.getContext(newUserId));
     const foo = { ...nextUser, info: 'bar' }; // this is ava bitchin me
     t.deepEqual(foo, newUser);
 });

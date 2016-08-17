@@ -47,7 +47,7 @@ test('setUser works with valid data input', async t => {
 test('get unvaid user dosent crash application', async t => {
     const nextUserId = 'foo';
     const nextUser = await getUser(storage, path, nextUserId);
-    t.is(Object.keys(nextUser).length, 0);
+    t.is(nextUser, undefined);
 });
 
 test('setUser works with valid data input', async t => {
@@ -72,7 +72,7 @@ test('remove user works with valid data input', async t => {
     const removedUserId = await removeUser(storage, path, nextUserId);
     t.is(removedUserId, nextUserId);
     const removedUser = await getUser(storage, path, removedUserId);
-    t.deepEqual(removedUser, Object({}));
+    t.deepEqual(removedUser, undefined);
 });
 
 test('getUserProp works with valid data input', async t => {

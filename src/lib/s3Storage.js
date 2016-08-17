@@ -16,7 +16,7 @@ const getUser = (db, path, userId) =>
     .then(body => body.Body.toString())
     .catch(err => {
         console.log(err);
-        return {};
+        return undefined;
     });
 
 const setUser = (db, path, userId, nextUser) => {
