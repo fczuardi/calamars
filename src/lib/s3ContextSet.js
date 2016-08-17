@@ -30,13 +30,13 @@ class ContextSet {
         return removeUser(this.db, this.path, id);
     }
     setContextProp(id, key, value) {
-        return setUserProp(this.db, this.path id, key, value);
+        return setUserProp(this.db, this.path, id, key, value);
     }
     getContextProp(id, key) {
         return getUserProp(this.db, this.path, id, key);
     }
     removeContextProp(id, key) {
-        return removeUserProp(this.db, this.pat, hid, key);
+        return removeUserProp(this.db, this.path, id, key);
     }
 }
 
