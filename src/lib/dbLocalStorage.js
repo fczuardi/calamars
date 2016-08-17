@@ -51,9 +51,9 @@ const removeUserProp = (db, userId, key) => {
 };
 
 const getSelectWhereList = (db, key, value) => {
-    var isValue = n => n[key] === value
+    const isValue = n => n[key] === value;
     const users = getUsers(db);
-    const list = filter(isValue, users)
+    const list = filter(isValue, users);
     return list;
 };
 

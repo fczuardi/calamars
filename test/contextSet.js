@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import ContextSet from 'lib/contextSet';
+import ContextSet from 'lib/contextSet'; // eslint-disable-line
 
 const storage = new ContextSet({ localPath: '../cache-test' });
 
@@ -49,26 +49,34 @@ test('setContextProp, removeContextProp', t => {
 });
 
 test('getPropValueList', t => {
-  const contextId1 = '1';
-  const contextId2 = '2';
-  const contextId3 = '3';
-  const context1 = {
-      name: 'foo',
-      age: '16'
-  };
-  const context2 = {
-      name: 'bar',
-      age: '12'
-  };
+    const contextId1 = '1';
+    const contextId2 = '2';
+    const contextId3 = '3';
+    const context1 = {
+        name: 'foo',
+        age: '16'
+    };
+    const context2 = {
+        name: 'bar',
+        age: '12'
+    };
 
-  storage.removeContext(contextId1);
-  storage.removeContext(contextId2);
-  storage.removeContext(contextId3);
+    storage.removeContext(contextId1);
+    storage.removeContext(contextId2);
+    storage.removeContext(contextId3);
 
-  storage.setContext(contextId1, context1) //Foo
-  storage.setContext(contextId2, context2) //Bar
-  storage.setContext(contextId3, context2) //Bar
+    storage.setContext(contextId1, context1); // Foo
+    storage.setContext(contextId2, context2); // Bar
+    storage.setContext(contextId3, context2); // Bar
 
-  const list = storage.getPropValueList('name', 'bar')
-  t.deepEqual(list, [{id:'2',name:'bar',age:'12'},{id:'3',name:'bar',age:'12'}] );
+    const list = storage.getPropValueList('name', 'bar');
+    t.deepEqual(list, [{
+        id: '2',
+        name: 'bar',
+        age: '12'
+    }, {
+        id: '3',
+        name: 'bar',
+        age: '12'
+    }]);
 });
