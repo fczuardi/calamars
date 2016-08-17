@@ -57,7 +57,7 @@ test('setUser works with valid data input', async t => {
     };
     const nextUserId = '1234567';
     await setUser(storage, path, nextUserId, nextUser);
-    const user = JSON.parse(await getUser(storage, path, nextUserId));
+    const user = await getUser(storage, path, nextUserId);
     t.is(user.name, nextUser.name);
     t.is(user.info, nextUser.info);
 });
@@ -93,7 +93,7 @@ test('setUserProp works with valid data input', async t => {
     const nextUserId = '1234567891';
     await setUser(storage, path, nextUserId, nextUser);
     const updatedUserId = await setUserProp(storage, path, nextUserId, 'info', 'bar');
-    const updatedUser = JSON.parse(await getUser(storage, path, updatedUserId));
+    const updatedUser = await getUser(storage, path, updatedUserId);
     t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
 });
 
@@ -105,6 +105,6 @@ test('removeUserProp works with valid data input', async t => {
     const nextUserId = '12345678912';
     await setUser(storage, path, nextUserId, nextUser);
     const newUserId = await removeUserProp(storage, path, nextUserId, 'info');
-    const newUser = JSON.parse(await getUser(storage, path, newUserId));
+    const newUser = await getUser(storage, path, newUserId);
     t.deepEqual(newUser, { name: 'foo' });
 });
