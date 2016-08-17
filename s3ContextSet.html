@@ -146,13 +146,13 @@
         <span class="hljs-keyword">return</span> removeUser(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id);
     }
     setContextProp(id, key, value) {
-        <span class="hljs-keyword">return</span> setUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path id, key, value);
+        <span class="hljs-keyword">return</span> setUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id, key, value);
     }
     getContextProp(id, key) {
         <span class="hljs-keyword">return</span> getUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id, key);
     }
     removeContextProp(id, key) {
-        <span class="hljs-keyword">return</span> removeUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.pat, hid, key);
+        <span class="hljs-keyword">return</span> removeUserProp(<span class="hljs-keyword">this</span>.db, <span class="hljs-keyword">this</span>.path, id, key);
     }
 }
 

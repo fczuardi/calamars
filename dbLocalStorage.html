@@ -167,9 +167,9 @@
 };
 
 <span class="hljs-keyword">const</span> getSelectWhereList = (db, key, value) =&gt; {
-    <span class="hljs-keyword">var</span> isValue = n =&gt; n[key] === value
+    <span class="hljs-keyword">const</span> isValue = n =&gt; n[key] === value;
     <span class="hljs-keyword">const</span> users = getUsers(db);
-    <span class="hljs-keyword">const</span> list = filter(isValue, users)
+    <span class="hljs-keyword">const</span> list = filter(isValue, users);
     <span class="hljs-keyword">return</span> list;
 };
 
