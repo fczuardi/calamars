@@ -7,9 +7,8 @@ import {
     removeUser,
     getUserProp,
     setUserProp,
-    removeUserProp,
-    getSelectWhereList
-} from './dbLocalStorage';
+    removeUserProp
+} from '././s3Storage';
 
 class ContextSet {
     constructor(config) {
@@ -36,10 +35,6 @@ class ContextSet {
     removeContextProp(id, key) {
         return removeUserProp(this.db, id, key);
     }
-    getPropValueList (key, value) {
-        return getSelectWhereList (this.db, key, value)
-    }
-
 }
 
 export default ContextSet;

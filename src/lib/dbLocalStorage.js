@@ -1,7 +1,7 @@
 import { LocalStorage } from 'node-localstorage';
 import {
     propEq, find, findIndex, remove, defaultTo,
-    update, gte, concat, of, merge
+    update, gte, concat, of, merge, filter
 } from 'ramda';
 
 const getDb = config => new LocalStorage(config.localPath);
@@ -46,8 +46,15 @@ const setUserProp = (db, userId, key, value) => setUser(db, userId, {
     [key]: value
 });
 const removeUserProp = (db, userId, key) => {
-    const { [key]: oldItem, ...other } = getUser(db, userId);
+    const { [key]: oldItem, ...other } = getUser(db, userId); // eslint-disable-line
     return setUser(db, userId, { ...other });
+};
+
+const getSelectWhereList = (db, key, value) => {
+    var isValue = n => n[key] === value
+    const users = getUsers(db);
+    const list = filter(isValue, users)
+    return list;
 };
 
 export {
@@ -59,5 +66,6 @@ export {
     removeUser,
     getUserProp,
     setUserProp,
-    removeUserProp
+    removeUserProp,
+    getSelectWhereList
 };
