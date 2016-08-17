@@ -11,7 +11,9 @@ import {
     setUserProp,
     removeUserProp
 } from '../src/lib/s3Storage';
+console.log(config);
 
+const path = config.path;
 const storage = getDb(config);
 
 test('Check if env vars is properly defined', t => {
@@ -38,7 +40,7 @@ test('setUser works with valid data input', async t => {
         info: 'bar'
     };
     const nextUserId = '123456';
-    const userId = await setUser(storage, nextUserId, nextUser);
+    const userId = await setUser(storage, path, nextUserId, nextUser);
     t.is(userId, nextUserId);
 });
 
@@ -48,8 +50,12 @@ test('setUser works with valid data input', async t => {
         info: 'bar'
     };
     const nextUserId = '1234567';
-    await setUser(storage, nextUserId, nextUser);
-    const user = JSON.parse(await getUser(storage, nextUserId));
+    console.log('a');
+    await setUser(storage, path, nextUserId, nextUser);
+    console.log('b');
+    const user = JSON.parse(await getUser(storage, path, nextUserId));
+    console.log('c');
+    console.log('user ', user);
     t.is(user.name, nextUser.name);
     t.is(user.info, nextUser.info);
 });
@@ -60,10 +66,10 @@ test('remove user works with valid data input', async t => {
         info: 'bar'
     };
     const nextUserId = '12345678';
-    await setUser(storage, nextUserId, nextUser);
-    const removedUserId = await removeUser(storage, nextUserId);
+    await setUser(storage, path, nextUserId, nextUser);
+    const removedUserId = await removeUser(storage, path, nextUserId);
     t.is(removedUserId, nextUserId);
-    const removedUser = await getUser(storage, removedUserId);
+    const removedUser = await getUser(storage, path, removedUserId);
     t.deepEqual(removedUser, Object({}));
 });
 
@@ -73,8 +79,8 @@ test('getUserProp works with valid data input', async t => {
         info: 'bar'
     };
     const nextUserId = '123456789';
-    await setUser(storage, nextUserId, nextUser);
-    const userProp = await getUserProp(storage, nextUserId, 'name');
+    await setUser(storage, path, nextUserId, nextUser);
+    const userProp = await getUserProp(storage, path, nextUserId, 'name');
     t.is(userProp, 'foo');
 });
 
@@ -83,9 +89,10 @@ test('setUserProp works with valid data input', async t => {
         name: 'foo'
     };
     const nextUserId = '1234567891';
-    await setUser(storage, nextUserId, nextUser);
-    const updatedUser = await setUserProp(storage, nextUserId, 'info', 'bar');
-    console.log(updatedUser);
+    await setUser(storage, path, nextUserId, nextUser);
+    const updatedUserId = await setUserProp(storage, path, nextUserId, 'info', 'bar');
+    const updatedUser = JSON.parse(await getUser(storage, path, updatedUserId));
+    console.log('updatedUser ', updatedUser);
     t.deepEqual(updatedUser, { name: 'foo', info: 'bar' });
 });
 
@@ -95,8 +102,8 @@ test('removeUserProp works with valid data input', async t => {
         info: 'bar'
     };
     const nextUserId = '12345678912';
-    await setUser(storage, nextUserId, nextUser);
-    const newUserId = await removeUserProp(storage, nextUserId, 'info');
-    const newUser = JSON.parse(await getUser(storage, newUserId));
+    await setUser(storage, path, nextUserId, nextUser);
+    const newUserId = await removeUserProp(storage, path, nextUserId, 'info');
+    const newUser = JSON.parse(await getUser(storage, path, newUserId));
     t.deepEqual(newUser, { name: 'foo' });
 });

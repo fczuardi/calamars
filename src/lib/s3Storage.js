@@ -1,11 +1,7 @@
-import config from '../../s3Config';
-import AWS from 'aws-sdk';
 import {
     prop, merge
 } from 'ramda';
-
-AWS.config.update(config.AWS);
-const path = config.path;
+import AWS from 'aws-sdk';
 
 const getDb = param => new AWS.S3(param.S3);
 
@@ -13,7 +9,7 @@ const getDb = param => new AWS.S3(param.S3);
 const getUsers = db => true;  // eslint-disable-line
 const setUsers = (db, data) => true; // eslint-disable-line
 
-const getUser = (db, userId) =>
+const getUser = (db, path, userId) =>
     db.getObject({
         Key: `${path}/${userId}.json`
     }).promise()
@@ -23,20 +19,24 @@ const getUser = (db, userId) =>
         return {};
     });
 
-const setUser = (db, userId, nextUser) => {
+const setUser = (db, path, userId, nextUser) => {
     if (!nextUser) { return null; }
+    console.log('db path ', path);
     return db.putObject({
         Key: `${path}/${userId}.json`,
         Body: JSON.stringify(nextUser)
     }).promise()
-    .then(() => userId)
+    .then(body => {
+        console.log(body);
+        return userId;
+    })
     .catch(err => {
         console.log(err);
         return nextUser;
     });
 };
 
-const removeUser = (db, userId) => {
+const removeUser = (db, path, userId) => {
     if (!userId) { return null; }
     return db.deleteObject({
         Key: `${path}/${userId}.json`
@@ -48,9 +48,9 @@ const removeUser = (db, userId) => {
     });
 };
 
-const getUserProp = (db, userId, key) => {
+const getUserProp = (db, path, userId, key) => {
     if (!userId) { return null; }
-    return getUser(db, userId)
+    return getUser(db, path, userId)
     .then(u => {
         if (!u || !key) { return undefined; }
         const user = JSON.parse(u);
@@ -64,13 +64,14 @@ const getUserProp = (db, userId, key) => {
     });
 };
 
-const setUserProp = (db, userId, key, value) => {
+const setUserProp = (db, path, userId, key, value) => {
     if (!userId) { return null; }
-    return getUser(db, userId)
+    return getUser(db, path, userId)
     .then(u => {
         if (!u || !key) { return undefined; }
         const user = JSON.parse(u);
-        return merge(user, { [key]: value });
+        const newUser = merge(user, { [key]: value });
+        return setUser(db, path, userId, newUser);
     })
     .catch(err => {
         console.log(err);
@@ -78,13 +79,13 @@ const setUserProp = (db, userId, key, value) => {
     });
 };
 
-const removeUserProp = (db, userId, key) => {
+const removeUserProp = (db, path, userId, key) => {
     if (!userId || !key) { return null; }
-    return getUser(db, userId)
+    return getUser(db, path, userId)
     .then(u => {
         if (!u) { return undefined; }
         const { [key]: oldItem, ...other} = JSON.parse(u); // eslint-disable-line
-        return setUser(db, userId, { ...other });
+        return setUser(db, path, userId, { ...other });
     })
     .catch(err => {
         console.log(err);
