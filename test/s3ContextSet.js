@@ -1,6 +1,6 @@
 import test from 'ava';
 import config from '../s3Config';
-import ContextSet from '../src/lib/s3ContextSet';
+import ContextSet from 'lib/s3ContextSet';
 
 const db = new ContextSet(config);
 

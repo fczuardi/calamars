@@ -10,8 +10,7 @@ import {
     getUserProp,
     setUserProp,
     removeUserProp
-} from '../src/lib/s3Storage';
-console.log(config);
+} from 'lib/s3Storage';
 
 const path = config.path;
 const storage = getDb(config);
