@@ -1,7 +1,5 @@
 import crypto from 'crypto';
 
-const appSecret = process.env.FB_APP_SECRET;
-
 // facebookWebhookSetup
 // ====================
 //
@@ -25,7 +23,7 @@ const setupGetWebhook = fbVerifyToken => (req, res) => {
     }
 };
 
-const verifySignature = (req, res, buf) => {
+const verifySignature = appSecret => (req, res, buf) => {
     const signature = req.headers['x-hub-signature'];
     const sha1Bot = crypto.createHmac('sha1', appSecret).update(buf).digest('hex');
     const sha1Fb = signature ? signature.slice('sha1='.length) : null;
