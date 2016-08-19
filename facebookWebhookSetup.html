@@ -16,9 +16,7 @@
           
           
           
-            <div class='highlight'><pre><span class="hljs-keyword">import</span> crypto <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;
-
-<span class="hljs-keyword">const</span> appSecret = process.env.FB_APP_SECRET;</pre></div>
+            <div class='highlight'><pre><span class="hljs-keyword">import</span> crypto <span class="hljs-keyword">from</span> <span class="hljs-string">'crypto'</span>;</pre></div>
           
         
 
@@ -148,7 +146,7 @@ the requested <code>hub.verify_token</code> parameter value.</p>
     }
 };
 
-<span class="hljs-keyword">const</span> verifySignature = (req, res, buf) =&gt; {
+<span class="hljs-keyword">const</span> verifySignature = appSecret =&gt; (req, res, buf) =&gt; {
     <span class="hljs-keyword">const</span> signature = req.headers[<span class="hljs-string">'x-hub-signature'</span>];
     <span class="hljs-keyword">const</span> sha1Bot = crypto.createHmac(<span class="hljs-string">'sha1'</span>, appSecret).update(buf).digest(<span class="hljs-string">'hex'</span>);
     <span class="hljs-keyword">const</span> sha1Fb = signature ? signature.slice(<span class="hljs-string">'sha1='</span>.length) : <span class="hljs-literal">null</span>;</pre></div>

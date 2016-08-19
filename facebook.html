@@ -149,7 +149,8 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
     FB_CALLBACK_PATH,
     FB_VERIFY_TOKEN,
     FB_PAGE_ID,
-    FB_PAGE_ACCESS_TOKEN
+    FB_PAGE_ACCESS_TOKEN,
+    FB_APP_SECRET
 } = process.env;</pre></div>
         
       
@@ -197,11 +198,12 @@ for details):<ul>
             verifyToken = FB_VERIFY_TOKEN,
             pageIds = [FB_PAGE_ID],
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
+            appSecret = FB_APP_SECRET,
             staticFiles = [],
             listeners = {}
         } = options;
 
-        <span class="hljs-keyword">if</span> (!callbackPath || !verifyToken || !pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">if</span> (!callbackPath || !verifyToken || !pageTokens[<span class="hljs-number">0</span>] || !appSecret) {
             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'FacebookMessengerBot could not be created, missing required option'</span>);
         }
 
@@ -209,7 +211,7 @@ for details):<ul>
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
         <span class="hljs-keyword">const</span> app = express();
         <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
-            app.use(bodyParser.json({ verify: verifySignature }));
+            app.use(bodyParser.json({ verify: verifySignature(appSecret) }));
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
             staticFiles.forEach(item =&gt; {
