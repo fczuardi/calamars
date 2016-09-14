@@ -182,6 +182,70 @@ You need to call this for each page you want to receive messages from.</p>
         
       
         
+        <h2 id="senderactions-status-userid-pageaccesstoken-">senderActions(status, userId, pageAccessToken)</h2>
+<p>Set typing indicators or send read receipts to your Facebook Messenger app/bot.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><strong>status</strong> - <em>string</em> - &#39;mark_seen&#39; || &#39;typing_on&#39; || &#39;typing_off&#39;</li>
+<li><strong>userId</strong> - <em>string</em> - The user fbid to send the status
+<strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions">token</a> for the page</li>
+</ul>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> senderActions = (status, userId, pageAccessToken) =&gt; {
+    <span class="hljs-keyword">const</span> requestOptions = {
+        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: <span class="hljs-string">'POST'</span>,
+        body: {
+            recipient: {
+                id: userId
+            },
+            sender_action: status
+        },
+        json: <span class="hljs-literal">true</span>
+    };
+    <span class="hljs-keyword">return</span> request(requestOptions);
+};</pre></div>
+        
+      
+        
+        <h2 id="quickrepliestext-text-attachment-pageaccesstoken-">quickRepliesText(text, attachment, pageAccessToken)</h2>
+<p>Send a quick replies message with your Facebook Messenger app/bot.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><strong>attachment</strong> - <em>Object</em> - Array of objects including the quick replies options</li>
+<li><strong>userId</strong> - <em>string</em> - recipient&#39;s messenger ID</li>
+<li><strong>text</strong> - <em>string</em> - message&#39;s text to be sent.
+<strong>pageAccessToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token">token</a> for the page</li>
+</ul>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> quickRepliesText = (text, attachment, userId, pageAccessToken) =&gt; {
+    <span class="hljs-keyword">const</span> requestOptions = {
+        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: <span class="hljs-string">'POST'</span>,
+        body: {
+            recipient: {
+                id: userId
+            },
+            message: {
+                text: text,
+                quick_replies: attachment
+            }
+        },
+        json: <span class="hljs-literal">true</span>
+    };
+    <span class="hljs-keyword">return</span> request(requestOptions);
+};</pre></div>
+        
+      
+        
         <h2 id="userinfo-userid-pageaccesstoken-">userInfo(userId, pageAccessToken)</h2>
 <p>Retrieves user information, first name, last name, profile pic, locale,
 time zone and gender, from Facebook&#39;s <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#user_profile_request">User Profile API</a></p>
@@ -270,7 +334,9 @@ A helper function to make graph api calls to set new thread state message
     sendTextMessage,
     userInfo,
     setWelcomeMessage,
-    threadSettings
+    threadSettings,
+    senderActions,
+    quickRepliesText
 };</pre></div>
         
       

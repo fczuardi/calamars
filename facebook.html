@@ -136,7 +136,9 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
     sendTextMessage,
     userInfo,
     setWelcomeMessage,
-    threadSettings
+    threadSettings,
+    senderActions,
+    quickRepliesText
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'./facebookGraphHelpers'</span>;</pre></div>
         
       
@@ -228,6 +230,10 @@ for details):<ul>
         <span class="hljs-keyword">return</span> sendTextMessage(message, pageToken);
     }
 
+    sendQuickReplies(text, attachment, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>] ) {
+        <span class="hljs-keyword">return</span> quickRepliesText(text, attachment, userId, pageToken)
+    }
+
     getUserInfo(userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
         <span class="hljs-keyword">return</span> userInfo(userId, pageToken);
     }
@@ -238,6 +244,10 @@ for details):<ul>
 
     setThreadSettings(options, pageId = <span class="hljs-keyword">this</span>.pageIds[<span class="hljs-number">0</span>], pageAccessToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
         <span class="hljs-keyword">return</span> threadSettings(options, pageId, pageAccessToken);
+    }
+
+    setSenderActions (status, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> senderActions(status, userId, pageToken)
     }
 }
 
