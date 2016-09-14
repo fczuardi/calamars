@@ -84,6 +84,38 @@ const senderActions = (status, userId, pageAccessToken) => {
 };
 
 
+// ## quickRepliesText(text, attachment, pageAccessToken)
+// Send a quick replies message with your Facebook Messenger app/bot.
+//
+// ### Parameters
+//   - **attachment** - _Object_ - Array of objects including the quick replies options
+//   - **userId** - _string_ - recipient's messenger ID
+//   - **text** - _string_ - message's text to be sent.
+// **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
+// [quickReplies]: https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies
+// [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
+const quickRepliesText = (text, attachment, userId, pageAccessToken) => {
+    const requestOptions = {
+        uri: `${apiURL}me/messages`,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: 'POST',
+        body: {
+            recipient: {
+                id: userId
+            },
+            message: {
+                text: text,
+                quick_replies: attachment
+            }
+        },
+        json: true
+    };
+    return request(requestOptions);
+};
+
+
 // ## userInfo(userId, pageAccessToken)
 // Retrieves user information, first name, last name, profile pic, locale,
 // time zone and gender, from Facebook's [User Profile API][userprofileapi]
@@ -169,5 +201,6 @@ export {
     userInfo,
     setWelcomeMessage,
     threadSettings,
-    senderActions
+    senderActions,
+    quickRepliesText
 };
