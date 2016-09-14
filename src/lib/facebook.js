@@ -17,7 +17,9 @@ import {
     sendTextMessage,
     userInfo,
     setWelcomeMessage,
-    threadSettings
+    threadSettings,
+    senderActions,
+    quickRepliesText
 } from './facebookGraphHelpers';
 
 // default values can be setup using environment vars
@@ -94,6 +96,10 @@ class FacebookMessengerBot {
         return sendTextMessage(message, pageToken);
     }
 
+    sendQuickReplies(text, attachment, userId, pageToken = this.pageTokens[0] ) {
+        return quickRepliesText(text, attachment, userId, pageToken)
+    }
+
     getUserInfo(userId, pageToken = this.pageTokens[0]) {
         return userInfo(userId, pageToken);
     }
@@ -104,6 +110,10 @@ class FacebookMessengerBot {
 
     setThreadSettings(options, pageId = this.pageIds[0], pageAccessToken = this.pageTokens[0]) {
         return threadSettings(options, pageId, pageAccessToken);
+    }
+
+    setSenderActions (status, userId, pageToken = this.pageTokens[0]) {
+        return senderActions(status, userId, pageToken)
     }
 }
 
