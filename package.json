@@ -96,7 +96,7 @@
     "codacy-coverage": "^2.0.0",
     "codeclimate-test-reporter": "^0.3.3",
     "codecov": "^1.0.1",
-    "coveralls": "^2.11.12",
+    "coveralls": "^2.11.13",
     "docco": "^0.7.0",
     "eslint-config-calamar": "^2.1.1",
     "gh-pages": "^0.11.0",
