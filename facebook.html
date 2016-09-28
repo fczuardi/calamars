@@ -212,16 +212,16 @@ for details):<ul>
         <span class="hljs-keyword">this</span>.pageIds = pageIds;
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
         <span class="hljs-keyword">const</span> app = express();
-        <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; {
-            app.use(bodyParser.json({ verify: verifySignature(appSecret) }));
+        <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> {
+            app.use(bodyParser.json({ <span class="hljs-attr">verify</span>: verifySignature(appSecret) }));
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
-            staticFiles.forEach(item =&gt; {
+            staticFiles.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
                 app.get(item.path, (req, res) =&gt; res.sendFile(resolvePath(item.file)));
             });
             app.listen(port, () =&gt; {
-                <span class="hljs-built_in">Promise</span>.all(pageTokens.map(token =&gt; pageSubscribe(token)))
-                .then(() =&gt; resolve(<span class="hljs-literal">true</span>));
+                <span class="hljs-built_in">Promise</span>.all(pageTokens.map(<span class="hljs-function"><span class="hljs-params">token</span> =&gt;</span> pageSubscribe(token)))
+                .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>));
             });
         });
     }
@@ -230,8 +230,8 @@ for details):<ul>
         <span class="hljs-keyword">return</span> sendTextMessage(message, pageToken);
     }
 
-    sendQuickReplies(text, attachment, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>] ) {
-        <span class="hljs-keyword">return</span> quickRepliesText(text, attachment, userId, pageToken)
+    sendQuickReplies(text, attachment, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> quickRepliesText(text, attachment, userId, pageToken);
     }
 
     getUserInfo(userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
@@ -246,8 +246,8 @@ for details):<ul>
         <span class="hljs-keyword">return</span> threadSettings(options, pageId, pageAccessToken);
     }
 
-    setSenderActions (status, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
-        <span class="hljs-keyword">return</span> senderActions(status, userId, pageToken)
+    setSenderActions(status, userId, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">return</span> senderActions(status, userId, pageToken);
     }
 }
 

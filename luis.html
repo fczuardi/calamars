@@ -167,8 +167,8 @@
 
         
           <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>) {
-        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.brainURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>`</span>;
-        <span class="hljs-keyword">return</span> request(url).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.brainURL}</span>&amp;q=<span class="hljs-subst">${<span class="hljs-built_in">encodeURIComponent</span>(text)}</span>`</span>;
+        <span class="hljs-keyword">return</span> request(url).then(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> <span class="hljs-built_in">JSON</span>.parse(body));
     }
 }</pre></div>
         
@@ -176,12 +176,12 @@
         
         <h2 id="examples">Examples</h2>
 <pre><code class="lang-javascript"><span class="hljs-keyword">const</span> options = {
-    id: <span class="hljs-string">'YOUR_LUIS_ID'</span>,
-    subscriptionKey: <span class="hljs-string">'YOUR_SUBSCRIPTION_KEY'</span>
+    <span class="hljs-attr">id</span>: <span class="hljs-string">'YOUR_LUIS_ID'</span>,
+    <span class="hljs-attr">subscriptionKey</span>: <span class="hljs-string">'YOUR_SUBSCRIPTION_KEY'</span>
 };
 <span class="hljs-keyword">const</span> luis = <span class="hljs-keyword">new</span> LuisDriver(options);
 luis.query(<span class="hljs-string">'Hi'</span>)
-    .then(result =&gt; {
+    .then(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> {
         <span class="hljs-keyword">const</span> {
             intent,
             score

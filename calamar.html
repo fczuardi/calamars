@@ -124,7 +124,7 @@
 facebook messenger <a href="https://developers.facebook.com/docs/messenger-platform/implementation#receive_message">&quot;messaging&quot; item</a></p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> isFacebookMessengerMessagingItem = item =&gt;
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> isFacebookMessengerMessagingItem = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span>
     (item &amp;&amp; item.timestamp &amp;&amp; item.sender &amp;&amp; item.recipient);</pre></div>
         
       
@@ -133,7 +133,7 @@ facebook messenger <a href="https://developers.facebook.com/docs/messenger-platf
 <a href="https://core.telegram.org/bots/api#update">telegram update object</a></p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> isTelegramUpdate = update =&gt; (update &amp;&amp; update.update_id);</pre></div>
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> isTelegramUpdate = <span class="hljs-function"><span class="hljs-params">update</span> =&gt;</span> (update &amp;&amp; update.update_id);</pre></div>
         
       
         
@@ -142,18 +142,18 @@ facebook messenger <a href="https://developers.facebook.com/docs/messenger-platf
 message update object format containing commonly used attributes.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> calamarMessageFormat = update =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> calamarMessageFormat = <span class="hljs-function"><span class="hljs-params">update</span> =&gt;</span> {
     <span class="hljs-keyword">if</span> (isFacebookMessengerMessagingItem(update)) {
         <span class="hljs-keyword">const</span> { message, timestamp, sender, recipient } = update;
         <span class="hljs-keyword">const</span> { mid, text } = message;
         <span class="hljs-keyword">return</span> {
             text,
             timestamp,
-            messageId: mid,
-            senderId: sender.id,
-            recipientId: recipient.id,
-            chatId: sender.id,
-            platform: PLATFORM_FACEBOOK_MESSENGER
+            <span class="hljs-attr">messageId</span>: mid,
+            <span class="hljs-attr">senderId</span>: sender.id,
+            <span class="hljs-attr">recipientId</span>: recipient.id,
+            <span class="hljs-attr">chatId</span>: sender.id,
+            <span class="hljs-attr">platform</span>: PLATFORM_FACEBOOK_MESSENGER
         };
     }
     <span class="hljs-keyword">if</span> (isTelegramUpdate(update)) {
@@ -162,10 +162,10 @@ message update object format containing commonly used attributes.</p>
         <span class="hljs-keyword">return</span> {
             text,
             timestamp,
-            messageId: message_id,
-            senderId: <span class="hljs-keyword">from</span>.id,
-            chatId: chat.id,
-            platform: PLATFORM_TELEGRAM
+            <span class="hljs-attr">messageId</span>: message_id,
+            <span class="hljs-attr">senderId</span>: <span class="hljs-keyword">from</span>.id,
+            <span class="hljs-attr">chatId</span>: chat.id,
+            <span class="hljs-attr">platform</span>: PLATFORM_TELEGRAM
         };
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;

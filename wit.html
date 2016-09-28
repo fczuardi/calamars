@@ -153,11 +153,11 @@
         }
 
         <span class="hljs-keyword">this</span>.queryURL = <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${intentEndpoint}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
-        <span class="hljs-keyword">this</span>.messageInfoURL = messageId =&gt;
+        <span class="hljs-keyword">this</span>.messageInfoURL = <span class="hljs-function"><span class="hljs-params">messageId</span> =&gt;</span>
             <span class="hljs-string">`<span class="hljs-subst">${baseURL}</span><span class="hljs-subst">${messageEndpoint}</span><span class="hljs-subst">${messageId}</span>?v=<span class="hljs-subst">${apiVersion}</span>`</span>;
         <span class="hljs-keyword">this</span>.requestHeaders = {
-            Authorization: <span class="hljs-string">`Bearer <span class="hljs-subst">${serverToken}</span>`</span>,
-            Accept: <span class="hljs-string">`application/vnd.wit.<span class="hljs-subst">${apiVersion}</span>+json`</span>
+            <span class="hljs-attr">Authorization</span>: <span class="hljs-string">`Bearer <span class="hljs-subst">${serverToken}</span>`</span>,
+            <span class="hljs-attr">Accept</span>: <span class="hljs-string">`application/vnd.wit.<span class="hljs-subst">${apiVersion}</span>+json`</span>
         };
     }</pre></div>
         
@@ -178,11 +178,11 @@ See <a href="https://wit.ai/docs/http/20160330#get-intent-via-text-link">https:/
 
         
           <div class='highlight'><pre>    query(text = <span class="hljs-string">''</span>, verbose = <span class="hljs-literal">false</span>, n = <span class="hljs-number">1</span>) {
-        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${this.queryURL}</span>&amp;q=<span class="hljs-subst">${encodeURIComponent(text)}</span>&amp;verbose=<span class="hljs-subst">${verbose}</span>&amp;n=<span class="hljs-subst">${n}</span>`</span>;
+        <span class="hljs-keyword">const</span> url = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.queryURL}</span>&amp;q=<span class="hljs-subst">${<span class="hljs-built_in">encodeURIComponent</span>(text)}</span>&amp;verbose=<span class="hljs-subst">${verbose}</span>&amp;n=<span class="hljs-subst">${n}</span>`</span>;
         <span class="hljs-keyword">return</span> request({
             url,
-            headers: <span class="hljs-keyword">this</span>.requestHeaders
-        }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+            <span class="hljs-attr">headers</span>: <span class="hljs-keyword">this</span>.requestHeaders
+        }).then(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> <span class="hljs-built_in">JSON</span>.parse(body));
     }</pre></div>
         
       
@@ -201,8 +201,8 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
         <span class="hljs-keyword">const</span> url = <span class="hljs-keyword">this</span>.messageInfoURL(id);
         <span class="hljs-keyword">return</span> request({
             url,
-            headers: <span class="hljs-keyword">this</span>.requestHeaders
-        }).then(body =&gt; <span class="hljs-built_in">JSON</span>.parse(body));
+            <span class="hljs-attr">headers</span>: <span class="hljs-keyword">this</span>.requestHeaders
+        }).then(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span> <span class="hljs-built_in">JSON</span>.parse(body));
     }
 }</pre></div>
         
@@ -210,12 +210,12 @@ See: <a href="https://wit.ai/docs/http/20160330#get-message-link">https://wit.ai
         
         <h2 id="examples">Examples</h2>
 <pre><code class="lang-javascript"><span class="hljs-keyword">const</span> options = {
-    id: <span class="hljs-string">'YOUR_WIT_ID'</span>,
-    serverToken: <span class="hljs-string">'YOUR_WIT_TOKEN'</span>
+    <span class="hljs-attr">id</span>: <span class="hljs-string">'YOUR_WIT_ID'</span>,
+    <span class="hljs-attr">serverToken</span>: <span class="hljs-string">'YOUR_WIT_TOKEN'</span>
 };
 <span class="hljs-keyword">const</span> wit = <span class="hljs-keyword">new</span> WitDriver(options);
 luis.query(<span class="hljs-string">'Hi'</span>)
-    .then(result =&gt; {
+    .then(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> {
         <span class="hljs-keyword">const</span> {
             _text,
             outcomes
@@ -237,7 +237,7 @@ luis.query(<span class="hljs-string">'Hi'</span>)
 <p>Returns an entity object or null</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntity = (outcomes, entityName) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntity = <span class="hljs-function">(<span class="hljs-params">outcomes, entityName</span>) =&gt;</span> {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> outcomes.entities[entityName][<span class="hljs-number">0</span>];
     } <span class="hljs-keyword">catch</span> (e) {
@@ -260,7 +260,7 @@ WitDriver.getEntity = getEntity;</pre></div>
 <p>Returns an array of entities or null</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntities = (outcomes, entityName) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> getEntities = <span class="hljs-function">(<span class="hljs-params">outcomes, entityName</span>) =&gt;</span> {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> outcomes.entities[entityName];
     } <span class="hljs-keyword">catch</span> (e) {
@@ -282,7 +282,7 @@ WitDriver.getEntities = getEntities;</pre></div>
 <p>Returns the value of the entity you look for or null</p>
 
         
-          <div class='highlight'><pre>WitDriver.getEntityValue = (outcomes, entityName) =&gt; {
+          <div class='highlight'><pre>WitDriver.getEntityValue = <span class="hljs-function">(<span class="hljs-params">outcomes, entityName</span>) =&gt;</span> {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> getEntity(outcomes, entityName).value;
     } <span class="hljs-keyword">catch</span> (e) {
@@ -301,7 +301,7 @@ WitDriver.getEntities = getEntities;</pre></div>
 <p>Returns the metadata of the entity you look for or null</p>
 
         
-          <div class='highlight'><pre>WitDriver.getEntityMeta = entity =&gt; {
+          <div class='highlight'><pre>WitDriver.getEntityMeta = <span class="hljs-function"><span class="hljs-params">entity</span> =&gt;</span> {
     <span class="hljs-keyword">try</span> {
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(entity.metadata);
     } <span class="hljs-keyword">catch</span> (e) {

@@ -138,7 +138,7 @@ sends the challenge as response or a validation error message depending on
 the requested <code>hub.verify_token</code> parameter value.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupGetWebhook = fbVerifyToken =&gt; (req, res) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupGetWebhook = <span class="hljs-function"><span class="hljs-params">fbVerifyToken</span> =&gt;</span> (req, res) =&gt; {
     <span class="hljs-keyword">if</span> (req.query[<span class="hljs-string">'hub.verify_token'</span>] === fbVerifyToken) {
         res.send(req.query[<span class="hljs-string">'hub.challenge'</span>]);
     } <span class="hljs-keyword">else</span> {
@@ -146,7 +146,7 @@ the requested <code>hub.verify_token</code> parameter value.</p>
     }
 };
 
-<span class="hljs-keyword">const</span> verifySignature = appSecret =&gt; (req, res, buf) =&gt; {
+<span class="hljs-keyword">const</span> verifySignature = <span class="hljs-function"><span class="hljs-params">appSecret</span> =&gt;</span> (req, res, buf) =&gt; {
     <span class="hljs-keyword">const</span> signature = req.headers[<span class="hljs-string">'x-hub-signature'</span>];
     <span class="hljs-keyword">const</span> sha1Bot = crypto.createHmac(<span class="hljs-string">'sha1'</span>, appSecret).update(buf).digest(<span class="hljs-string">'hex'</span>);
     <span class="hljs-keyword">const</span> sha1Fb = signature ? signature.slice(<span class="hljs-string">'sha1='</span>.length) : <span class="hljs-literal">null</span>;</pre></div>
@@ -211,11 +211,11 @@ parameter to the listener callbacks.</li>
 </table>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = (listeners, bot) =&gt; (req, res) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setupPostWebhook = <span class="hljs-function">(<span class="hljs-params">listeners, bot</span>) =&gt;</span> (req, res) =&gt; {
     <span class="hljs-keyword">if</span> (res.headersSent) {
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
-    <span class="hljs-keyword">const</span> fNull = () =&gt; <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">const</span> fNull = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">const</span> {
         onUpdate = fNull,
         onMessage = fNull,
@@ -226,8 +226,8 @@ parameter to the listener callbacks.</li>
     <span class="hljs-keyword">if</span> (!req.body.entry || !<span class="hljs-built_in">Array</span>.isArray(req.body.entry)) {
         <span class="hljs-keyword">return</span> res.send(<span class="hljs-literal">false</span>);
     }
-    req.body.entry.forEach(({ messaging }) =&gt; {
-        messaging.forEach(update =&gt; {
+    req.body.entry.forEach(<span class="hljs-function">(<span class="hljs-params">{ messaging }</span>) =&gt;</span> {
+        messaging.forEach(<span class="hljs-function"><span class="hljs-params">update</span> =&gt;</span> {
             <span class="hljs-keyword">const</span> { message, optin, delivery, postback } = update;
             <span class="hljs-keyword">const</span> payload = {
                 update,
@@ -248,8 +248,8 @@ parameter to the listener callbacks.</li>
                     <span class="hljs-keyword">const</span> postbackPayload = <span class="hljs-built_in">JSON</span>.parse(postback.payload);
                     <span class="hljs-keyword">if</span> (postbackPayload.type &amp;&amp; postbackPayload.type === <span class="hljs-string">'legacy-welcome'</span>) {
                         bot.sendMessage({
-                            userId: update.sender.id,
-                            text: postbackPayload.message.text
+                            <span class="hljs-attr">userId</span>: update.sender.id,
+                            <span class="hljs-attr">text</span>: postbackPayload.message.text
                         });
                     }
                 } <span class="hljs-keyword">catch</span> (e) {

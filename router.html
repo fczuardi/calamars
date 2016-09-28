@@ -186,22 +186,22 @@ callbacks or any extra data.</p>
 <pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { createRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'calamars'</span>;
 
 <span class="hljs-keyword">const</span> input1 = {
-    query: <span class="hljs-string">'Stop!'</span>,
-    intentName: <span class="hljs-string">'stop'</span>,
-    score: <span class="hljs-number">0.9629247</span>
+    <span class="hljs-attr">query</span>: <span class="hljs-string">'Stop!'</span>,
+    <span class="hljs-attr">intentName</span>: <span class="hljs-string">'stop'</span>,
+    <span class="hljs-attr">score</span>: <span class="hljs-number">0.9629247</span>
 };
 <span class="hljs-keyword">const</span> input2 = {
-    query: <span class="hljs-string">'Foobar'</span>,
-    intentName: <span class="hljs-string">'None'</span>,
-    score: <span class="hljs-number">0.546681643</span>
+    <span class="hljs-attr">query</span>: <span class="hljs-string">'Foobar'</span>,
+    <span class="hljs-attr">intentName</span>: <span class="hljs-string">'None'</span>,
+    <span class="hljs-attr">score</span>: <span class="hljs-number">0.546681643</span>
 };
 <span class="hljs-keyword">const</span> extraParam = <span class="hljs-string">'hello.'</span>;
 
 <span class="hljs-keyword">const</span> routes = [[
-    obj =&gt; obj.intentName === <span class="hljs-string">'stop'</span>,
+    <span class="hljs-function"><span class="hljs-params">obj</span> =&gt;</span> obj.intentName === <span class="hljs-string">'stop'</span>,
     obj =&gt; <span class="hljs-string">`You say <span class="hljs-subst">${obj.query}</span>, I say go go go, oh no.`</span>
 ], [
-    obj =&gt; obj.intentName === <span class="hljs-string">'None'</span>,
+    <span class="hljs-function"><span class="hljs-params">obj</span> =&gt;</span> obj.intentName === <span class="hljs-string">'None'</span>,
     (obj, extra) =&gt; <span class="hljs-string">`I dont know why you say <span class="hljs-subst">${obj.query}</span>, I say <span class="hljs-subst">${extra}</span>`</span>
 ]];
 
@@ -219,7 +219,7 @@ callbacks or any extra data.</p>
         <h3 id="source">Source</h3>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = routes =&gt; (input, ...other) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> createRouter = <span class="hljs-function"><span class="hljs-params">routes</span> =&gt;</span> (input, ...other) =&gt; {
     <span class="hljs-keyword">if</span> (!routes) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }</pre></div>
         
       
@@ -230,7 +230,7 @@ expression, and on those cases it will be treated as a shortcut
 for exact match or <code>RegExp.test</code> respectively.</p>
 
         
-          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> matchingRoutes = routes.filter(route =&gt; {
+          <div class='highlight'><pre>    <span class="hljs-keyword">const</span> matchingRoutes = routes.filter(<span class="hljs-function"><span class="hljs-params">route</span> =&gt;</span> {
         <span class="hljs-keyword">const</span> cmp = route[<span class="hljs-number">0</span>];
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cmp === <span class="hljs-string">'function'</span>) {
             <span class="hljs-keyword">return</span> cmp(input, ...other);

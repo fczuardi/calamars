@@ -120,54 +120,54 @@
     update, gte, concat, <span class="hljs-keyword">of</span>, merge, filter
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>;
 
-<span class="hljs-keyword">const</span> getDb = config =&gt; <span class="hljs-keyword">new</span> LocalStorage(config.localPath);
+<span class="hljs-keyword">const</span> getDb = <span class="hljs-function"><span class="hljs-params">config</span> =&gt;</span> <span class="hljs-keyword">new</span> LocalStorage(config.localPath);
 
-<span class="hljs-keyword">const</span> setTable = (db, tableName, data) =&gt; db.setItem(tableName, <span class="hljs-built_in">JSON</span>.stringify(data));
-<span class="hljs-keyword">const</span> getTable = (db, tableName) =&gt; <span class="hljs-built_in">JSON</span>.parse(db.getItem(tableName));
+<span class="hljs-keyword">const</span> setTable = <span class="hljs-function">(<span class="hljs-params">db, tableName, data</span>) =&gt;</span> db.setItem(tableName, <span class="hljs-built_in">JSON</span>.stringify(data));
+<span class="hljs-keyword">const</span> getTable = <span class="hljs-function">(<span class="hljs-params">db, tableName</span>) =&gt;</span> <span class="hljs-built_in">JSON</span>.parse(db.getItem(tableName));
 
-<span class="hljs-keyword">const</span> getUsers = db =&gt; getTable(db, <span class="hljs-string">'users'</span>);
-<span class="hljs-keyword">const</span> setUsers = (db, data) =&gt; setTable(db, <span class="hljs-string">'users'</span>, data);
+<span class="hljs-keyword">const</span> getUsers = <span class="hljs-function"><span class="hljs-params">db</span> =&gt;</span> getTable(db, <span class="hljs-string">'users'</span>);
+<span class="hljs-keyword">const</span> setUsers = <span class="hljs-function">(<span class="hljs-params">db, data</span>) =&gt;</span> setTable(db, <span class="hljs-string">'users'</span>, data);
 
-<span class="hljs-keyword">const</span> getUser = (db, userId) =&gt; {
+<span class="hljs-keyword">const</span> getUser = <span class="hljs-function">(<span class="hljs-params">db, userId</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> users = getUsers(db);
     <span class="hljs-keyword">const</span> propEqIdUserId = propEq(<span class="hljs-string">'id'</span>, userId);
     <span class="hljs-keyword">const</span> user = defaultTo({}, find(propEqIdUserId, users));
     <span class="hljs-keyword">return</span> user;
 };
-<span class="hljs-keyword">const</span> getUserIndex = (users, userId) =&gt; {
+<span class="hljs-keyword">const</span> getUserIndex = <span class="hljs-function">(<span class="hljs-params">users, userId</span>) =&gt;</span> {
     <span class="hljs-keyword">if</span> (!userId) { <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
     <span class="hljs-keyword">const</span> propEqIdUserId = propEq(<span class="hljs-string">'id'</span>, userId);
     <span class="hljs-keyword">return</span> findIndex(propEqIdUserId, users);
 };
-<span class="hljs-keyword">const</span> setUser = (db, userId, nextUser) =&gt; {
+<span class="hljs-keyword">const</span> setUser = <span class="hljs-function">(<span class="hljs-params">db, userId, nextUser</span>) =&gt;</span> {
     <span class="hljs-keyword">if</span> (!nextUser) { <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>; }
     <span class="hljs-keyword">const</span> users = getUsers(db);
     <span class="hljs-keyword">const</span> userIndex = getUserIndex(users, userId);
-    <span class="hljs-keyword">const</span> updatedUsers = <span class="hljs-keyword">of</span>(merge({ id: userId }, nextUser));
+    <span class="hljs-keyword">const</span> updatedUsers = <span class="hljs-keyword">of</span>(merge({ <span class="hljs-attr">id</span>: userId }, nextUser));
     <span class="hljs-keyword">const</span> nextUsers = gte(userIndex, <span class="hljs-number">0</span>)
         ? update(userIndex, nextUser, users)
         : concat(users, updatedUsers);
     <span class="hljs-keyword">return</span> setUsers(db, nextUsers);
 };
-<span class="hljs-keyword">const</span> removeUser = (db, userId) =&gt; {
+<span class="hljs-keyword">const</span> removeUser = <span class="hljs-function">(<span class="hljs-params">db, userId</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> users = getUsers(db);
     <span class="hljs-keyword">const</span> userIndex = getUserIndex(users, userId);
     <span class="hljs-keyword">return</span> setUsers(db, remove(userIndex, <span class="hljs-number">1</span>, users));
 };
 
-<span class="hljs-keyword">const</span> getUserProp = (db, userId, key) =&gt; getUser(db, userId)[key];
-<span class="hljs-keyword">const</span> setUserProp = (db, userId, key, value) =&gt; setUser(db, userId, {
+<span class="hljs-keyword">const</span> getUserProp = <span class="hljs-function">(<span class="hljs-params">db, userId, key</span>) =&gt;</span> getUser(db, userId)[key];
+<span class="hljs-keyword">const</span> setUserProp = <span class="hljs-function">(<span class="hljs-params">db, userId, key, value</span>) =&gt;</span> setUser(db, userId, {
     ...getUser(db, userId),
-    id: userId,
+    <span class="hljs-attr">id</span>: userId,
     [key]: value
 });
-<span class="hljs-keyword">const</span> removeUserProp = (db, userId, key) =&gt; {
+<span class="hljs-keyword">const</span> removeUserProp = <span class="hljs-function">(<span class="hljs-params">db, userId, key</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> { [key]: oldItem, ...other } = getUser(db, userId); <span class="hljs-comment">// eslint-disable-line</span>
     <span class="hljs-keyword">return</span> setUser(db, userId, { ...other });
 };
 
-<span class="hljs-keyword">const</span> getSelectWhereList = (db, key, value) =&gt; {
-    <span class="hljs-keyword">const</span> isValue = n =&gt; n[key] === value;
+<span class="hljs-keyword">const</span> getSelectWhereList = <span class="hljs-function">(<span class="hljs-params">db, key, value</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> isValue = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n[key] === value;
     <span class="hljs-keyword">const</span> users = getUsers(db);
     <span class="hljs-keyword">const</span> list = filter(isValue, users);
     <span class="hljs-keyword">return</span> list;

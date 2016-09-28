@@ -129,12 +129,12 @@ You need to call this for each page you want to receive messages from.</p>
 </ul>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = pageAccessToken =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> pageSubscribe = <span class="hljs-function"><span class="hljs-params">pageAccessToken</span> =&gt;</span> {
     <span class="hljs-keyword">const</span> requestOptions = {
-        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/subscribed_apps`</span>,
-        method: <span class="hljs-string">'POST'</span>,
-        qs: {
-            access_token: pageAccessToken
+        <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/subscribed_apps`</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">qs</span>: {
+            <span class="hljs-attr">access_token</span>: pageAccessToken
         }
     };
     <span class="hljs-keyword">return</span> request(requestOptions);
@@ -155,27 +155,27 @@ You need to call this for each page you want to receive messages from.</p>
 </ul>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> sendTextMessage = (message, pageAccessToken) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> sendTextMessage = <span class="hljs-function">(<span class="hljs-params">message, pageAccessToken</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> { attachment, text } = message;
     <span class="hljs-keyword">const</span> croppedText = text
         ? text.substring(<span class="hljs-number">0</span>, <span class="hljs-number">319</span>) + (message.text.length &gt; <span class="hljs-number">320</span> ? <span class="hljs-string">'…'</span> : <span class="hljs-string">''</span>)
         : <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">const</span> requestOptions = {
-        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
-        qs: {
-            access_token: pageAccessToken
+        <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
+        <span class="hljs-attr">qs</span>: {
+            <span class="hljs-attr">access_token</span>: pageAccessToken
         },
-        method: <span class="hljs-string">'POST'</span>,
-        body: {
-            recipient: {
-                id: message.userId
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">body</span>: {
+            <span class="hljs-attr">recipient</span>: {
+                <span class="hljs-attr">id</span>: message.userId
             },
-            message: {
-                text: croppedText,
+            <span class="hljs-attr">message</span>: {
+                <span class="hljs-attr">text</span>: croppedText,
                 attachment
             }
         },
-        json: <span class="hljs-literal">true</span>
+        <span class="hljs-attr">json</span>: <span class="hljs-literal">true</span>
     };
     <span class="hljs-keyword">return</span> request(requestOptions);
 };</pre></div>
@@ -192,20 +192,20 @@ You need to call this for each page you want to receive messages from.</p>
 </ul>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> senderActions = (status, userId, pageAccessToken) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> senderActions = <span class="hljs-function">(<span class="hljs-params">status, userId, pageAccessToken</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> requestOptions = {
-        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
-        qs: {
-            access_token: pageAccessToken
+        <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
+        <span class="hljs-attr">qs</span>: {
+            <span class="hljs-attr">access_token</span>: pageAccessToken
         },
-        method: <span class="hljs-string">'POST'</span>,
-        body: {
-            recipient: {
-                id: userId
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">body</span>: {
+            <span class="hljs-attr">recipient</span>: {
+                <span class="hljs-attr">id</span>: userId
             },
-            sender_action: status
+            <span class="hljs-attr">sender_action</span>: status
         },
-        json: <span class="hljs-literal">true</span>
+        <span class="hljs-attr">json</span>: <span class="hljs-literal">true</span>
     };
     <span class="hljs-keyword">return</span> request(requestOptions);
 };</pre></div>
@@ -223,23 +223,23 @@ You need to call this for each page you want to receive messages from.</p>
 </ul>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> quickRepliesText = (text, attachment, userId, pageAccessToken) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> quickRepliesText = <span class="hljs-function">(<span class="hljs-params">text, attachment, userId, pageAccessToken</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> requestOptions = {
-        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
-        qs: {
-            access_token: pageAccessToken
+        <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span>me/messages`</span>,
+        <span class="hljs-attr">qs</span>: {
+            <span class="hljs-attr">access_token</span>: pageAccessToken
         },
-        method: <span class="hljs-string">'POST'</span>,
-        body: {
-            recipient: {
-                id: userId
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">body</span>: {
+            <span class="hljs-attr">recipient</span>: {
+                <span class="hljs-attr">id</span>: userId
             },
-            message: {
-                text: text,
-                quick_replies: attachment
+            <span class="hljs-attr">message</span>: {
+                text,
+                <span class="hljs-attr">quick_replies</span>: attachment
             }
         },
-        json: <span class="hljs-literal">true</span>
+        <span class="hljs-attr">json</span>: <span class="hljs-literal">true</span>
     };
     <span class="hljs-keyword">return</span> request(requestOptions);
 };</pre></div>
@@ -257,13 +257,13 @@ get information from the userId</li>
 </ul>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> userInfo = (userId, pageAccessToken) =&gt; <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(resolve =&gt; request({
-    uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${userId}</span>`</span>,
-    qs: {
-        fields: <span class="hljs-string">'first_name,last_name,profile_pic,locale,timezone,gender'</span>,
-        access_token: pageAccessToken
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> userInfo = <span class="hljs-function">(<span class="hljs-params">userId, pageAccessToken</span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> request({
+    <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${userId}</span>`</span>,
+    <span class="hljs-attr">qs</span>: {
+        <span class="hljs-attr">fields</span>: <span class="hljs-string">'first_name,last_name,profile_pic,locale,timezone,gender'</span>,
+        <span class="hljs-attr">access_token</span>: pageAccessToken
     }
-}).then(body =&gt;
+}).then(<span class="hljs-function"><span class="hljs-params">body</span> =&gt;</span>
     resolve(<span class="hljs-built_in">JSON</span>.parse(body))
 ));</pre></div>
         
@@ -276,21 +276,21 @@ Greeting Text, Get Start Button or Persistent Menu</p>
 <a href="https://developers.facebook.com/docs/messenger-platform/thread-settings">thread_settings endpoint</a>.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> threadSettings = ({ type, state, text, cta }, pageId, pageAccessToken) =&gt; {
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> threadSettings = <span class="hljs-function">(<span class="hljs-params">{ type, state, text, cta }, pageId, pageAccessToken</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> requestOptions = {
-        uri: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${pageId}</span>/thread_settings`</span>,
-        qs: {
-            access_token: pageAccessToken
+        <span class="hljs-attr">uri</span>: <span class="hljs-string">`<span class="hljs-subst">${apiURL}</span><span class="hljs-subst">${pageId}</span>/thread_settings`</span>,
+        <span class="hljs-attr">qs</span>: {
+            <span class="hljs-attr">access_token</span>: pageAccessToken
         },
-        method: <span class="hljs-string">'POST'</span>,
-        json: <span class="hljs-literal">true</span>
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">json</span>: <span class="hljs-literal">true</span>
     };
     <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'greeting'</span>) {
         <span class="hljs-keyword">return</span> request({
             ...requestOptions,
-            body: {
-                setting_type: type,
-                greeting: {
+            <span class="hljs-attr">body</span>: {
+                <span class="hljs-attr">setting_type</span>: type,
+                <span class="hljs-attr">greeting</span>: {
                     text
                 }
             }
@@ -298,10 +298,10 @@ Greeting Text, Get Start Button or Persistent Menu</p>
     }
     <span class="hljs-keyword">return</span> request({
         ...requestOptions,
-        body: {
-            thread_state: state,
-            setting_type: type,
-            call_to_actions: cta
+        <span class="hljs-attr">body</span>: {
+            <span class="hljs-attr">thread_state</span>: state,
+            <span class="hljs-attr">setting_type</span>: type,
+            <span class="hljs-attr">call_to_actions</span>: cta
         }
     });
 };</pre></div>
@@ -314,13 +314,13 @@ A helper function to make graph api calls to set new thread state message
 <a href="https://developers.facebook.com/docs/messenger-platform/send-api-reference#welcome_message_configuration">setting</a>.</p>
 
         
-          <div class='highlight'><pre><span class="hljs-keyword">const</span> setWelcomeMessage = (message, pageId, pageAccessToken) =&gt; threadSettings(
+          <div class='highlight'><pre><span class="hljs-keyword">const</span> setWelcomeMessage = <span class="hljs-function">(<span class="hljs-params">message, pageId, pageAccessToken</span>) =&gt;</span> threadSettings(
     {
-        type: <span class="hljs-string">'call_to_actions'</span>,
-        state: <span class="hljs-string">'new_thread'</span>,
-        cta: [{
-            payload: <span class="hljs-built_in">JSON</span>.stringify({
-                type: <span class="hljs-string">'legacy-welcome'</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'call_to_actions'</span>,
+        <span class="hljs-attr">state</span>: <span class="hljs-string">'new_thread'</span>,
+        <span class="hljs-attr">cta</span>: [{
+            <span class="hljs-attr">payload</span>: <span class="hljs-built_in">JSON</span>.stringify({
+                <span class="hljs-attr">type</span>: <span class="hljs-string">'legacy-welcome'</span>,
                 message
             })
         }]
