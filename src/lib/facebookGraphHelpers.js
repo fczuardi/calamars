@@ -106,7 +106,7 @@ const quickRepliesText = (text, attachment, userId, pageAccessToken) => {
                 id: userId
             },
             message: {
-                text: text,
+                text,
                 quick_replies: attachment
             }
         },

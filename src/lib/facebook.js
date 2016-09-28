@@ -96,8 +96,8 @@ class FacebookMessengerBot {
         return sendTextMessage(message, pageToken);
     }
 
-    sendQuickReplies(text, attachment, userId, pageToken = this.pageTokens[0] ) {
-        return quickRepliesText(text, attachment, userId, pageToken)
+    sendQuickReplies(text, attachment, userId, pageToken = this.pageTokens[0]) {
+        return quickRepliesText(text, attachment, userId, pageToken);
     }
 
     getUserInfo(userId, pageToken = this.pageTokens[0]) {
@@ -112,8 +112,8 @@ class FacebookMessengerBot {
         return threadSettings(options, pageId, pageAccessToken);
     }
 
-    setSenderActions (status, userId, pageToken = this.pageTokens[0]) {
-        return senderActions(status, userId, pageToken)
+    setSenderActions(status, userId, pageToken = this.pageTokens[0]) {
+        return senderActions(status, userId, pageToken);
     }
 }
 
