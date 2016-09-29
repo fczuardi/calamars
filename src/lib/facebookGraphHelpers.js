@@ -17,7 +17,14 @@ const pageSubscribe = pageAccessToken => {
             access_token: pageAccessToken
         }
     };
-    return request(requestOptions);
+    return new Promise(resolve => {
+        return request(requestOptions)
+            .then(result => resolve(result))
+            .catch(e => {
+                console.error(e.message);
+                return resolve(e.message);
+            });
+    });
 };
 
 // ## sendTextMessage(message, pageAccessToken)

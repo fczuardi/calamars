@@ -65,7 +65,7 @@ const mybot = new FacebookMessengerBot({
     }
 });
 
-mybot.launchPromise.then(function(){
+mybot.start().then(function(){
     console.log(`server is running on port ${myPort}`);
 })
 ```
