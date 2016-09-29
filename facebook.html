@@ -172,7 +172,9 @@ and <a href="./facebookGraphHelpers.html">facebookGraphHelpers.js</a></p>
 <li><strong>callbackPath</strong> - <em>string</em> - The endpoint path of the setup <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Callback URL</a></li>
 <li><strong>verifyToken</strong> - <em>string</em> - The <a href="https://developers.facebook.com/docs/messenger-platform/implementation#setup_webhook">Verify Token</a></li>
 <li><strong>pageTokens</strong> - <em>Array</em> - A list of page tokens to subscribe to</li>
-<li><strong>staticFiles</strong> - <em>Array</em> - List of specific static files to be served
+<li><strong>appSecret</strong> - <em>string</em> - The app secret of your facebook app, used to verify that the source of the updates is Facebook</li>
+<li><strong>staticFiles</strong> - <em>Array</em> - List of specific static files to be served</li>
+<li><strong>autoSubscribe</strong> - <em>boolean</em> - If true will attempt to subscribe your facebook app to all facebook pages in <strong>pageTokens</strong> using an API call
 by the same expressjs server that runs the bot. Each item of this array
 should be an object in the format
 <code>{path: &#39;\some_get_endpoit&#39;, file: &#39;path/to/static.file&#39;}</code></li>
@@ -202,6 +204,7 @@ for details):<ul>
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
             appSecret = FB_APP_SECRET,
             staticFiles = [],
+            autoSubscribe = <span class="hljs-literal">false</span>,
             listeners = {}
         } = options;
 
@@ -218,6 +221,7 @@ for details):<ul>
         <span class="hljs-keyword">this</span>.listeners = listeners;
         <span class="hljs-keyword">this</span>.port = port;
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
+        <span class="hljs-keyword">this</span>.autoSubscribe = autoSubscribe;
         <span class="hljs-keyword">this</span>.server = {};
     }
 
@@ -245,6 +249,9 @@ to attach your bot config to an existing expressjs</p>
         <span class="hljs-keyword">let</span> bot = <span class="hljs-keyword">this</span>;
         <span class="hljs-keyword">const</span> launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> {
             bot.server = app.listen(bot.port, () =&gt; {
+                <span class="hljs-keyword">if</span> (!bot.autoSubscribe) {
+                    <span class="hljs-keyword">return</span> resolve(<span class="hljs-literal">true</span>);
+                }
                 <span class="hljs-keyword">const</span> subscriptionPromises = bot.pageTokens.map(<span class="hljs-function"><span class="hljs-params">token</span> =&gt;</span>
                     pageSubscribe(token)
                 );
