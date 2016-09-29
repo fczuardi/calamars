@@ -211,19 +211,58 @@ for details):<ul>
 
         <span class="hljs-keyword">this</span>.pageIds = pageIds;
         <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
+        <span class="hljs-keyword">this</span>.staticFiles = staticFiles;
+        <span class="hljs-keyword">this</span>.appSecret = appSecret;
+        <span class="hljs-keyword">this</span>.callbackPath = callbackPath;
+        <span class="hljs-keyword">this</span>.verifyToken = verifyToken;
+        <span class="hljs-keyword">this</span>.listeners = listeners;
+        <span class="hljs-keyword">this</span>.port = port;
+        <span class="hljs-keyword">this</span>.pageTokens = pageTokens;
+        <span class="hljs-keyword">this</span>.server = {};
+    }
+
+    setupExpressApp(app) {
+        app.use(bodyParser.json({ <span class="hljs-attr">verify</span>: verifySignature(<span class="hljs-keyword">this</span>.appSecret) }));
+        app.get(<span class="hljs-keyword">this</span>.callbackPath, setupGetWebhook(<span class="hljs-keyword">this</span>.verifyToken));
+        app.post(<span class="hljs-keyword">this</span>.callbackPath, setupPostWebhook(<span class="hljs-keyword">this</span>.listeners, <span class="hljs-keyword">this</span>));
+        <span class="hljs-keyword">this</span>.staticFiles.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+            app.get(item.path, (req, res) =&gt; res.sendFile(resolvePath(item.file)));
+        });
+    }</pre></div>
+        
+      
+        
+        <p>NEW in v0.17
+The constructor no longer launch a webserver, you will have
+to launch it up manually with bot.start() or if you already have
+an express app running, you can use bot.setupExpressApp(app)
+to attach your bot config to an existing expressjs</p>
+
+        
+          <div class='highlight'><pre>    start() {
         <span class="hljs-keyword">const</span> app = express();
-        <span class="hljs-keyword">this</span>.launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> {
-            app.use(bodyParser.json({ <span class="hljs-attr">verify</span>: verifySignature(appSecret) }));
-            app.get(callbackPath, setupGetWebhook(verifyToken));
-            app.post(callbackPath, setupPostWebhook(listeners, <span class="hljs-keyword">this</span>));
-            staticFiles.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-                app.get(item.path, (req, res) =&gt; res.sendFile(resolvePath(item.file)));
-            });
-            app.listen(port, () =&gt; {
-                <span class="hljs-built_in">Promise</span>.all(pageTokens.map(<span class="hljs-function"><span class="hljs-params">token</span> =&gt;</span> pageSubscribe(token)))
-                .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>));
+        <span class="hljs-keyword">this</span>.setupExpressApp(app);
+        <span class="hljs-keyword">let</span> bot = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">const</span> launchPromise = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> {
+            bot.server = app.listen(bot.port, () =&gt; {
+                <span class="hljs-keyword">const</span> subscriptionPromises = bot.pageTokens.map(<span class="hljs-function"><span class="hljs-params">token</span> =&gt;</span>
+                    pageSubscribe(token)
+                );
+                <span class="hljs-built_in">Promise</span>.all(subscriptionPromises).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+                    <span class="hljs-keyword">return</span> resolve(<span class="hljs-literal">true</span>);
+                }).catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-built_in">console</span>.error(e.message));
             });
         });
+        <span class="hljs-keyword">return</span> launchPromise;
+    }</pre></div>
+        
+      
+        
+        <p>NEW in v0.17</p>
+
+        
+          <div class='highlight'><pre>    stop() {
+        <span class="hljs-keyword">this</span>.server.close();
     }
 
     sendMessage(message, pageToken = <span class="hljs-keyword">this</span>.pageTokens[<span class="hljs-number">0</span>]) {
