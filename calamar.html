@@ -145,11 +145,12 @@ message update object format containing commonly used attributes.</p>
           <div class='highlight'><pre><span class="hljs-keyword">const</span> calamarMessageFormat = <span class="hljs-function"><span class="hljs-params">update</span> =&gt;</span> {
     <span class="hljs-keyword">if</span> (isFacebookMessengerMessagingItem(update)) {
         <span class="hljs-keyword">const</span> { message, timestamp, sender, recipient } = update;
-        <span class="hljs-keyword">const</span> { mid, text } = message;
+        <span class="hljs-keyword">const</span> { mid = <span class="hljs-literal">null</span>, text = <span class="hljs-literal">null</span>, is_echo = <span class="hljs-literal">false</span> } = message;
         <span class="hljs-keyword">return</span> {
             text,
             timestamp,
             <span class="hljs-attr">messageId</span>: mid,
+            <span class="hljs-attr">isEcho</span>: is_echo,
             <span class="hljs-attr">senderId</span>: sender.id,
             <span class="hljs-attr">recipientId</span>: recipient.id,
             <span class="hljs-attr">chatId</span>: sender.id,
