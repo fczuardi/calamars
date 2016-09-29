@@ -17,7 +17,9 @@ import {
     sendTextMessage,
     userInfo,
     setWelcomeMessage,
-    threadSettings
+    threadSettings,
+    senderActions,
+    quickRepliesText
 } from './facebookGraphHelpers';
 
 // default values can be setup using environment vars
@@ -26,7 +28,8 @@ const {
     FB_CALLBACK_PATH,
     FB_VERIFY_TOKEN,
     FB_PAGE_ID,
-    FB_PAGE_ACCESS_TOKEN
+    FB_PAGE_ACCESS_TOKEN,
+    FB_APP_SECRET
 } = process.env;
 
 // The main class, this represents a facebook messenger chat bot/server
@@ -63,11 +66,12 @@ class FacebookMessengerBot {
             verifyToken = FB_VERIFY_TOKEN,
             pageIds = [FB_PAGE_ID],
             pageTokens = [FB_PAGE_ACCESS_TOKEN],
+            appSecret = FB_APP_SECRET,
             staticFiles = [],
             listeners = {}
         } = options;
 
-        if (!callbackPath || !verifyToken || !pageTokens[0]) {
+        if (!callbackPath || !verifyToken || !pageTokens[0] || !appSecret) {
             throw new Error('FacebookMessengerBot could not be created, missing required option');
         }
 
@@ -75,7 +79,7 @@ class FacebookMessengerBot {
         this.pageTokens = pageTokens;
         const app = express();
         this.launchPromise = new Promise(resolve => {
-            app.use(bodyParser.json({ verify: verifySignature }));
+            app.use(bodyParser.json({ verify: verifySignature(appSecret) }));
             app.get(callbackPath, setupGetWebhook(verifyToken));
             app.post(callbackPath, setupPostWebhook(listeners, this));
             staticFiles.forEach(item => {
@@ -92,6 +96,10 @@ class FacebookMessengerBot {
         return sendTextMessage(message, pageToken);
     }
 
+    sendQuickReplies(text, attachment, userId, pageToken = this.pageTokens[0]) {
+        return quickRepliesText(text, attachment, userId, pageToken);
+    }
+
     getUserInfo(userId, pageToken = this.pageTokens[0]) {
         return userInfo(userId, pageToken);
     }
@@ -102,6 +110,10 @@ class FacebookMessengerBot {
 
     setThreadSettings(options, pageId = this.pageIds[0], pageAccessToken = this.pageTokens[0]) {
         return threadSettings(options, pageId, pageAccessToken);
+    }
+
+    setSenderActions(status, userId, pageToken = this.pageTokens[0]) {
+        return senderActions(status, userId, pageToken);
     }
 }
 

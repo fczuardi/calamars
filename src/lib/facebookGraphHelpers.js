@@ -56,6 +56,66 @@ const sendTextMessage = (message, pageAccessToken) => {
 };
 
 
+// ## senderActions(status, userId, pageAccessToken)
+// Set typing indicators or send read receipts to your Facebook Messenger app/bot.
+//
+// ### Parameters
+// - **status** - _string_ - 'mark_seen' || 'typing_on' || 'typing_off'
+// - **userId** - _string_ - The user fbid to send the status
+// **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
+// [senderActions]: https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions
+// [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions
+const senderActions = (status, userId, pageAccessToken) => {
+    const requestOptions = {
+        uri: `${apiURL}me/messages`,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: 'POST',
+        body: {
+            recipient: {
+                id: userId
+            },
+            sender_action: status
+        },
+        json: true
+    };
+    return request(requestOptions);
+};
+
+
+// ## quickRepliesText(text, attachment, pageAccessToken)
+// Send a quick replies message with your Facebook Messenger app/bot.
+//
+// ### Parameters
+//   - **attachment** - _Object_ - Array of objects including the quick replies options
+//   - **userId** - _string_ - recipient's messenger ID
+//   - **text** - _string_ - message's text to be sent.
+// **pageAccessToken** - _string_ - The [token][pageAccessToken] for the page
+// [quickReplies]: https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies
+// [pageAccessToken]: https://developers.facebook.com/docs/messenger-platform/implementation#page_access_token
+const quickRepliesText = (text, attachment, userId, pageAccessToken) => {
+    const requestOptions = {
+        uri: `${apiURL}me/messages`,
+        qs: {
+            access_token: pageAccessToken
+        },
+        method: 'POST',
+        body: {
+            recipient: {
+                id: userId
+            },
+            message: {
+                text,
+                quick_replies: attachment
+            }
+        },
+        json: true
+    };
+    return request(requestOptions);
+};
+
+
 // ## userInfo(userId, pageAccessToken)
 // Retrieves user information, first name, last name, profile pic, locale,
 // time zone and gender, from Facebook's [User Profile API][userprofileapi]
@@ -140,5 +200,7 @@ export {
     sendTextMessage,
     userInfo,
     setWelcomeMessage,
-    threadSettings
+    threadSettings,
+    senderActions,
+    quickRepliesText
 };
