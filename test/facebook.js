@@ -17,7 +17,9 @@ test('Evironment var for the Facebook app is set', t => {
 
 test('Bot Class empty instantiation', t => {
     const bot = new FacebookMessengerBot();
-    t.is(typeof bot.launchPromise.then, 'function');
+    const launchPromise = bot.start();
+    t.is(typeof launchPromise.then, 'function');
+    bot.stop();
 });
 
 const PORT = parseInt(process.env.PORT, 10);
@@ -37,7 +39,9 @@ test('Bot with pages to subscribe', t => {
         port: PORT + 2,
         pageTokens: [FB_PAGE_ACCESS_TOKEN]
     });
-    t.is(typeof bot.launchPromise.then, 'function');
+    const launchPromise = bot.start();
+    t.is(typeof launchPromise.then, 'function');
+    bot.stop();
 });
 
 test('Bot Webserver launches and returns expected challenge', async t => {
@@ -47,7 +51,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
         port
     };
     const bot = new FacebookMessengerBot(botConfig);
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const challenge = 'Foobar';
     const validationErrorString = 'Error, wrong validation token';
@@ -62,6 +66,7 @@ test('Bot Webserver launches and returns expected challenge', async t => {
     t.is(returnedBody, challenge);
     const returnedBody2 = await request.get(uri);
     t.is(returnedBody2, validationErrorString);
+    bot.stop();
 });
 
 const appSecret = process.env.FB_APP_SECRET;
@@ -78,7 +83,7 @@ test(
         const port = PORT + 4;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const bot = new FacebookMessengerBot({ port });
-        const serverStarted = await bot.launchPromise;
+        const serverStarted = await bot.start();
         t.true(serverStarted);
         const body = {};
         const botResponse = await request({
@@ -91,6 +96,7 @@ test(
             json: true
         });
         t.false(botResponse);
+        bot.stop();
     }
 );
 
@@ -100,7 +106,7 @@ test(
         const port = PORT + 5;
         const uri = `http://localhost:${port}${FB_CALLBACK_PATH}`;
         const bot = new FacebookMessengerBot({ port });
-        const serverStarted = await bot.launchPromise;
+        const serverStarted = await bot.start();
         t.true(serverStarted);
         const body = {
             object: 'page',
@@ -133,6 +139,7 @@ test(
         } catch (e) {
             t.is(e.message, '401 - false');
         }
+        bot.stop();
     }
 );
 
@@ -147,7 +154,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot.launchPromise;
+        const serverStarted = await bot.start();
         t.true(serverStarted);
         const body = { entry: [{ messaging: [{ }] }] };
         const requestOptions = {
@@ -161,6 +168,7 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
+        bot.stop();
     }
 );
 test(
@@ -176,7 +184,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot.launchPromise;
+        const serverStarted = await bot.start();
         t.true(serverStarted);
         const body = { entry: [{ messaging: [{ message: { text: msg } }] }] };
         const requestOptions = {
@@ -190,6 +198,7 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
+        bot.stop();
     }
 );
 
@@ -224,7 +233,7 @@ test(
             }
         };
         const bot = new FacebookMessengerBot({ port, listeners });
-        const serverStarted = await bot.launchPromise;
+        const serverStarted = await bot.start();
         t.true(serverStarted);
         const body = { entry: [
             { messaging: [
@@ -246,6 +255,7 @@ test(
         };
         const returnedBody = await request(requestOptions);
         t.true(returnedBody);
+        bot.stop();
     }
 );
 
@@ -265,7 +275,7 @@ test(
                 onMessage
             };
             const bot = new FacebookMessengerBot({ port, listeners });
-            const serverStarted = await bot.launchPromise;
+            const serverStarted = await bot.start();
             t.true(serverStarted);
             const body = { entry: [{ messaging: [{
                 sender: { id: process.env.FB_TEST_USER_ID },
@@ -282,6 +292,7 @@ test(
             };
             const returnedBody = await request(requestOptions);
             t.true(returnedBody);
+            bot.stop();
         });
     }
 );
@@ -290,7 +301,7 @@ test('Bot sends a text message', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 11
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const invalidUserIdMessage = {
         userId: 'Foo12345',
@@ -306,13 +317,14 @@ test('Bot sends a text message', async t => {
     };
     const sendMessageResult = await bot.sendMessage(message);
     t.truthy(sendMessageResult.message_id);
+    bot.stop();
 });
 
 test('Bot sends a long text message', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 12
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const userId = process.env.FB_TEST_USER_ID;
     const message = {
@@ -329,13 +341,14 @@ The pleasing punishment that deceive the Capitol!
     const sendMessageResult = await bot.sendMessage(message);
     t.truthy(sendMessageResult.message_id);
     t.truthy(sendMessageResult.recipient_id);
+    bot.stop();
 });
 
 test('Bot sends a message with image attachment', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 13
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const userId = process.env.FB_TEST_USER_ID;
     const message = {
@@ -350,26 +363,28 @@ test('Bot sends a message with image attachment', async t => {
     const sendMessageResult = await bot.sendMessage(message);
     t.truthy(sendMessageResult.message_id);
     t.truthy(sendMessageResult.recipient_id);
+    bot.stop();
 });
 
 test('Change welcome message of a bot', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 14
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const message = {
         text: 'A new test welcome message. 🐨'
     };
     const setWelcomeMessageResult = await bot.setWelcomeMessage(message);
     t.truthy(setWelcomeMessageResult.result);
+    bot.stop();
 });
 
 test('Setup persistent menu of a bot', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 15
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const type = 'call_to_actions';
     const state = 'existing_thread';
@@ -386,13 +401,14 @@ test('Setup persistent menu of a bot', async t => {
         cta
     });
     t.truthy(setThreadSettingResult);
+    bot.stop();
 });
 
 test('Setup Get Start button postback of a bot', async t => {
     const bot = new FacebookMessengerBot({
         port: PORT + 16
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const type = 'call_to_actions';
     const state = 'new_thread';
@@ -407,6 +423,7 @@ test('Setup Get Start button postback of a bot', async t => {
         cta
     });
     t.truthy(setThreadSettingResult);
+    bot.stop();
 });
 
 test('Bot server can also serve static files', async t => {
@@ -419,9 +436,10 @@ test('Bot server can also serve static files', async t => {
         port,
         staticFiles
     });
-    const serverStarted = await bot.launchPromise;
+    const serverStarted = await bot.start();
     t.true(serverStarted);
     const returnedBody = await request(uri);
     const fileContents = readFileSync(file);
     t.is(returnedBody, fileContents.toString());
+    bot.stop();
 });

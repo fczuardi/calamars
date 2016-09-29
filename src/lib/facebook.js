@@ -77,19 +77,50 @@ class FacebookMessengerBot {
 
         this.pageIds = pageIds;
         this.pageTokens = pageTokens;
+        this.staticFiles = staticFiles;
+        this.appSecret = appSecret;
+        this.callbackPath = callbackPath;
+        this.verifyToken = verifyToken;
+        this.listeners = listeners;
+        this.port = port;
+        this.pageTokens = pageTokens;
+        this.server = {};
+    }
+
+    setupExpressApp(app) {
+        app.use(bodyParser.json({ verify: verifySignature(this.appSecret) }));
+        app.get(this.callbackPath, setupGetWebhook(this.verifyToken));
+        app.post(this.callbackPath, setupPostWebhook(this.listeners, this));
+        this.staticFiles.forEach(item => {
+            app.get(item.path, (req, res) => res.sendFile(resolvePath(item.file)));
+        });
+    }
+
+    // NEW in v0.17
+    // The constructor no longer launch a webserver, you will have
+    // to launch it up manually with bot.start() or if you already have
+    // an express app running, you can use bot.setupExpressApp(app)
+    // to attach your bot config to an existing expressjs
+    start() {
         const app = express();
-        this.launchPromise = new Promise(resolve => {
-            app.use(bodyParser.json({ verify: verifySignature(appSecret) }));
-            app.get(callbackPath, setupGetWebhook(verifyToken));
-            app.post(callbackPath, setupPostWebhook(listeners, this));
-            staticFiles.forEach(item => {
-                app.get(item.path, (req, res) => res.sendFile(resolvePath(item.file)));
-            });
-            app.listen(port, () => {
-                Promise.all(pageTokens.map(token => pageSubscribe(token)))
-                .then(() => resolve(true));
+        this.setupExpressApp(app);
+        let bot = this;
+        const launchPromise = new Promise(resolve => {
+            bot.server = app.listen(bot.port, () => {
+                const subscriptionPromises = bot.pageTokens.map(token =>
+                    pageSubscribe(token)
+                );
+                Promise.all(subscriptionPromises).then(() => {
+                    return resolve(true);
+                }).catch(e => console.error(e.message));
             });
         });
+        return launchPromise;
+    }
+
+    // NEW in v0.17
+    stop() {
+        this.server.close();
     }
 
     sendMessage(message, pageToken = this.pageTokens[0]) {
