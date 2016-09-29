@@ -21,7 +21,7 @@ const isTelegramUpdate = update => (update && update.update_id);
 const calamarMessageFormat = update => {
     if (isFacebookMessengerMessagingItem(update)) {
         const { message, timestamp, sender, recipient } = update;
-        const { mid, text } = message;
+        const { mid = null, text = null } = message;
         return {
             text,
             timestamp,
