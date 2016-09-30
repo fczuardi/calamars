@@ -41,9 +41,11 @@ class FacebookMessengerBot {
     //   - **callbackPath** - _string_ - The endpoint path of the setup [Callback URL][fbwebhook]
     //   - **verifyToken** - _string_ - The [Verify Token][fbwebhook]
     //   - **pageTokens** - _Array_ - A list of page tokens to subscribe to
-    //   - **appSecret** - _string_ - The app secret of your facebook app, used to verify that the source of the updates is Facebook
+    //   - **appSecret** - _string_ - The app secret of your facebook app, used
+    // to verify that the source of the updates is Facebook
     //   - **staticFiles** - _Array_ - List of specific static files to be served
-    //   - **autoSubscribe** - _boolean_ - If true will attempt to subscribe your facebook app to all facebook pages in **pageTokens** using an API call
+    //   - **autoSubscribe** - _boolean_ - If true will attempt to subscribe
+    // your facebook app to all facebook pages in **pageTokens** using an API call
     // by the same expressjs server that runs the bot. Each item of this array
     // should be an object in the format
     // ```{path: '\some_get_endpoit', file: 'path/to/static.file'}```
@@ -108,7 +110,7 @@ class FacebookMessengerBot {
     start() {
         const app = express();
         this.setupExpressApp(app);
-        let bot = this;
+        const bot = this;
         const launchPromise = new Promise(resolve => {
             bot.server = app.listen(bot.port, () => {
                 if (!bot.autoSubscribe) {
@@ -117,9 +119,9 @@ class FacebookMessengerBot {
                 const subscriptionPromises = bot.pageTokens.map(token =>
                     pageSubscribe(token)
                 );
-                Promise.all(subscriptionPromises).then(() => {
-                    return resolve(true);
-                }).catch(e => console.error(e.message));
+                return Promise.all(subscriptionPromises)
+                        .then(() => resolve(true))
+                        .catch(e => console.error(e.message));
             });
         });
         return launchPromise;

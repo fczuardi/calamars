@@ -1,6 +1,6 @@
 import request from 'request-promise';
 
-const apiURL = 'https://graph.facebook.com/v2.6/';
+const apiURL = 'https://graph.facebook.com/v2.7/';
 
 // ## pageSubscribe(pageAccessToken)
 // Subscribe your facebook app/bot to a facebook page's webhook updates.
@@ -17,14 +17,14 @@ const pageSubscribe = pageAccessToken => {
             access_token: pageAccessToken
         }
     };
-    return new Promise(resolve => {
-        return request(requestOptions)
-            .then(result => resolve(result))
-            .catch(e => {
-                console.error(e.message);
-                return resolve(e.message);
-            });
-    });
+    return new Promise(resolve =>
+        request(requestOptions)
+        .then(result => resolve(result))
+        .catch(e => {
+            console.error(e.message);
+            return resolve(e.message);
+        })
+    );
 };
 
 // ## sendTextMessage(message, pageAccessToken)
@@ -171,14 +171,24 @@ const threadSettings = ({ type, state, text, cta }, pageId, pageAccessToken) => 
             }
         });
     }
-    return request({
-        ...requestOptions,
-        body: {
-            thread_state: state,
-            setting_type: type,
-            call_to_actions: cta
-        }
-    });
+    return new Promise(resolve =>
+        request({
+            ...requestOptions,
+            body: {
+                thread_state: state,
+                setting_type: type,
+                call_to_actions: cta
+            }
+        })
+        .then(response => {
+            console.log('DEBUG: threadSettings response headers', response.headers);
+            return resolve(response);
+        })
+        .catch(error => {
+            console.log('DEBUG: threadSettings error headers', error.response.headers);
+            return resolve(error.message);
+        })
+    );
 };
 
 // ## setWelcomeMessage(message, pageId, pageAccessToken)
