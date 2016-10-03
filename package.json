@@ -94,7 +94,7 @@
     "babel-plugin-transform-export-extensions": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "codacy-coverage": "^2.0.0",
-    "codeclimate-test-reporter": "^0.3.3",
+    "codeclimate-test-reporter": "^0.4.0",
     "codecov": "^1.0.1",
     "coveralls": "^2.11.14",
     "docco": "^0.7.0",
