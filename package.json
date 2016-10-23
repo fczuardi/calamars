@@ -101,7 +101,7 @@
     "eslint-config-calamar": "^2.1.1",
     "gh-pages": "^0.11.0",
     "jsesc": "^2.2.0",
-    "nock": "^8.0.0",
+    "nock": "^9.0.0",
     "npm-run-all": "^3.1.0",
     "npm-scripts-info": "^0.3.6",
     "nyc": "^8.3.0",
