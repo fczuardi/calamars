@@ -5,7 +5,7 @@
   "author": "Fabricio C Zuardi",
   "license": "AGPL-3.0",
   "engines": {
-    "node": "*"
+    "node": ">= 4"
   },
   "main": "./src/lib/index.js",
   "scripts-info": {
