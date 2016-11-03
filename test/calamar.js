@@ -26,6 +26,7 @@ test('Translate Facebook Messenger messaging item to Calamar message format', t 
         text,
         timestamp,
         messageId: mid,
+        isEcho: false,
         senderId,
         recipientId,
         chatId: senderId,

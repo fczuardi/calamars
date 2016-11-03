@@ -20,12 +20,13 @@ const isTelegramUpdate = update => (update && update.update_id);
 // message update object format containing commonly used attributes.
 const calamarMessageFormat = update => {
     if (isFacebookMessengerMessagingItem(update)) {
-        const { message, timestamp, sender, recipient } = update;
-        const { mid, text } = message;
+        const { message = {}, timestamp, sender, recipient } = update;
+        const { mid = null, text = null, is_echo = false } = message; // eslint-disable-line
         return {
             text,
             timestamp,
             messageId: mid,
+            isEcho: is_echo,
             senderId: sender.id,
             recipientId: recipient.id,
             chatId: sender.id,
