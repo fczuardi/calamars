@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/fczuardi/calamars.svg?branch=master)](https://travis-ci.org/fczuardi/calamars)
 [![Dependency Status](https://david-dm.org/fczuardi/calamars.svg)](https://david-dm.org/fczuardi/calamars)
 [![coveralls](https://coveralls.io/repos/github/fczuardi/calamars/badge.svg?branch=master)](https://coveralls.io/github/fczuardi/calamars?branch=master)
-[![License](https://img.shields.io/badge/license-AGPL-lightgrey.svg)][license]
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)][license]
 [see all badges…][badges]
 
 An alpha quality, under heavy development, proto-frramework for building
@@ -176,7 +176,7 @@ pull request expanding this list, or file an issue :)
 
 ## License
 
-- [AGPL-3.0][license]
+- [MIT][license]
 
 [badges]: https://github.com/fczuardi/calamars/blob/master/badges.md
 [documentation]: http://fczuardi.github.io/calamars/
