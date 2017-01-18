@@ -104,7 +104,7 @@
     "nock": "^8.0.0",
     "npm-run-all": "^3.1.0",
     "npm-scripts-info": "^0.3.6",
-    "nyc": "^8.3.0",
+    "nyc": "^10.1.0",
     "snyk": "^1.19.1"
   },
   "dependencies": {
