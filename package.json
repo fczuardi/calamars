@@ -95,7 +95,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "codacy-coverage": "^2.0.0",
     "codeclimate-test-reporter": "^0.3.3",
-    "codecov": "^1.0.1",
+    "codecov": "^2.1.0",
     "coveralls": "^2.11.14",
     "docco": "^0.7.0",
     "eslint-config-calamar": "^2.1.1",
