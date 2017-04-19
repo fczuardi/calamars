@@ -28,7 +28,7 @@ const setUser = (db, userId, nextUser) => {
     const users = getUsers(db);
     const userIndex = getUserIndex(users, userId);
     const updatedUsers = of(merge({ id: userId }, nextUser));
-    const nextUsers = gte(userIndex, 0)
+    const nextUsers = get(userIndex, 0)
         ? update(userIndex, nextUser, users)
         : concat(users, updatedUsers);
     return setUsers(db, nextUsers);
